@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
@@ -96,3 +97,8 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+=======
+# Grupo 1 — Backend
+
+Bienvenido a tu repositorio de backend. A partir de aquí pueden comenzar a trabajar en sus proyectos de taller.
+>>>>>>> 87f1a4001474dad6eef41e674d3d91b2fd9d1ece
