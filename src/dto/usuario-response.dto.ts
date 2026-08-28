@@ -1,13 +1,35 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-// La contrasena nunca forma parte de este contrato.
+/**
+ * DTO de SALIDA.
+ * Datos publicos de la cuenta. No expone la contrasena.
+ */
 export class UsuarioResponseDto {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({
+    type: Number,
+    title: 'Identificador',
+    description:
+      'Identificador del usuario. Se usa en las rutas de carrito y favoritos.',
+    example: 1,
+    required: true,
+  })
   id: number;
 
-  @ApiProperty({ example: 'Ana Rojas' })
+  @ApiProperty({
+    type: String,
+    title: 'Nombre',
+    description: 'Nombre del cliente mostrado en el header.',
+    example: 'Fernanda Rojas',
+    required: true,
+  })
   nombre: string;
 
-  @ApiProperty({ example: 'ana@mail.com' })
+  @ApiProperty({
+    type: String,
+    title: 'Correo electronico',
+    description: 'Correo electronico de la cuenta.',
+    example: 'cliente@stylenow.cl',
+    required: true,
+  })
   correoElectronico: string;
 }

@@ -1,39 +1,43 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { CategoriasController } from './categorias.controller';
-import { ColeccionesController } from './colecciones.controller';
-import { ProductosController } from './productos.controller';
-import { AuthController } from './auth.controller';
-import { CarritoController } from './carrito.controller';
-import { ComunidadController } from './comunidad.controller';
-import { CategoriasService } from './categorias.service';
-import { ColeccionesService } from './colecciones.service';
-import { ProductosService } from './productos.service';
-import { AuthService } from './auth.service';
-import { UsuariosService } from './usuarios.service';
-import { CarritoService } from './carrito.service';
-import { ComunidadService } from './comunidad.service';
+import { AuthController } from './controllers/auth.controller';
+import { CarritoController } from './controllers/carrito.controller';
+import { CategoriasController } from './controllers/categorias.controller';
+import { ColeccionesController } from './controllers/colecciones.controller';
+import { ComunidadController } from './controllers/comunidad.controller';
+import { FavoritosController } from './controllers/favoritos.controller';
+import { ProductosController } from './controllers/productos.controller';
+import { AuthService } from './services/auth.service';
+import { CarritoService } from './services/carrito.service';
+import { CategoriasService } from './services/categorias.service';
+import { ColeccionesService } from './services/colecciones.service';
+import { ComunidadService } from './services/comunidad.service';
+import { FavoritosService } from './services/favoritos.service';
+import { ProductosService } from './services/productos.service';
 
+/**
+ * Modulo raiz de StyleNow.
+ * Hito 1 mantiene un unico modulo para que la estructura siga siendo simple:
+ * todos los controladores viven en src/controllers y todos los servicios en
+ * src/services.
+ */
 @Module({
   imports: [],
   controllers: [
-    AppController,
+    ProductosController,
     CategoriasController,
     ColeccionesController,
-    ProductosController,
     AuthController,
     CarritoController,
+    FavoritosController,
     ComunidadController,
   ],
   providers: [
-    AppService,
+    ProductosService,
     CategoriasService,
     ColeccionesService,
-    ProductosService,
     AuthService,
-    UsuariosService,
     CarritoService,
+    FavoritosService,
     ComunidadService,
   ],
 })
