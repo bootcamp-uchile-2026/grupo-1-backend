@@ -1,27 +1,74 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+/**
+ * DTO de SALIDA.
+ * Datos minimos que necesita una tarjeta de producto del catalogo.
+ * No incluye descripcion, galeria ni variantes para no enviar informacion
+ * que el listado no muestra.
+ */
 export class ProductoResponseDto {
-  @ApiProperty({ example: 12 })
+  @ApiProperty({
+    type: Number,
+    title: 'Identificador',
+    description:
+      'Identificador del producto. Se usa para abrir la ficha en GET /productos/{id}.',
+    example: 1,
+    required: true,
+  })
   id: number;
 
-  @ApiProperty({ example: 'Chaqueta Oversize' })
+  @ApiProperty({
+    type: String,
+    title: 'Nombre',
+    description: 'Nombre comercial del producto.',
+    example: 'Vestido de lino',
+    required: true,
+  })
   nombre: string;
 
-  @ApiProperty({ example: 49990 })
+  @ApiProperty({
+    type: Number,
+    title: 'Precio',
+    description: 'Precio vigente en pesos chilenos, sin decimales.',
+    example: 29990,
+    required: true,
+  })
   precio: number;
 
-  @ApiProperty({ example: 'https://cdn.stylenow.cl/p/12.jpg' })
+  @ApiProperty({
+    type: String,
+    title: 'Imagen principal',
+    description: 'Imagen que se muestra en la tarjeta del catalogo.',
+    example: 'https://cdn.stylenow.cl/productos/vestido-lino.jpg',
+    required: true,
+  })
   imagenUrl: string;
 
-  @ApiProperty({ example: 'mujer' })
-  genero: string;
-
-  @ApiProperty({ example: 'chaquetas' })
+  @ApiProperty({
+    type: String,
+    title: 'Categoria',
+    description: 'Slug de la categoria a la que pertenece el producto.',
+    example: 'mujer',
+    required: true,
+  })
   categoria: string;
 
-  @ApiProperty({ example: true })
+  @ApiProperty({
+    type: Boolean,
+    title: 'Novedad',
+    description:
+      'Indica si el producto forma parte de la nueva coleccion de la home.',
+    example: true,
+    required: true,
+  })
   novedad: boolean;
 
-  @ApiProperty({ example: false })
+  @ApiProperty({
+    type: Boolean,
+    title: 'Oferta',
+    description: 'Indica si el producto aparece en la seccion Ofertas.',
+    example: false,
+    required: true,
+  })
   oferta: boolean;
 }

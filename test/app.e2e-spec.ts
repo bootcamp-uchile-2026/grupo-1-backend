@@ -4,7 +4,7 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
 
-describe('AppController (e2e)', () => {
+describe('StyleNow API (e2e)', () => {
   let app: INestApplication<App>;
 
   beforeEach(async () => {
@@ -16,11 +16,19 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('/productos (GET)', () => {
     return request(app.getHttpServer())
-      .get('/')
+      .get('/productos')
       .expect(200)
-      .expect('Hello World!');
+      .expect(({ body }) => {
+        const responseBody = body as {
+          productos: unknown[];
+          pagina: number;
+        };
+
+        expect(responseBody.productos).toBeInstanceOf(Array);
+        expect(responseBody.pagina).toBe(1);
+      });
   });
 
   afterEach(async () => {
