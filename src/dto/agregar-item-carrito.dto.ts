@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsInt, IsPositive } from 'class-validator';
 
 /**
  * DTO de ENTRADA.
@@ -15,6 +16,8 @@ export class AgregarItemCarritoDto {
     example: 101,
     required: true,
   })
+  @IsInt()
+  @IsPositive()
   varianteId: number;
 
   @ApiProperty({
@@ -24,5 +27,7 @@ export class AgregarItemCarritoDto {
     example: 2,
     required: true,
   })
+  @IsInt()
+  @IsPositive()
   cantidad: number;
 }

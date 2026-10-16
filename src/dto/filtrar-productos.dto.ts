@@ -1,113 +1,143 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import {
+  IsBoolean,
+  IsIn,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
+import { PaginacionQueryDto } from './paginacion-query.dto';
+import { aBooleano } from './query-transformaciones';
+
+/** Criterios de ordenamiento que acepta el catalogo. */
+export const ORDENES_PRODUCTO = [
+  'relevancia',
+  'precio_asc',
+  'precio_desc',
+  'nombre_asc',
+] as const;
+export type OrdenProducto = (typeof ORDENES_PRODUCTO)[number];
+
+/** Una cadena numerica vacia no es el valor cero; debe fallar IsInt. */
+const aNumeroQuery = ({ value }: { value: unknown }): unknown => {
+  if (typeof value === 'string' && value.trim() === '') return Number.NaN;
+  return typeof value === 'string' ? Number(value) : value;
+};
 
 /**
  * DTO de ENTRADA.
- * Agrupa los filtros opcionales del catalogo que llegan como query params
- * en GET /productos. Todas las propiedades son opcionales: si no se envia
- * ninguna, el endpoint devuelve el catalogo completo paginado.
+ * Filtros opcionales del catalogo que llegan como query params en
+ * GET /productos, mas la paginacion comun (pagina y limite). Si no se envia
+ * ninguno, el endpoint devuelve la primera pagina del catalogo completo.
+ * Los filtros se combinan con AND.
  */
-export class FiltrarProductosDto {
-  @ApiProperty({
+export class FiltrarProductosDto extends PaginacionQueryDto {
+  @ApiPropertyOptional({
     type: String,
-    title: 'Texto buscado',
     description:
-      'Texto libre del buscador del header. Busca en nombre y descripcion.',
+      'Texto del buscador del header. Coincidencia parcial en nombre o ' +
+      'descripcion, sin distinguir mayusculas ni tildes.',
     example: 'vestido',
-    required: false,
   })
+  @IsOptional()
+  @IsString()
   search?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: String,
-    title: 'Categoria',
     description:
-      'Slug de la categoria del catalogo, obtenido desde GET /categorias.',
+      'Slug de la categoria, obtenido desde GET /categorias. Una categoria ' +
+      'sin productos devuelve un listado vacio.',
     example: 'mujer',
-    required: false,
   })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
   categoria?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: String,
-    title: 'Talla',
-    description: 'Talla disponible en alguna variante del producto.',
+    description: 'Talla con stock disponible en alguna variante del producto.',
     example: 'M',
-    required: false,
   })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
   talla?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: String,
-    title: 'Color',
-    description: 'Color disponible en alguna variante del producto.',
+    description:
+      'Color con stock disponible en alguna variante del producto. Si se ' +
+      'envia junto con talla, la misma variante debe cumplir ambos.',
     example: 'Beige',
-    required: false,
   })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
   color?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: Number,
-    title: 'Precio minimo',
-    description: 'Precio minimo en pesos chilenos, sin decimales.',
+    description: 'Precio minimo en pesos chilenos, sin decimales. Inclusivo.',
+    minimum: 0,
     example: 10000,
-    required: false,
   })
-  precioMin?: string;
+  @IsOptional()
+  @Transform(aNumeroQuery)
+  @IsInt()
+  @Min(0)
+  precioMin?: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: Number,
-    title: 'Precio maximo',
-    description: 'Precio maximo en pesos chilenos, sin decimales.',
+    description:
+      'Precio maximo en pesos chilenos, sin decimales. Inclusivo. No puede ' +
+      'ser menor que precioMin.',
+    minimum: 0,
     example: 40000,
-    required: false,
   })
-  precioMax?: string;
+  @IsOptional()
+  @Transform(aNumeroQuery)
+  @IsInt()
+  @Min(0)
+  precioMax?: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: Boolean,
-    title: 'Solo novedades',
     description:
-      'Cuando es true devuelve solo los productos de la nueva coleccion.',
+      'true devuelve solo los productos de la nueva coleccion; false, solo ' +
+      'los que no lo son.',
     example: true,
-    required: false,
   })
-  novedad?: string;
+  @IsOptional()
+  @Transform(aBooleano)
+  @IsBoolean()
+  novedad?: boolean;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: Boolean,
-    title: 'Solo ofertas',
     description:
-      'Cuando es true devuelve solo los productos con precio rebajado.',
-    example: true,
-    required: false,
+      'true devuelve solo los productos en oferta; false, solo los que no ' +
+      'lo estan.',
+    example: false,
   })
-  oferta?: string;
+  @IsOptional()
+  @Transform(aBooleano)
+  @IsBoolean()
+  oferta?: boolean;
 
-  @ApiProperty({
-    type: String,
-    title: 'Orden del listado',
-    description: 'Criterio de ordenamiento del catalogo.',
+  @ApiPropertyOptional({
+    enum: ORDENES_PRODUCTO,
+    description:
+      'Criterio de ordenamiento. relevancia es el orden propio del catalogo.',
+    default: 'relevancia',
     example: 'precio_asc',
-    enum: ['relevancia', 'precio_asc', 'precio_desc', 'nombre_asc'],
-    required: false,
   })
-  orden?: string;
-
-  @ApiProperty({
-    type: Number,
-    title: 'Pagina',
-    description: 'Numero de pagina solicitada. Comienza en 1.',
-    example: 1,
-    required: false,
-  })
-  pagina?: string;
-
-  @ApiProperty({
-    type: Number,
-    title: 'Limite',
-    description: 'Cantidad de productos por pagina. Maximo 50.',
-    example: 12,
-    required: false,
-  })
-  limite?: string;
+  @IsOptional()
+  @IsIn(ORDENES_PRODUCTO)
+  orden?: OrdenProducto;
 }

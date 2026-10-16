@@ -1,136 +1,231 @@
+import { Injectable } from '@nestjs/common';
 import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+  RecursoNoEncontradoError,
+  ReglaNegocioError,
+} from '../dominio/errores-dominio';
 import { ActualizarCantidadDto } from '../dto/actualizar-cantidad.dto';
 import { AgregarItemCarritoDto } from '../dto/agregar-item-carrito.dto';
 import { CarritoResponseDto } from '../dto/carrito-response.dto';
 import { ItemCarritoResponseDto } from '../dto/item-carrito-response.dto';
-import { AuthService } from './auth.service';
+import { VarianteResponseDto } from '../dto/variante-response.dto';
+import {
+  CarritoPersistido,
+  CarritosRepository,
+} from '../repositorios/carritos.repository';
 import { ProductosService } from './productos.service';
-
-/** Linea del carrito tal como se guarda en memoria. */
-interface LineaCarrito {
-  varianteId: number;
-  cantidad: number;
-}
+import { UsuariosService } from './usuarios.service';
 
 /**
  * Carrito de compras de StyleNow.
- * En Hito 1 los carritos viven en memoria, en un Map indexado por usuario.
- * Todos los metodos devuelven el carrito completo y recalculado para que
- * el frontend actualice el icono del header con una sola respuesta.
+ * El carrito guarda solo variante y cantidad; nombre, imagen, talla, color
+ * y precio se leen del catalogo vigente en cada respuesta. La cantidad de
+ * una variante nunca puede superar su stock.
  */
 @Injectable()
 export class CarritoService {
-  private readonly carritos = new Map<number, LineaCarrito[]>();
+  /** Colas independientes: las escrituras y el checkout no se pisan. */
+  private readonly operaciones = new Map<number, Promise<void>>();
 
   constructor(
+    private readonly carritos: CarritosRepository,
+    private readonly usuariosService: UsuariosService,
     private readonly productosService: ProductosService,
-    private readonly authService: AuthService,
   ) {}
 
-  /** Devuelve el carrito actual del usuario. Si nunca compro, viene vacio. */
-  obtenerCarrito(usuarioId: string): CarritoResponseDto {
-    const id = this.authService.obtenerUsuarioPorId(usuarioId).id;
-    return this.construirRespuesta(id, this.lineasDe(id));
+  /** Crea el carrito vacio de un usuario recien registrado. */
+  async crearCarrito(usuarioId: number): Promise<void> {
+    await this.carritos.crearParaUsuario(usuarioId);
+  }
+
+  /** Devuelve el carrito actual del usuario. */
+  async obtenerCarrito(usuarioId: number): Promise<CarritoResponseDto> {
+    const carrito = await this.carritoDeUsuario(usuarioId);
+    return this.aRespuesta(carrito);
   }
 
   /**
-   * Agrega una variante al carrito.
-   * Si la variante ya estaba, suma la cantidad a la linea existente.
+   * Agrega una variante al carrito. Si la variante ya estaba, suma la
+   * cantidad a la linea existente.
    */
-  agregarItem(
-    usuarioId: string,
-    dto: AgregarItemCarritoDto,
-  ): CarritoResponseDto {
-    const id = this.authService.obtenerUsuarioPorId(usuarioId).id;
-    const varianteId = this.aEnteroPositivo(dto?.varianteId, 'varianteId');
-    const cantidad = this.aEnteroPositivo(dto?.cantidad, 'cantidad');
-
-    const { variante } = this.productosService.obtenerVariante(varianteId);
-    const lineas = this.lineasDe(id);
-    const existente = lineas.find((linea) => linea.varianteId === varianteId);
-    const cantidadFinal = (existente?.cantidad ?? 0) + cantidad;
-
-    if (cantidadFinal > variante.stock) {
-      throw new BadRequestException(
-        `Stock insuficiente. Quedan ${variante.stock} unidades disponibles`,
+  async agregarItem(
+    usuarioId: number,
+    datos: AgregarItemCarritoDto,
+  ): Promise<CarritoResponseDto> {
+    const carrito = await this.carritoDeUsuario(usuarioId);
+    return this.ejecutarOperacion(carrito.id, async () => {
+      const vigente = await this.buscarPorId(carrito.id);
+      const { variante } = await this.productosService.obtenerVariante(
+        datos.varianteId,
       );
-    }
-
-    if (existente) {
-      existente.cantidad = cantidadFinal;
-    } else {
-      lineas.push({ varianteId, cantidad });
-    }
-    this.carritos.set(id, lineas);
-    return this.construirRespuesta(id, lineas);
+      const actual =
+        vigente.items.find((item) => item.varianteId === variante.id)
+          ?.cantidad ?? 0;
+      const cantidad = actual + datos.cantidad;
+      this.comprobarStock(variante, cantidad);
+      return this.guardar(carrito.id, variante.id, cantidad);
+    });
   }
 
-  /** Reemplaza la cantidad de una linea que ya esta en el carrito. */
-  actualizarCantidad(
-    usuarioId: string,
-    varianteId: string,
-    dto: ActualizarCantidadDto,
-  ): CarritoResponseDto {
-    const id = this.authService.obtenerUsuarioPorId(usuarioId).id;
-    const idVariante = this.aEnteroPositivo(varianteId, 'varianteId');
-    const cantidad = this.aEnteroPositivo(dto?.cantidad, 'cantidad');
-
-    const lineas = this.lineasDe(id);
-    const linea = lineas.find((item) => item.varianteId === idVariante);
-    if (!linea) {
-      throw new NotFoundException(
-        `La variante ${idVariante} no esta en el carrito`,
-      );
-    }
-
-    const { variante } = this.productosService.obtenerVariante(idVariante);
-    if (cantidad > variante.stock) {
-      throw new BadRequestException(
-        `Stock insuficiente. Quedan ${variante.stock} unidades disponibles`,
-      );
-    }
-
-    linea.cantidad = cantidad;
-    this.carritos.set(id, lineas);
-    return this.construirRespuesta(id, lineas);
+  /** Reemplaza la cantidad de una linea existente del carrito. */
+  async actualizarCantidad(
+    usuarioId: number,
+    varianteId: number,
+    datos: ActualizarCantidadDto,
+  ): Promise<CarritoResponseDto> {
+    const carrito = await this.carritoDeUsuario(usuarioId);
+    return this.ejecutarOperacion(carrito.id, async () => {
+      this.comprobarLinea(await this.buscarPorId(carrito.id), varianteId);
+      const { variante } =
+        await this.productosService.obtenerVariante(varianteId);
+      this.comprobarStock(variante, datos.cantidad);
+      return this.guardar(carrito.id, variante.id, datos.cantidad);
+    });
   }
 
   /** Quita una linea del carrito y devuelve el carrito recalculado. */
-  eliminarItem(usuarioId: string, varianteId: string): CarritoResponseDto {
-    const id = this.authService.obtenerUsuarioPorId(usuarioId).id;
-    const idVariante = this.aEnteroPositivo(varianteId, 'varianteId');
+  async eliminarItem(
+    usuarioId: number,
+    varianteId: number,
+  ): Promise<CarritoResponseDto> {
+    const carrito = await this.carritoDeUsuario(usuarioId);
+    return this.ejecutarOperacion(carrito.id, async () => {
+      this.comprobarLinea(await this.buscarPorId(carrito.id), varianteId);
+      const eliminado = await this.carritos.eliminarItem(
+        carrito.id,
+        varianteId,
+      );
+      if (!eliminado) {
+        throw new RecursoNoEncontradoError(
+          `El carrito no tiene la variante ${varianteId}`,
+        );
+      }
+      return this.obtenerCarrito(usuarioId);
+    });
+  }
 
-    const lineas = this.lineasDe(id);
-    const posicion = lineas.findIndex((item) => item.varianteId === idVariante);
-    if (posicion === -1) {
-      throw new NotFoundException(
-        `La variante ${idVariante} no esta en el carrito`,
+  /** Coordina una operacion completa por id, sin bloquear otros carritos. */
+  async ejecutarOperacion<T>(
+    carritoId: number,
+    operacion: () => Promise<T>,
+  ): Promise<T> {
+    const anterior = this.operaciones.get(carritoId) ?? Promise.resolve();
+    const resultado = anterior.then(operacion);
+    const cola = resultado.then(
+      () => undefined,
+      () => undefined,
+    );
+    this.operaciones.set(carritoId, cola);
+    try {
+      return await resultado;
+    } finally {
+      if (this.operaciones.get(carritoId) === cola) {
+        this.operaciones.delete(carritoId);
+      }
+    }
+  }
+
+  /**
+   * Uso interno de PedidosService: carrito completo, con precios del
+   * catalogo vigente, a partir de su id.
+   */
+  async obtenerParaCheckout(carritoId: number): Promise<CarritoResponseDto> {
+    const carrito = await this.buscarPorId(carritoId);
+    return this.aRespuesta(carrito);
+  }
+
+  /** Uso interno de PedidosService: vacia el carrito tras crear el pedido. */
+  async vaciarDespuesDeCheckout(carritoId: number): Promise<void> {
+    const vaciado = await this.carritos.vaciar(carritoId);
+    if (!vaciado) throw new Error('No se pudo vaciar el carrito del checkout');
+  }
+
+  /** Compensa incluso un vaciado que fallo despues de modificar el carrito. */
+  async restaurarDespuesDeCheckout(carrito: CarritoResponseDto): Promise<void> {
+    const restaurado = await this.carritos.restaurarItems(
+      carrito.id,
+      carrito.items.map(({ varianteId, cantidad }) => ({
+        varianteId,
+        cantidad,
+      })),
+    );
+    if (!restaurado) throw new Error('No se pudo restaurar el carrito');
+  }
+
+  /**
+   * Regla de stock del carrito y del checkout: la variante debe tener stock
+   * y la cantidad total pedida no puede superarlo.
+   */
+  comprobarStock(variante: VarianteResponseDto, cantidad: number): void {
+    if (variante.stock <= 0) {
+      throw new ReglaNegocioError(
+        `La variante ${variante.id} no tiene stock disponible`,
       );
     }
-
-    lineas.splice(posicion, 1);
-    this.carritos.set(id, lineas);
-    return this.construirRespuesta(id, lineas);
-  }
-
-  private lineasDe(usuarioId: number): LineaCarrito[] {
-    return this.carritos.get(usuarioId) ?? [];
-  }
-
-  /** Arma la respuesta del carrito con los precios y totales calculados. */
-  private construirRespuesta(
-    usuarioId: number,
-    lineas: LineaCarrito[],
-  ): CarritoResponseDto {
-    const items: ItemCarritoResponseDto[] = lineas.map((linea) => {
-      const { producto, variante } = this.productosService.obtenerVariante(
-        linea.varianteId,
+    if (cantidad > variante.stock) {
+      throw new ReglaNegocioError(
+        `La variante ${variante.id} tiene ${variante.stock} unidades disponibles y se pidieron ${cantidad}`,
       );
-      return {
+    }
+  }
+
+  private async carritoDeUsuario(
+    usuarioId: number,
+  ): Promise<CarritoPersistido> {
+    await this.usuariosService.obtenerUsuario(usuarioId);
+    const carrito = await this.carritos.buscarPorUsuario(usuarioId);
+    if (!carrito) {
+      throw new RecursoNoEncontradoError(
+        `El usuario ${usuarioId} no tiene carrito`,
+      );
+    }
+    return carrito;
+  }
+
+  private async buscarPorId(carritoId: number): Promise<CarritoPersistido> {
+    const carrito = await this.carritos.buscarPorId(carritoId);
+    if (!carrito) {
+      throw new RecursoNoEncontradoError(
+        `No existe el carrito con id ${carritoId}`,
+      );
+    }
+    return carrito;
+  }
+
+  private comprobarLinea(carrito: CarritoPersistido, varianteId: number): void {
+    if (!carrito.items.some((item) => item.varianteId === varianteId)) {
+      throw new RecursoNoEncontradoError(
+        `El carrito no tiene la variante ${varianteId}`,
+      );
+    }
+  }
+
+  private async guardar(
+    carritoId: number,
+    varianteId: number,
+    cantidad: number,
+  ): Promise<CarritoResponseDto> {
+    const carrito = await this.carritos.guardarCantidad(
+      carritoId,
+      varianteId,
+      cantidad,
+    );
+    if (!carrito) {
+      throw new RecursoNoEncontradoError(
+        `No existe el carrito con id ${carritoId}`,
+      );
+    }
+    return this.aRespuesta(carrito);
+  }
+
+  /** Arma la respuesta con los datos vigentes del catalogo. */
+  private async aRespuesta(
+    carrito: CarritoPersistido,
+  ): Promise<CarritoResponseDto> {
+    const items: ItemCarritoResponseDto[] = [];
+    for (const linea of carrito.items) {
+      const { producto, variante } =
+        await this.productosService.obtenerVariante(linea.varianteId);
+      items.push({
         productoId: producto.id,
         varianteId: variante.id,
         nombre: producto.nombre,
@@ -140,27 +235,14 @@ export class CarritoService {
         precioUnitario: producto.precio,
         cantidad: linea.cantidad,
         subtotal: producto.precio * linea.cantidad,
-      };
-    });
-
+      });
+    }
     return {
-      usuarioId,
+      id: carrito.id,
+      usuarioId: carrito.usuarioId,
       items,
       cantidadTotal: items.reduce((total, item) => total + item.cantidad, 0),
       subtotal: items.reduce((total, item) => total + item.subtotal, 0),
     };
-  }
-
-  private aEnteroPositivo(
-    valor: string | number | undefined,
-    campo: string,
-  ): number {
-    const numero = Number(valor);
-    if (!Number.isInteger(numero) || numero < 1) {
-      throw new BadRequestException(
-        `${campo} debe ser un entero mayor que cero`,
-      );
-    }
-    return numero;
   }
 }

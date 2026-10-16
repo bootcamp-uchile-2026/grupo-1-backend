@@ -3,7 +3,7 @@ import { UsuarioResponseDto } from './usuario-response.dto';
 
 /**
  * DTO de SALIDA.
- * Resultado del inicio de sesion. En Hito 1 no se devuelve ningun token
+ * Resultado del inicio de sesion. En Hito 2 no se devuelve ningun token
  * porque JWT esta fuera del alcance.
  */
 export class AuthResponseDto {

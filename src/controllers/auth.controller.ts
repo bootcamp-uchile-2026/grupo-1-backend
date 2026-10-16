@@ -9,10 +9,9 @@ import { AuthService } from '../services/auth.service';
 
 /**
  * Recurso Auth.
- * Cubre los accesos "Crear cuenta" e "Iniciar sesion" del header.
- * Hito 1 no implementa JWT, hashing de contrasenas, guards ni sesiones de
- * servidor: estos endpoints definen el contrato HTTP que consumira el
- * frontend y guardan los usuarios en memoria.
+ * Cubre los accesos "Crear cuenta" e "Iniciar sesion" del header. En Hito 2
+ * las cuentas y credenciales viven en memoria (fase dummy); no hay JWT,
+ * hashing de contrasenas, guards ni sesiones de servidor.
  */
 @ApiTags('auth')
 @Controller('auth')
@@ -22,10 +21,11 @@ export class AuthController {
   @ApiOperation({
     summary: 'Registra una cuenta nueva',
     description:
-      'Crea la cuenta del formulario "Crear cuenta" del header. El correo electronico ' +
-      'identifica la cuenta y no se puede repetir. La respuesta nunca incluye la contrasena. ' +
-      'En Hito 1 la contrasena se guarda en memoria sin hashing porque ese contenido aun no ' +
-      'forma parte del curso.',
+      'Crea la cuenta del formulario "Crear cuenta" del header, junto con su carrito ' +
+      'vacio. El correo electronico identifica la cuenta y no se puede repetir (se compara ' +
+      'sin distinguir mayusculas). El perfil nace con apellido vacio, que se completa en ' +
+      'PATCH /usuarios/{usuarioId}. La respuesta nunca incluye la contrasena. En la fase ' +
+      'dummy de Hito 2 la contrasena se guarda en memoria sin hashing.',
   })
   @ApiBody({
     description: 'Datos del formulario de registro.',
@@ -38,14 +38,18 @@ export class AuthController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Falta alguno de los campos obligatorios.',
+    description:
+      'Falta alguno de los campos obligatorios, el correo no es valido o se envian ' +
+      'campos no declarados.',
   })
   @ApiResponse({
     status: 409,
     description: 'Ya existe una cuenta con ese correo electronico.',
   })
   @Post('registro')
-  registrar(@Body() dto: RegistrarUsuarioDto): UsuarioResponseDto {
+  async registrar(
+    @Body() dto: RegistrarUsuarioDto,
+  ): Promise<UsuarioResponseDto> {
     return this.authService.registrar(dto);
   }
 
@@ -54,7 +58,7 @@ export class AuthController {
     description:
       'Valida el correo electronico y la contrasena del formulario "Iniciar sesion". ' +
       'La respuesta devuelve un mensaje y los datos publicos del usuario. No devuelve token ' +
-      'ni accessToken porque JWT esta fuera del alcance de Hito 1.',
+      'ni accessToken porque JWT esta fuera del alcance de Hito 2.',
   })
   @ApiBody({
     description: 'Credenciales del formulario de inicio de sesion.',
@@ -66,12 +70,16 @@ export class AuthController {
     type: AuthResponseDto,
   })
   @ApiResponse({
+    status: 400,
+    description: 'Falta el correo o la contrasena, o el correo no es valido.',
+  })
+  @ApiResponse({
     status: 401,
     description: 'Correo electronico o contrasena incorrectos.',
   })
   @HttpCode(200)
   @Post('login')
-  login(@Body() dto: LoginDto): AuthResponseDto {
+  async login(@Body() dto: LoginDto): Promise<AuthResponseDto> {
     return this.authService.login(dto);
   }
 
@@ -79,7 +87,7 @@ export class AuthController {
     summary: 'Cierra la sesion del frontend',
     description:
       'Devuelve la confirmacion de cierre de sesion que el header necesita para volver al ' +
-      'estado de visitante. IMPORTANTE: Hito 1 no implementa JWT ni sesiones de servidor, ' +
+      'estado de visitante. IMPORTANTE: Hito 2 no implementa JWT ni sesiones de servidor, ' +
       'por lo tanto este endpoint representa el contrato de cierre de sesion del frontend ' +
       'pero no invalida ningun token ni ninguna sesion en el servidor. El frontend es quien ' +
       'descarta los datos del usuario que mantiene localmente.',

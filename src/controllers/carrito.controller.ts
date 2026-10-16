@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -24,7 +25,8 @@ import { CarritoService } from '../services/carrito.service';
  * El carrito siempre pertenece a un usuario, por eso la ruta es anidada:
  * /usuarios/{usuarioId}/carrito. Las lineas se identifican por varianteId
  * porque la ficha obliga a elegir color y talla antes de agregar.
- * Todos los endpoints devuelven el carrito completo y recalculado.
+ * Todos los endpoints devuelven el carrito completo y recalculado, con su
+ * id: el carritoId que POST /pedidos usa para hacer el checkout.
  */
 @ApiTags('carrito')
 @Controller('usuarios/:usuarioId/carrito')
@@ -34,8 +36,9 @@ export class CarritoController {
   @ApiOperation({
     summary: 'Obtiene el carrito del usuario',
     description:
-      'Devuelve las lineas actuales del carrito con sus subtotales, la cantidad total de ' +
-      'unidades y el subtotal general. Si el usuario aun no agrega nada, items viene vacio.',
+      'Devuelve el id del carrito, sus lineas con los precios vigentes del catalogo, la ' +
+      'cantidad total de unidades y el subtotal general. Si el usuario aun no agrega ' +
+      'nada, items viene vacio. El id es el carritoId que se envia en POST /pedidos.',
   })
   @ApiParam({
     name: 'usuarioId',
@@ -55,7 +58,9 @@ export class CarritoController {
   })
   @ApiResponse({ status: 404, description: 'No existe un usuario con ese id.' })
   @Get()
-  obtenerCarrito(@Param('usuarioId') usuarioId: string): CarritoResponseDto {
+  async obtenerCarrito(
+    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+  ): Promise<CarritoResponseDto> {
     return this.carritoService.obtenerCarrito(usuarioId);
   }
 
@@ -85,17 +90,18 @@ export class CarritoController {
   @ApiResponse({
     status: 400,
     description:
-      'La cantidad no es un entero mayor que cero o supera el stock disponible.',
+      'La cantidad no es un entero mayor que cero, la variante no tiene stock o la ' +
+      'cantidad total de la variante en el carrito superaria su stock.',
   })
   @ApiResponse({
     status: 404,
     description: 'No existe el usuario o no existe la variante.',
   })
   @Post('items')
-  agregarItem(
-    @Param('usuarioId') usuarioId: string,
+  async agregarItem(
+    @Param('usuarioId', ParseIntPipe) usuarioId: number,
     @Body() dto: AgregarItemCarritoDto,
-  ): CarritoResponseDto {
+  ): Promise<CarritoResponseDto> {
     return this.carritoService.agregarItem(usuarioId, dto);
   }
 
@@ -140,11 +146,11 @@ export class CarritoController {
     description: 'No existe el usuario, o la variante no esta en el carrito.',
   })
   @Patch('items/:varianteId')
-  actualizarCantidad(
-    @Param('usuarioId') usuarioId: string,
-    @Param('varianteId') varianteId: string,
+  async actualizarCantidad(
+    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('varianteId', ParseIntPipe) varianteId: number,
     @Body() dto: ActualizarCantidadDto,
-  ): CarritoResponseDto {
+  ): Promise<CarritoResponseDto> {
     return this.carritoService.actualizarCantidad(usuarioId, varianteId, dto);
   }
 
@@ -184,10 +190,10 @@ export class CarritoController {
     description: 'No existe el usuario, o la variante no esta en el carrito.',
   })
   @Delete('items/:varianteId')
-  eliminarItem(
-    @Param('usuarioId') usuarioId: string,
-    @Param('varianteId') varianteId: string,
-  ): CarritoResponseDto {
+  async eliminarItem(
+    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('varianteId', ParseIntPipe) varianteId: number,
+  ): Promise<CarritoResponseDto> {
     return this.carritoService.eliminarItem(usuarioId, varianteId);
   }
 }

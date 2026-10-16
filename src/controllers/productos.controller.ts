@@ -1,11 +1,5 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
-import {
-  ApiOperation,
-  ApiParam,
-  ApiQuery,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FiltrarProductosDto } from '../dto/filtrar-productos.dto';
 import { ProductoDetalleResponseDto } from '../dto/producto-detalle-response.dto';
 import { ProductosPaginadosResponseDto } from '../dto/productos-paginados-response.dto';
@@ -28,86 +22,9 @@ export class ProductosController {
       'Devuelve la pagina solicitada del catalogo. Sin filtros entrega el catalogo completo. ' +
       'Este mismo endpoint resuelve el buscador del header (search), la navegacion por ' +
       'categoria (categoria), el bloque Nueva coleccion de la home (novedad=true), la seccion ' +
-      'Ofertas (oferta=true) y los filtros de talla, color, precio y orden del catalogo.',
-  })
-  @ApiQuery({
-    name: 'search',
-    type: String,
-    required: false,
-    description:
-      'Texto del buscador del header. Busca en el nombre y la descripcion.',
-    example: 'vestido',
-  })
-  @ApiQuery({
-    name: 'categoria',
-    type: String,
-    required: false,
-    description: 'Slug de categoria obtenido desde GET /categorias.',
-    example: 'mujer',
-  })
-  @ApiQuery({
-    name: 'talla',
-    type: String,
-    required: false,
-    description: 'Talla con stock disponible en alguna variante del producto.',
-    example: 'M',
-  })
-  @ApiQuery({
-    name: 'color',
-    type: String,
-    required: false,
-    description: 'Color con stock disponible en alguna variante del producto.',
-    example: 'Beige',
-  })
-  @ApiQuery({
-    name: 'precioMin',
-    type: Number,
-    required: false,
-    description: 'Precio minimo en pesos chilenos.',
-    example: 10000,
-  })
-  @ApiQuery({
-    name: 'precioMax',
-    type: Number,
-    required: false,
-    description: 'Precio maximo en pesos chilenos.',
-    example: 40000,
-  })
-  @ApiQuery({
-    name: 'novedad',
-    type: Boolean,
-    required: false,
-    description: 'true devuelve solo los productos de la nueva coleccion.',
-    example: true,
-  })
-  @ApiQuery({
-    name: 'oferta',
-    type: Boolean,
-    required: false,
-    description: 'true devuelve solo los productos de la seccion Ofertas.',
-    example: true,
-  })
-  @ApiQuery({
-    name: 'orden',
-    required: false,
-    enum: ['relevancia', 'precio_asc', 'precio_desc', 'nombre_asc'],
-    description:
-      'Criterio de ordenamiento del listado. Por defecto relevancia.',
-    example: 'precio_asc',
-  })
-  @ApiQuery({
-    name: 'pagina',
-    type: Number,
-    required: false,
-    description: 'Pagina solicitada. Comienza en 1. Por defecto 1.',
-    example: 1,
-  })
-  @ApiQuery({
-    name: 'limite',
-    type: Number,
-    required: false,
-    description: 'Productos por pagina. Por defecto 12 y como maximo 50.',
-    example: 12,
+      'Ofertas (oferta=true) y los filtros de talla, color, precio y orden del catalogo. ' +
+      'Los filtros se combinan con AND. Una busqueda sin coincidencias o una pagina ' +
+      'fuera de rango responden 200 con productos vacio.',
   })
   @ApiResponse({
     status: 200,
@@ -117,12 +34,13 @@ export class ProductosController {
   @ApiResponse({
     status: 400,
     description:
-      'Algun filtro tiene un formato invalido, por ejemplo precioMin mayor que precioMax.',
+      'Algun filtro tiene un formato invalido, se envio un parametro no declarado ' +
+      'o precioMin es mayor que precioMax.',
   })
   @Get()
-  obtenerProductos(
+  async obtenerProductos(
     @Query() filtros: FiltrarProductosDto,
-  ): ProductosPaginadosResponseDto {
+  ): Promise<ProductosPaginadosResponseDto> {
     return this.productosService.obtenerProductos(filtros);
   }
 
@@ -147,14 +65,16 @@ export class ProductosController {
   })
   @ApiResponse({
     status: 400,
-    description: 'El id no es un entero mayor que cero.',
+    description: 'El id no es un numero entero.',
   })
   @ApiResponse({
     status: 404,
     description: 'No existe un producto con ese id.',
   })
   @Get(':id')
-  obtenerProductoPorId(@Param('id') id: string): ProductoDetalleResponseDto {
+  async obtenerProductoPorId(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ProductoDetalleResponseDto> {
     return this.productosService.obtenerProductoPorId(id);
   }
 }
