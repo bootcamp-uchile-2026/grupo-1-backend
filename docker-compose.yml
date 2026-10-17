@@ -1,8 +1,6 @@
 services:
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: bbtechgroup/stylenow-backend:hito-2
 
     container_name: stylenow-backend
 
