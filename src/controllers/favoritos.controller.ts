@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Param, ParseIntPipe, Post } from '@nestjs/common';
 import {
   ApiBody,
   ApiOperation,
@@ -12,7 +12,7 @@ import { FavoritosService } from '../services/favoritos.service';
 
 /**
  * Recurso Favoritos.
- * Hito 1 implementa unicamente el boton "Agregar a favoritos" de la ficha de
+ * El contrato cubre unicamente el boton "Agregar a favoritos" de la ficha de
  * producto, que es la unica accion que el wireframe demuestra. La lectura y
  * el borrado de favoritos se definiran cuando se analice formalmente la
  * vista Favoritos de Mi Cuenta.
@@ -58,10 +58,11 @@ export class FavoritosController {
     description: 'El producto ya esta en la lista de favoritos.',
   })
   @Post()
-  agregarFavorito(
-    @Param('usuarioId') usuarioId: string,
+  async agregarFavorito(
+    @Param('usuarioId', ParseIntPipe) usuarioId: number,
     @Body() dto: AgregarFavoritoDto,
-  ): FavoritoResponseDto {
+  ): Promise<FavoritoResponseDto> {
     return this.favoritosService.agregarFavorito(usuarioId, dto);
   }
 }
+

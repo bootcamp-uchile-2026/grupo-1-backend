@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 /**
  * DTO de ENTRADA.
@@ -12,6 +13,8 @@ export class RegistrarUsuarioDto {
     example: 'Fernanda Rojas',
     required: true,
   })
+  @IsString()
+  @IsNotEmpty()
   nombre: string;
 
   @ApiProperty({
@@ -22,15 +25,19 @@ export class RegistrarUsuarioDto {
     example: 'cliente@stylenow.cl',
     required: true,
   })
+  @IsEmail()
   correoElectronico: string;
 
   @ApiProperty({
     type: String,
     title: 'Contrasena',
     description:
-      'Contrasena elegida por el cliente. En Hito 1 se guarda en memoria y no se aplica hashing.',
+      'Contrasena elegida por el cliente. En la fase dummy de Hito 2 se guarda en memoria ' +
+      'y no se aplica hashing. Nunca se devuelve.',
     example: 'StyleNow2026',
     required: true,
   })
+  @IsString()
+  @IsNotEmpty()
   contrasena: string;
 }

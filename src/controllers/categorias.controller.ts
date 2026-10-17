@@ -1,6 +1,12 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CategoriaResponseDto } from '../dto/categoria-response.dto';
+import { FiltrarCategoriasDto } from '../dto/filtrar-categorias.dto';
 import { CategoriasService } from '../services/categorias.service';
 
 /**
@@ -17,31 +23,23 @@ export class CategoriasController {
   @ApiOperation({
     summary: 'Lista las categorias del catalogo',
     description:
-      'Devuelve las categorias del menu principal. Con destacada=true entrega solo las que ' +
-      'se pintan en "Categorias populares" de la home. El slug de cada categoria se usa ' +
-      'luego como filtro en GET /productos?categoria={slug}.',
+      'Devuelve las categorias en el orden del menu principal, tengan o no productos. ' +
+      'Con destacada=true entrega solo las que se pintan en "Categorias populares" de ' +
+      'la home. El slug de cada categoria es el valor del filtro ' +
+      'GET /productos?categoria={slug}.',
   })
-  @ApiQuery({
-    name: 'destacada',
-    type: Boolean,
-    required: false,
-    description: 'true devuelve solo las categorias visibles en la home.',
-    example: true,
-  })
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
     description: 'Categorias obtenidas correctamente.',
-    type: CategoriaResponseDto,
-    isArray: true,
+    type: [CategoriaResponseDto],
   })
-  @ApiResponse({
-    status: 400,
-    description: 'El valor de destacada no es true ni false.',
+  @ApiBadRequestResponse({
+    description:
+      'destacada no es true ni false, o se envio un parametro no declarado.',
   })
   @Get()
-  obtenerCategorias(
-    @Query('destacada') destacada?: string,
-  ): CategoriaResponseDto[] {
-    return this.categoriasService.obtenerCategorias(destacada);
+  async obtenerCategorias(
+    @Query() filtros: FiltrarCategoriasDto,
+  ): Promise<CategoriaResponseDto[]> {
+    return this.categoriasService.obtenerCategorias(filtros.destacada);
   }
 }

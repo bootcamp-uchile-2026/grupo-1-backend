@@ -1,46 +1,40 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { ConflictoDominioError } from '../dominio/errores-dominio';
 import { AgregarFavoritoDto } from '../dto/agregar-favorito.dto';
 import { FavoritoResponseDto } from '../dto/favorito-response.dto';
-import { AuthService } from './auth.service';
+import { FavoritosRepository } from '../repositorios/favoritos.repository';
 import { ProductosService } from './productos.service';
+import { UsuariosService } from './usuarios.service';
 
 /**
- * Favoritos de StyleNow.
- * En Hito 1 solo se implementa el boton "Agregar a favoritos" de la ficha,
- * que es lo unico que el wireframe demuestra. La vista de Favoritos de
- * Mi Cuenta se analizara mas adelante.
+ * Favoritos de StyleNow: el boton "Agregar a favoritos" de la ficha.
+ * Se guarda el producto completo, sin variante, y una sola vez por usuario.
  */
 @Injectable()
 export class FavoritosService {
-  private readonly favoritosPorUsuario = new Map<number, number[]>();
-
   constructor(
+    private readonly favoritos: FavoritosRepository,
+    private readonly usuariosService: UsuariosService,
     private readonly productosService: ProductosService,
-    private readonly authService: AuthService,
   ) {}
 
   /** Guarda un producto en la lista de favoritos del usuario. */
-  agregarFavorito(
-    usuarioId: string,
-    dto: AgregarFavoritoDto,
-  ): FavoritoResponseDto {
-    const id = this.authService.obtenerUsuarioPorId(usuarioId).id;
-    const producto = this.productosService.obtenerProductoPorId(
-      dto?.productoId,
+  async agregarFavorito(
+    usuarioId: number,
+    datos: AgregarFavoritoDto,
+  ): Promise<FavoritoResponseDto> {
+    await this.usuariosService.obtenerUsuario(usuarioId);
+    const producto = await this.productosService.obtenerProductoPorId(
+      datos.productoId,
     );
-    const favoritos = this.favoritosPorUsuario.get(id) ?? [];
-
-    if (favoritos.includes(producto.id)) {
-      throw new ConflictException(
+    const agregado = await this.favoritos.agregar(usuarioId, producto.id);
+    if (!agregado) {
+      throw new ConflictoDominioError(
         'El producto ya esta en la lista de favoritos',
       );
     }
-
-    favoritos.push(producto.id);
-    this.favoritosPorUsuario.set(id, favoritos);
-
     return {
-      usuarioId: id,
+      usuarioId,
       productoId: producto.id,
       mensaje: 'Producto agregado a favoritos',
     };

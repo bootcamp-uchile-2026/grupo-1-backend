@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsInt, IsPositive } from 'class-validator';
 
 /**
  * DTO de ENTRADA.
@@ -13,5 +14,7 @@ export class ActualizarCantidadDto {
     example: 3,
     required: true,
   })
+  @IsInt()
+  @IsPositive()
   cantidad: number;
 }

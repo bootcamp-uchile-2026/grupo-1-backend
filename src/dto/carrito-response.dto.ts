@@ -10,6 +10,17 @@ import { ItemCarritoResponseDto } from './item-carrito-response.dto';
 export class CarritoResponseDto {
   @ApiProperty({
     type: Number,
+    title: 'Identificador del carrito',
+    description:
+      'Identidad propia del carrito, distinta del usuario. Es el carritoId que se ' +
+      'envia en POST /pedidos para hacer el checkout.',
+    example: 1,
+    required: true,
+  })
+  id: number;
+
+  @ApiProperty({
+    type: Number,
     title: 'Identificador de usuario',
     description: 'Usuario dueno del carrito.',
     example: 1,
