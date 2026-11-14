@@ -49,7 +49,6 @@ export class CrearCambioDevolucionDto {
     minimum: 1,
     type: Number,
     description: 'Obligatoria para cambio. No se permite para devolucion.',
-    minimum: 1,
     example: 101,
   })
   @ValidateIf(
