@@ -1,3 +1,4 @@
+import { LogEntradaInterceptor } from './common/log-entrada.interceptor';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { FiltroExcepcionesGlobal } from './common/filtro-excepciones.filter';
 import { crearObservabilidadHttp } from './common/observabilidad-http.middleware';
@@ -44,6 +45,7 @@ export function configurarApp(app: INestApplication): void {
   app.use(asignarRequestId);
   app.use(crearObservabilidadHttp());
   app.enableCors({ exposedHeaders: [CABECERA_REQUEST_ID] });
+  app.useGlobalInterceptors(new LogEntradaInterceptor());
   app.useGlobalFilters(new FiltroExcepcionesGlobal());
   app.useGlobalPipes(
     new ValidationPipe({
