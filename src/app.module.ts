@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { validarEntorno } from './validar-entorno';
 import { AuthController } from './controllers/auth.controller';
 import { CarritoController } from './controllers/carrito.controller';
 import { CategoriasController } from './controllers/categorias.controller';
@@ -103,7 +104,7 @@ const REPOSITORIOS = [
 ];
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true })],
+  imports: [ConfigModule.forRoot({ isGlobal: true, validate: validarEntorno })],
   controllers: [
     ProductosController,
     CategoriasController,
