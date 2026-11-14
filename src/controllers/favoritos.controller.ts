@@ -1,11 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Post,
-} from '@nestjs/common';
+import { IdPositivoPipe } from '../common/id-positivo.pipe';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ErrorResponseDto } from '../dto/error-response.dto';
 import {
   ApiBody,
@@ -26,16 +20,23 @@ export class FavoritosController {
 
   @Get()
   @ApiOperation({ summary: 'Lista los productos favoritos del usuario' })
-  @ApiParam({ name: 'usuarioId', type: Number })
+  @ApiParam({
+    name: 'usuarioId',
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
+  })
   @ApiResponse({ status: 200, type: [ProductoDetalleResponseDto] })
   @ApiResponse({
     type: ErrorResponseDto,
     status: 400,
-    description: 'El identificador no es un entero.',
+    description: 'El identificador debe ser un entero positivo seguro.',
   })
-  @ApiResponse({ type: ErrorResponseDto, status: 404, description: 'El usuario no existe.' })
+  @ApiResponse({
+    type: ErrorResponseDto,
+    status: 404,
+    description: 'El usuario no existe.',
+  })
   listar(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
   ): Promise<ProductoDetalleResponseDto[]> {
     return this.favoritosService.listar(usuarioId);
   }
@@ -80,7 +81,7 @@ export class FavoritosController {
   })
   @Post()
   async agregarFavorito(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
     @Body() dto: AgregarFavoritoDto,
   ): Promise<FavoritoResponseDto> {
     return this.favoritosService.agregarFavorito(usuarioId, dto);

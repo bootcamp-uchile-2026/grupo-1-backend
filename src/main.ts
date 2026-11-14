@@ -131,8 +131,7 @@ async function bootstrap() {
   SwaggerModule.setup(rutaSwagger, app, document);
 
   await app.listen(puerto);
- console.log(`🚀 Backend ejecutándose en puerto: ${puerto}`);
-
+  console.log(`🚀 Backend ejecutándose en puerto: ${puerto}`);
 }
 bootstrap().catch((error: unknown) => {
   const logger = new Logger('Bootstrap');
