@@ -50,7 +50,7 @@ describe('Privacidad HTTP', () => {
       .set('Authorization', 'private-auth')
       .set('Cookie', 'session=private-cookie')
       .send(body)
-      .expect(status as number);
+      .expect(status);
     const records = log.mock.calls.map(
       ([value]) => value as Record<string, unknown>,
     );
