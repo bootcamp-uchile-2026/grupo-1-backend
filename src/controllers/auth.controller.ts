@@ -1,3 +1,4 @@
+import { ErrorResponseDto } from '../dto/error-response.dto';
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthResponseDto } from '../dto/auth-response.dto';
@@ -37,12 +38,14 @@ export class AuthController {
     type: UsuarioResponseDto,
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 400,
     description:
       'Falta alguno de los campos obligatorios, el correo no es valido o se envian ' +
       'campos no declarados.',
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 409,
     description: 'Ya existe una cuenta con ese correo electronico.',
   })
@@ -70,10 +73,12 @@ export class AuthController {
     type: AuthResponseDto,
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 400,
     description: 'Falta el correo o la contrasena, o el correo no es valido.',
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 401,
     description: 'Correo electronico o contrasena incorrectos.',
   })

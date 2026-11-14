@@ -1,3 +1,4 @@
+import { ErrorResponseDto } from '../dto/error-response.dto';
 import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FiltrarProductosDto } from '../dto/filtrar-productos.dto';
@@ -32,6 +33,7 @@ export class ProductosController {
     type: ProductosPaginadosResponseDto,
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 400,
     description:
       'Algun filtro tiene un formato invalido, se envio un parametro no declarado ' +
@@ -64,10 +66,12 @@ export class ProductosController {
     type: ProductoDetalleResponseDto,
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 400,
     description: 'El id no es un numero entero.',
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 404,
     description: 'No existe un producto con ese id.',
   })

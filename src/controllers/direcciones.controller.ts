@@ -1,3 +1,4 @@
+import { ErrorResponseDto } from '../dto/error-response.dto';
 import {
   Body,
   Controller,
@@ -31,6 +32,7 @@ import { DireccionesService } from '../services/direcciones.service';
  */
 @ApiTags('direcciones')
 @ApiBadRequestResponse({
+  type: ErrorResponseDto,
   description: 'La entrada no cumple el contrato del endpoint.',
 })
 @ApiParam({
@@ -40,6 +42,7 @@ import { DireccionesService } from '../services/direcciones.service';
   example: 1,
 })
 @ApiNotFoundResponse({
+  type: ErrorResponseDto,
   description: 'No existe el usuario, o la direccion no existe o no es suya.',
 })
 @Controller('usuarios/:usuarioId/direcciones')

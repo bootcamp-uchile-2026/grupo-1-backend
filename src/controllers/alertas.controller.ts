@@ -1,3 +1,4 @@
+import { ErrorResponseDto } from '../dto/error-response.dto';
 import {
   Body,
   Controller,
@@ -31,6 +32,7 @@ import { AlertasService } from '../services/alertas.service';
  */
 @ApiTags('alertas')
 @ApiBadRequestResponse({
+  type: ErrorResponseDto,
   description: 'La entrada no cumple el contrato del endpoint.',
 })
 @ApiParam({
@@ -40,6 +42,7 @@ import { AlertasService } from '../services/alertas.service';
   example: 1,
 })
 @ApiNotFoundResponse({
+  type: ErrorResponseDto,
   description:
     'No existe el usuario, la alerta no existe o no es suya, o el producto o la ' +
     'variante indicados no existen en el catalogo.',
