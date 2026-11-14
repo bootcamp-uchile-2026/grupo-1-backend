@@ -249,8 +249,18 @@ docs/                   documentación (modelo entidad–relación)
 
 ## Docker y despliegue
 
-El empaquetado con Docker y el despliegue corresponden a la etapa de cierre
-del Hito 2.
+Para desarrollo, ejecutar `docker compose up --build -d` desde el repositorio.
+Compose lee el archivo local `.env` si existe. `PORT` controla el puerto de
+la API dentro del contenedor y `HOST_PORT` permite publicarlo en otro puerto.
+Sin configuración ambos usan 3000. Consultar `/productos` y `/api` en el
+puerto publicado. Dos proyectos locales pueden usar nombres de proyecto
+(`docker compose -p <nombre>`) y puertos de host distintos.
+
+Para consumir una imagen ya publicada, definir `BACKEND_IMAGE` en el entorno
+o en `.env` con la referencia versionada aprobada por el equipo, obtenerla
+con `docker compose pull` y ejecutar `docker compose up -d --no-build`.
+`APP_VERSION` identifica la versión de API del entorno. Para desarrollo
+se usa por defecto la versión 0.0.1 del manifiesto actual.
 
 ## Seguridad
 
