@@ -4,12 +4,13 @@ import { AppModule } from '../src/app.module';
 import { configurarApp } from '../src/configurar-app';
 import request from 'supertest';
 import type { App } from 'supertest/types';
+import type { INestApplication } from '@nestjs/common';
 describe('IDs positivos documentados', () => {
   it('publica limites y rechaza IDs invalidos', async () => {
     const module = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
-    const app = module.createNestApplication<App>();
+    const app = module.createNestApplication<INestApplication<App>>();
     configurarApp(app);
     await app.init();
     try {
