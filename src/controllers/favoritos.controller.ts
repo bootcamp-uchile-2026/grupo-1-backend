@@ -1,4 +1,5 @@
-import { Body, Controller, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { IdPositivoPipe } from '../common/id-positivo.pipe';
+import { Body, Controller, Param, Post } from '@nestjs/common';
 import {
   ApiBody,
   ApiOperation,
@@ -59,7 +60,7 @@ export class FavoritosController {
   })
   @Post()
   async agregarFavorito(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
     @Body() dto: AgregarFavoritoDto,
   ): Promise<FavoritoResponseDto> {
     return this.favoritosService.agregarFavorito(usuarioId, dto);

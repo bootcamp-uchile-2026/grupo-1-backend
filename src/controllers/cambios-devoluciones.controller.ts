@@ -1,11 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Post,
-} from '@nestjs/common';
+import { IdPositivoPipe } from '../common/id-positivo.pipe';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -67,8 +61,8 @@ export class CambiosDevolucionesController {
   })
   @Post('pedidos/:pedidoId/cambios-devoluciones')
   async crearSolicitud(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
-    @Param('pedidoId', ParseIntPipe) pedidoId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
+    @Param('pedidoId', IdPositivoPipe) pedidoId: number,
     @Body() datos: CrearCambioDevolucionDto,
   ): Promise<CambioDevolucionResponseDto> {
     return this.cambiosDevolucionesService.crearSolicitud(
@@ -94,8 +88,8 @@ export class CambiosDevolucionesController {
   })
   @Get('pedidos/:pedidoId/cambios-devoluciones')
   async obtenerSolicitudesDePedido(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
-    @Param('pedidoId', ParseIntPipe) pedidoId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
+    @Param('pedidoId', IdPositivoPipe) pedidoId: number,
   ): Promise<CambioDevolucionResponseDto[]> {
     return this.cambiosDevolucionesService.obtenerSolicitudesDePedido(
       usuarioId,
@@ -119,8 +113,8 @@ export class CambiosDevolucionesController {
   })
   @Get('cambios-devoluciones/:solicitudId')
   async obtenerSolicitud(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
-    @Param('solicitudId', ParseIntPipe) solicitudId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
+    @Param('solicitudId', IdPositivoPipe) solicitudId: number,
   ): Promise<CambioDevolucionResponseDto> {
     return this.cambiosDevolucionesService.obtenerSolicitud(
       usuarioId,

@@ -1,11 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Post,
-} from '@nestjs/common';
+import { IdPositivoPipe } from '../common/id-positivo.pipe';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
@@ -77,7 +71,7 @@ export class PedidosController {
   @ApiNotFoundResponse({ description: 'No existe el usuario.' })
   @Get('usuarios/:usuarioId/pedidos')
   async obtenerPedidos(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
   ): Promise<PedidoResponseDto[]> {
     return this.pedidosService.obtenerPedidos(usuarioId);
   }
@@ -109,8 +103,8 @@ export class PedidosController {
   })
   @Get('usuarios/:usuarioId/pedidos/:pedidoId')
   async obtenerPedido(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
-    @Param('pedidoId', ParseIntPipe) pedidoId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
+    @Param('pedidoId', IdPositivoPipe) pedidoId: number,
   ): Promise<PedidoDetalleResponseDto> {
     return this.pedidosService.obtenerPedido(usuarioId, pedidoId);
   }

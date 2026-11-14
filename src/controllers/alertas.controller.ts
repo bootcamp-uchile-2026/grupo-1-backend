@@ -1,3 +1,4 @@
+import { IdPositivoPipe } from '../common/id-positivo.pipe';
 import {
   Body,
   Controller,
@@ -6,7 +7,6 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  ParseIntPipe,
   Post,
 } from '@nestjs/common';
 import {
@@ -55,7 +55,7 @@ export class AlertasController {
   })
   @Get()
   async obtenerAlertas(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
   ): Promise<AlertaResponseDto[]> {
     return this.alertasService.obtenerAlertas(usuarioId);
   }
@@ -72,7 +72,7 @@ export class AlertasController {
   })
   @Post('precio')
   async crearAlertaPrecio(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
     @Body() datos: CrearAlertaPrecioDto,
   ): Promise<AlertaResponseDto> {
     return this.alertasService.crearAlertaPrecio(usuarioId, datos);
@@ -91,7 +91,7 @@ export class AlertasController {
   })
   @Post('reposicion')
   async crearAvisoReposicion(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
     @Body() datos: CrearAvisoReposicionDto,
   ): Promise<AlertaResponseDto> {
     return this.alertasService.crearAvisoReposicion(usuarioId, datos);
@@ -108,8 +108,8 @@ export class AlertasController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':alertaId')
   async eliminarAlerta(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
-    @Param('alertaId', ParseIntPipe) alertaId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
+    @Param('alertaId', IdPositivoPipe) alertaId: number,
   ): Promise<void> {
     await this.alertasService.eliminarAlerta(usuarioId, alertaId);
   }

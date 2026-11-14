@@ -1,10 +1,10 @@
+import { IdPositivoPipe } from '../common/id-positivo.pipe';
 import {
   Body,
   Controller,
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -59,7 +59,7 @@ export class CarritoController {
   @ApiResponse({ status: 404, description: 'No existe un usuario con ese id.' })
   @Get()
   async obtenerCarrito(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
   ): Promise<CarritoResponseDto> {
     return this.carritoService.obtenerCarrito(usuarioId);
   }
@@ -99,7 +99,7 @@ export class CarritoController {
   })
   @Post('items')
   async agregarItem(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
     @Body() dto: AgregarItemCarritoDto,
   ): Promise<CarritoResponseDto> {
     return this.carritoService.agregarItem(usuarioId, dto);
@@ -147,8 +147,8 @@ export class CarritoController {
   })
   @Patch('items/:varianteId')
   async actualizarCantidad(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
-    @Param('varianteId', ParseIntPipe) varianteId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
+    @Param('varianteId', IdPositivoPipe) varianteId: number,
     @Body() dto: ActualizarCantidadDto,
   ): Promise<CarritoResponseDto> {
     return this.carritoService.actualizarCantidad(usuarioId, varianteId, dto);
@@ -191,8 +191,8 @@ export class CarritoController {
   })
   @Delete('items/:varianteId')
   async eliminarItem(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
-    @Param('varianteId', ParseIntPipe) varianteId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
+    @Param('varianteId', IdPositivoPipe) varianteId: number,
   ): Promise<CarritoResponseDto> {
     return this.carritoService.eliminarItem(usuarioId, varianteId);
   }
