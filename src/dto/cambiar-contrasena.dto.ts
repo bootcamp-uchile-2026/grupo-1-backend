@@ -7,6 +7,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
  */
 export class CambiarContrasenaDto {
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Contrasena vigente de la cuenta.',
     example: 'StyleNow2026',
@@ -16,6 +17,7 @@ export class CambiarContrasenaDto {
   contrasenaActual: string;
 
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Contrasena que reemplaza a la actual.',
     example: 'StyleNow2027',

@@ -7,6 +7,7 @@ import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
  */
 export class LoginDto {
   @ApiProperty({
+    format: 'email',
     type: String,
     title: 'Correo electronico',
     description:
@@ -18,6 +19,7 @@ export class LoginDto {
   correoElectronico: string;
 
   @ApiProperty({
+    minLength: 1,
     type: String,
     title: 'Contrasena',
     description: 'Contrasena de la cuenta.',

@@ -7,6 +7,7 @@ import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
  */
 export class ActualizarUsuarioDto {
   @ApiPropertyOptional({
+    minLength: 1,
     type: String,
     description: 'Nombre del cliente.',
     example: 'Fernanda',
@@ -17,6 +18,7 @@ export class ActualizarUsuarioDto {
   nombre?: string;
 
   @ApiPropertyOptional({
+    minLength: 1,
     type: String,
     description: 'Apellido del cliente.',
     example: 'Rojas',
@@ -27,6 +29,7 @@ export class ActualizarUsuarioDto {
   apellido?: string;
 
   @ApiPropertyOptional({
+    minLength: 1,
     type: String,
     description: 'Telefono de contacto.',
     example: '+56912345678',
