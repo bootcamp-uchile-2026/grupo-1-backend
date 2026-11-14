@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PEDIDOS_DUMMY, PedidoDummy } from '../../data/pedidos.dummy';
 import { PedidoDetalleResponseDto } from '../../dto/pedido-detalle-response.dto';
-import {
-  NuevoPedido,
-  PedidosRepository,
-} from '../pedidos.repository';
+import { NuevoPedido, PedidosRepository } from '../pedidos.repository';
 import { copiar } from './reiniciable';
 
 /**
