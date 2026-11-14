@@ -5,22 +5,15 @@ import {
   CarritosRepository,
   LineaCarritoPersistida,
 } from '../carritos.repository';
-import { copiar, RepositorioReiniciable } from './reiniciable';
+import { copiar } from './reiniciable';
 
 @Injectable()
-export class DummyCarritosRepository
-  extends CarritosRepository
-  implements RepositorioReiniciable
-{
+export class DummyCarritosRepository extends CarritosRepository {
   private carritos: CarritoPersistido[] = [];
   private siguienteId = 0;
 
   constructor() {
     super();
-    this.reiniciar();
-  }
-
-  reiniciar(): void {
     this.carritos = copiar(CARRITOS_DUMMY);
     this.siguienteId = Math.max(0, ...this.carritos.map((c) => c.id)) + 1;
   }

@@ -4,9 +4,8 @@ import { PedidoDetalleResponseDto } from '../../dto/pedido-detalle-response.dto'
 import {
   NuevoPedido,
   PedidosRepository,
-  SnapshotCheckout,
 } from '../pedidos.repository';
-import { copiar, RepositorioReiniciable } from './reiniciable';
+import { copiar } from './reiniciable';
 
 /**
  * Pedidos en memoria. Parte de los fixtures y agrega los pedidos que crea
@@ -14,20 +13,13 @@ import { copiar, RepositorioReiniciable } from './reiniciable';
  * por lo que dos creaciones nunca reciben el mismo id.
  */
 @Injectable()
-export class DummyPedidosRepository
-  extends PedidosRepository
-  implements RepositorioReiniciable
-{
+export class DummyPedidosRepository extends PedidosRepository {
   private pedidos: PedidoDummy[] = [];
   private siguientePedidoId = 0;
   private siguienteItemId = 0;
 
   constructor() {
     super();
-    this.reiniciar();
-  }
-
-  reiniciar(): void {
     this.pedidos = copiar(PEDIDOS_DUMMY);
     this.siguientePedidoId =
       Math.max(0, ...this.pedidos.map(({ pedido }) => pedido.id)) + 1;
@@ -95,11 +87,5 @@ export class DummyPedidosRepository
     if (posicion === -1) return Promise.resolve(false);
     this.pedidos.splice(posicion, 1);
     return Promise.resolve(true);
-  }
-
-  /** Solo para tests: copia del checkout guardado con un pedido. */
-  snapshotDe(pedidoId: number): SnapshotCheckout | undefined {
-    const encontrado = this.pedidos.find((item) => item.pedido.id === pedidoId);
-    return encontrado?.checkout ? copiar(encontrado.checkout) : undefined;
   }
 }

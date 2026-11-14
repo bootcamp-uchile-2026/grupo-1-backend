@@ -9,22 +9,15 @@ import {
   CambiosDevolucionesRepository,
   NuevaSolicitud,
 } from '../cambios-devoluciones.repository';
-import { copiar, RepositorioReiniciable } from './reiniciable';
+import { copiar } from './reiniciable';
 
 @Injectable()
-export class DummyCambiosDevolucionesRepository
-  extends CambiosDevolucionesRepository
-  implements RepositorioReiniciable
-{
+export class DummyCambiosDevolucionesRepository extends CambiosDevolucionesRepository {
   private solicitudes: CambioDevolucionResponseDto[] = [];
   private siguienteId = SOLICITUD_NUEVA_ID;
 
   constructor() {
     super();
-    this.reiniciar();
-  }
-
-  reiniciar(): void {
     this.solicitudes = copiar(CAMBIOS_DEVOLUCIONES_DUMMY);
     this.siguienteId = SOLICITUD_NUEVA_ID;
   }

@@ -2,23 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { LOOK_NUEVO_ID, LOOKS_DUMMY } from '../../data/looks.dummy';
 import { LookResponseDto } from '../../dto/look-response.dto';
 import { LooksRepository, NuevoLook } from '../looks.repository';
-import { copiar, RepositorioReiniciable } from './reiniciable';
+import { copiar } from './reiniciable';
 
 @Injectable()
-export class DummyLooksRepository
-  extends LooksRepository
-  implements RepositorioReiniciable
-{
+export class DummyLooksRepository extends LooksRepository {
   private looks: LookResponseDto[] = [];
   private guardados = new Set<string>();
   private siguienteId = LOOK_NUEVO_ID;
 
   constructor() {
     super();
-    this.reiniciar();
-  }
-
-  reiniciar(): void {
     this.looks = copiar(LOOKS_DUMMY);
     this.guardados = new Set();
     this.siguienteId = LOOK_NUEVO_ID;
@@ -49,10 +42,5 @@ export class DummyLooksRepository
   guardarParaUsuario(usuarioId: number, lookId: number): Promise<void> {
     this.guardados.add(`${usuarioId}:${lookId}`);
     return Promise.resolve();
-  }
-
-  /** Solo para tests: indica si el usuario tiene guardado el look. */
-  estaGuardado(usuarioId: number, lookId: number): boolean {
-    return this.guardados.has(`${usuarioId}:${lookId}`);
   }
 }

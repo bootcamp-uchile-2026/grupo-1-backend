@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
+import { configurarApp } from '../src/configurar-app';
 import { AppModule } from './../src/app.module';
 
 describe('StyleNow API (e2e)', () => {
@@ -13,6 +14,7 @@ describe('StyleNow API (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    configurarApp(app);
     await app.init();
   });
 
@@ -29,6 +31,14 @@ describe('StyleNow API (e2e)', () => {
         expect(responseBody.productos).toBeInstanceOf(Array);
         expect(responseBody.pagina).toBe(1);
       });
+  });
+
+  it('rechaza parametros desconocidos con el contrato HTTP real', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/productos?desconocido=1')
+      .expect(400);
+    expect(response.headers['x-request-id']).toBeDefined();
+    expect(response.body).toMatchObject({ statusCode: 400 });
   });
 
   afterEach(async () => {
