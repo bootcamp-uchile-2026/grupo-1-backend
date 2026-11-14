@@ -15,7 +15,7 @@ export class ProductoDetalleResponseDto extends ProductoResponseDto {
     example: 'Vestido de lino de corte recto, ideal para primavera.',
     required: true,
   })
-  descripcion: string;
+  descripcion!: string;
 
   @ApiProperty({
     type: [String],
@@ -28,7 +28,7 @@ export class ProductoDetalleResponseDto extends ProductoResponseDto {
     ],
     required: true,
   })
-  imagenes: string[];
+  imagenes!: string[];
 
   @ApiProperty({
     type: Number,
@@ -38,7 +38,7 @@ export class ProductoDetalleResponseDto extends ProductoResponseDto {
     example: 4.5,
     required: true,
   })
-  calificacion: number;
+  calificacion!: number;
 
   @ApiProperty({
     type: [String],
@@ -47,7 +47,7 @@ export class ProductoDetalleResponseDto extends ProductoResponseDto {
     example: ['Beige', 'Negro'],
     required: true,
   })
-  colores: string[];
+  colores!: string[];
 
   @ApiProperty({
     type: [String],
@@ -56,7 +56,7 @@ export class ProductoDetalleResponseDto extends ProductoResponseDto {
     example: ['S', 'M', 'L'],
     required: true,
   })
-  tallas: string[];
+  tallas!: string[];
 
   @ApiProperty({
     type: String,
@@ -66,7 +66,7 @@ export class ProductoDetalleResponseDto extends ProductoResponseDto {
     example: 'https://www.stylenow.cl/ayuda/guia-de-tallas',
     required: true,
   })
-  guiaTallas: string;
+  guiaTallas!: string;
 
   @ApiProperty({
     type: [VarianteResponseDto],
@@ -76,5 +76,5 @@ export class ProductoDetalleResponseDto extends ProductoResponseDto {
       'elegida para agregar el producto al carrito.',
     required: true,
   })
-  variantes: VarianteResponseDto[];
+  variantes!: VarianteResponseDto[];
 }

@@ -17,7 +17,7 @@ export class CarritoResponseDto {
     example: 1,
     required: true,
   })
-  id: number;
+  id!: number;
 
   @ApiProperty({
     type: Number,
@@ -26,7 +26,7 @@ export class CarritoResponseDto {
     example: 1,
     required: true,
   })
-  usuarioId: number;
+  usuarioId!: number;
 
   @ApiProperty({
     type: [ItemCarritoResponseDto],
@@ -34,7 +34,7 @@ export class CarritoResponseDto {
     description: 'Lineas actuales del carrito. Puede venir vacio.',
     required: true,
   })
-  items: ItemCarritoResponseDto[];
+  items!: ItemCarritoResponseDto[];
 
   @ApiProperty({
     type: Number,
@@ -44,7 +44,7 @@ export class CarritoResponseDto {
     example: 3,
     required: true,
   })
-  cantidadTotal: number;
+  cantidadTotal!: number;
 
   @ApiProperty({
     type: Number,
@@ -53,5 +53,5 @@ export class CarritoResponseDto {
     example: 89970,
     required: true,
   })
-  subtotal: number;
+  subtotal!: number;
 }

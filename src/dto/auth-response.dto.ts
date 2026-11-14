@@ -14,7 +14,7 @@ export class AuthResponseDto {
     example: 'Inicio de sesion correcto',
     required: true,
   })
-  mensaje: string;
+  mensaje!: string;
 
   @ApiProperty({
     type: UsuarioResponseDto,
@@ -22,5 +22,5 @@ export class AuthResponseDto {
     description: 'Datos publicos del usuario autenticado, sin la contrasena.',
     required: true,
   })
-  usuario: UsuarioResponseDto;
+  usuario!: UsuarioResponseDto;
 }

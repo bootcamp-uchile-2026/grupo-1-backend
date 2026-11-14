@@ -13,7 +13,7 @@ export class CrearDireccionDto {
   })
   @IsString()
   @IsNotEmpty()
-  nombre: string;
+  nombre!: string;
 
   @ApiProperty({
     type: String,
@@ -22,7 +22,7 @@ export class CrearDireccionDto {
   })
   @IsString()
   @IsNotEmpty()
-  calle: string;
+  calle!: string;
 
   @ApiProperty({
     type: String,
@@ -31,7 +31,7 @@ export class CrearDireccionDto {
   })
   @IsString()
   @IsNotEmpty()
-  numero: string;
+  numero!: string;
 
   @ApiPropertyOptional({
     type: String,
@@ -50,7 +50,7 @@ export class CrearDireccionDto {
   })
   @IsString()
   @IsNotEmpty()
-  comuna: string;
+  comuna!: string;
 
   @ApiProperty({
     type: String,
@@ -59,7 +59,7 @@ export class CrearDireccionDto {
   })
   @IsString()
   @IsNotEmpty()
-  region: string;
+  region!: string;
 
   @ApiProperty({
     type: Boolean,
@@ -67,5 +67,5 @@ export class CrearDireccionDto {
     example: true,
   })
   @IsBoolean()
-  principal: boolean;
+  principal!: boolean;
 }

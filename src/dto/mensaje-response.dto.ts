@@ -12,5 +12,5 @@ export class MensajeResponseDto {
     example: 'Sesion cerrada correctamente',
     required: true,
   })
-  mensaje: string;
+  mensaje!: string;
 }

@@ -13,5 +13,5 @@ export class GuardarLookDto {
   })
   @IsInt()
   @IsPositive()
-  lookId: number;
+  lookId!: number;
 }

@@ -10,28 +10,28 @@ export class UsuarioDetalleResponseDto {
     description: 'Identificador del usuario.',
     example: 1,
   })
-  id: number;
+  id!: number;
 
   @ApiProperty({
     type: String,
     description: 'Nombre del cliente.',
     example: 'Fernanda',
   })
-  nombre: string;
+  nombre!: string;
 
   @ApiProperty({
     type: String,
     description: 'Apellido del cliente.',
     example: 'Rojas',
   })
-  apellido: string;
+  apellido!: string;
 
   @ApiProperty({
     type: String,
     description: 'Correo electronico de la cuenta.',
     example: 'cliente@stylenow.cl',
   })
-  email: string;
+  email!: string;
 
   @ApiPropertyOptional({
     type: String,

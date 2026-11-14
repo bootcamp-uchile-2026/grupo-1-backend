@@ -12,21 +12,21 @@ export class AlertaResponseDto {
     description: 'Identificador de la alerta.',
     example: 1,
   })
-  id: number;
+  id!: number;
 
   @ApiProperty({
     enum: TIPOS_ALERTA,
     description: 'Tipo de alerta: precio o reposicion.',
     example: 'precio',
   })
-  tipo: TipoAlerta;
+  tipo!: TipoAlerta;
 
   @ApiProperty({
     type: Number,
     description: 'Identificador del producto.',
     example: 1,
   })
-  productoId: number;
+  productoId!: number;
 
   @ApiPropertyOptional({
     type: Number,
@@ -49,5 +49,5 @@ export class AlertaResponseDto {
     description: 'Estado actual de la alerta.',
     example: 'activa',
   })
-  estado: EstadoAlerta;
+  estado!: EstadoAlerta;
 }

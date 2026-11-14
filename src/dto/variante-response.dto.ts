@@ -15,7 +15,7 @@ export class VarianteResponseDto {
     example: 101,
     required: true,
   })
-  id: number;
+  id!: number;
 
   @ApiProperty({
     type: String,
@@ -24,7 +24,7 @@ export class VarianteResponseDto {
     example: 'Beige',
     required: true,
   })
-  color: string;
+  color!: string;
 
   @ApiProperty({
     type: String,
@@ -33,7 +33,7 @@ export class VarianteResponseDto {
     example: 'M',
     required: true,
   })
-  talla: string;
+  talla!: string;
 
   @ApiProperty({
     type: Number,
@@ -42,5 +42,5 @@ export class VarianteResponseDto {
     example: 8,
     required: true,
   })
-  stock: number;
+  stock!: number;
 }

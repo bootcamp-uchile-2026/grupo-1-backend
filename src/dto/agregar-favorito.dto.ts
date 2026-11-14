@@ -17,5 +17,5 @@ export class AgregarFavoritoDto {
   })
   @IsInt()
   @IsPositive()
-  productoId: number;
+  productoId!: number;
 }

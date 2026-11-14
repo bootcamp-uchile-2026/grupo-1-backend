@@ -10,26 +10,26 @@ export class LooksPaginadosResponseDto {
     type: [LookResponseDto],
     description: 'Looks de la pagina solicitada.',
   })
-  looks: LookResponseDto[];
+  looks!: LookResponseDto[];
 
   @ApiProperty({
     type: Number,
     description: 'Numero de pagina devuelta.',
     example: 1,
   })
-  pagina: number;
+  pagina!: number;
 
   @ApiProperty({
     type: Number,
     description: 'Cantidad maxima de looks por pagina.',
     example: 12,
   })
-  limite: number;
+  limite!: number;
 
   @ApiProperty({
     type: Number,
     description: 'Cantidad total de looks.',
     example: 4,
   })
-  total: number;
+  total!: number;
 }

@@ -13,7 +13,7 @@ export class CambiarContrasenaDto {
   })
   @IsString()
   @IsNotEmpty()
-  contrasenaActual: string;
+  contrasenaActual!: string;
 
   @ApiProperty({
     type: String,
@@ -22,5 +22,5 @@ export class CambiarContrasenaDto {
   })
   @IsString()
   @IsNotEmpty()
-  contrasenaNueva: string;
+  contrasenaNueva!: string;
 }

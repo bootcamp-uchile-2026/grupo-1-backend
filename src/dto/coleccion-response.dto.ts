@@ -12,7 +12,7 @@ export class ColeccionResponseDto {
     example: 1,
     required: true,
   })
-  id: number;
+  id!: number;
 
   @ApiProperty({
     type: String,
@@ -21,7 +21,7 @@ export class ColeccionResponseDto {
     example: 'Look urbano',
     required: true,
   })
-  nombre: string;
+  nombre!: string;
 
   @ApiProperty({
     type: String,
@@ -30,7 +30,7 @@ export class ColeccionResponseDto {
     example: 'Prendas comodas en tonos neutros para el dia a dia.',
     required: true,
   })
-  descripcion: string;
+  descripcion!: string;
 
   @ApiProperty({
     type: String,
@@ -39,5 +39,5 @@ export class ColeccionResponseDto {
     example: 'https://cdn.stylenow.cl/colecciones/look-urbano.jpg',
     required: true,
   })
-  imagenUrl: string;
+  imagenUrl!: string;
 }
