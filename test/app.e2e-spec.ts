@@ -31,6 +31,15 @@ describe('StyleNow API (e2e)', () => {
       });
   });
 
+  it('consulta el carrito del usuario mediante el repositorio registrado', () => {
+    return request(app.getHttpServer())
+      .get('/usuarios/1/carrito')
+      .expect(200)
+      .expect(({ body }) => {
+        expect(body).toMatchObject({ usuarioId: 1, items: [] });
+      });
+  });
+
   afterEach(async () => {
     await app.close();
   });
