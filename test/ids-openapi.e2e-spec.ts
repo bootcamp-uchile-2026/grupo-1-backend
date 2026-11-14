@@ -34,6 +34,13 @@ describe('IDs positivos documentados', () => {
         await request(app.getHttpServer())
           .get('/productos/' + id)
           .expect(400);
+      // Formas no canonicas: Number() las convertiria en 1 o 1000.
+      for (const ruta of ['/productos/', '/usuarios/'])
+        for (const id of ['0x1', '1e3', '3e0', '+1', '01', ' 1', '1 '])
+          await request(app.getHttpServer())
+            .get(ruta + encodeURIComponent(id))
+            .expect(400);
+      await request(app.getHttpServer()).get('/usuarios/1').expect(200);
       await request(app.getHttpServer()).get('/productos/999999').expect(404);
       await request(app.getHttpServer()).get('/productos/1').expect(200);
     } finally {
