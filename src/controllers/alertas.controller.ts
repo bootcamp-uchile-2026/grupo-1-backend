@@ -35,7 +35,7 @@ import { AlertasService } from '../services/alertas.service';
 })
 @ApiParam({
   name: 'usuarioId',
-  type: Number,
+  schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
   description: 'Identificador del usuario dueno de las alertas.',
   example: 1,
 })
@@ -100,7 +100,7 @@ export class AlertasController {
   @ApiOperation({ summary: 'Elimina una alerta' })
   @ApiParam({
     name: 'alertaId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador de la alerta.',
     example: 1,
   })

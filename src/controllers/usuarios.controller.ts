@@ -32,7 +32,7 @@ import { UsuariosService } from '../services/usuarios.service';
 })
 @ApiParam({
   name: 'usuarioId',
-  type: Number,
+  schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
   description: 'Identificador del usuario.',
   example: 1,
 })

@@ -21,7 +21,7 @@ import { CambiosDevolucionesService } from '../services/cambios-devoluciones.ser
 @ApiTags('cambios-devoluciones')
 @ApiParam({
   name: 'usuarioId',
-  type: Number,
+  schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
   description: 'Identificador del usuario dueno del pedido.',
   example: 1,
 })
@@ -41,7 +41,7 @@ export class CambiosDevolucionesController {
   })
   @ApiParam({
     name: 'pedidoId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador del pedido.',
     example: 1001,
   })
@@ -75,7 +75,7 @@ export class CambiosDevolucionesController {
   @ApiOperation({ summary: 'Lista las solicitudes de un pedido' })
   @ApiParam({
     name: 'pedidoId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador del pedido.',
     example: 1001,
   })
@@ -100,7 +100,7 @@ export class CambiosDevolucionesController {
   @ApiOperation({ summary: 'Obtiene el detalle de una solicitud' })
   @ApiParam({
     name: 'solicitudId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador de la solicitud.',
     example: 1,
   })

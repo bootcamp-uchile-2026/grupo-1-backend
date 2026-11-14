@@ -32,7 +32,7 @@ export class FavoritosController {
   })
   @ApiParam({
     name: 'usuarioId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     required: true,
     description: 'Identificador del usuario dueno de la lista de favoritos.',
     example: 1,
@@ -66,4 +66,3 @@ export class FavoritosController {
     return this.favoritosService.agregarFavorito(usuarioId, dto);
   }
 }
-

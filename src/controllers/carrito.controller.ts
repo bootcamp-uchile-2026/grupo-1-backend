@@ -42,7 +42,7 @@ export class CarritoController {
   })
   @ApiParam({
     name: 'usuarioId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     required: true,
     description: 'Identificador del usuario dueno del carrito.',
     example: 1,
@@ -73,7 +73,7 @@ export class CarritoController {
   })
   @ApiParam({
     name: 'usuarioId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     required: true,
     description: 'Identificador del usuario dueno del carrito.',
     example: 1,
@@ -114,14 +114,14 @@ export class CarritoController {
   })
   @ApiParam({
     name: 'usuarioId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     required: true,
     description: 'Identificador del usuario dueno del carrito.',
     example: 1,
   })
   @ApiParam({
     name: 'varianteId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     required: true,
     description:
       'Identificador de la variante que identifica la linea del carrito.',
@@ -163,14 +163,14 @@ export class CarritoController {
   })
   @ApiParam({
     name: 'usuarioId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     required: true,
     description: 'Identificador del usuario dueno del carrito.',
     example: 1,
   })
   @ApiParam({
     name: 'varianteId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     required: true,
     description:
       'Identificador de la variante que identifica la linea del carrito.',

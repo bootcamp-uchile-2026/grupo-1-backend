@@ -45,7 +45,7 @@ export class LooksController {
   @ApiOperation({ summary: 'Obtiene el detalle de un look' })
   @ApiParam({
     name: 'lookId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador del look.',
     example: 1,
   })
@@ -82,7 +82,7 @@ export class LooksController {
   })
   @ApiParam({
     name: 'usuarioId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador del usuario que guarda el look.',
     example: 1,
   })

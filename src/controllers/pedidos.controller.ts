@@ -60,7 +60,7 @@ export class PedidosController {
   @ApiOperation({ summary: 'Lista los pedidos del usuario' })
   @ApiParam({
     name: 'usuarioId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador del usuario dueno de los pedidos.',
     example: 1,
   })
@@ -84,13 +84,13 @@ export class PedidosController {
   })
   @ApiParam({
     name: 'usuarioId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador del usuario dueno del pedido.',
     example: 1,
   })
   @ApiParam({
     name: 'pedidoId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador del pedido.',
     example: 1001,
   })

@@ -35,7 +35,7 @@ import { DireccionesService } from '../services/direcciones.service';
 })
 @ApiParam({
   name: 'usuarioId',
-  type: Number,
+  schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
   description: 'Identificador del usuario dueno de las direcciones.',
   example: 1,
 })
@@ -77,7 +77,7 @@ export class DireccionesController {
   })
   @ApiParam({
     name: 'direccionId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador de la direccion.',
     example: 1,
   })
@@ -101,7 +101,7 @@ export class DireccionesController {
   @ApiOperation({ summary: 'Elimina una direccion' })
   @ApiParam({
     name: 'direccionId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador de la direccion.',
     example: 1,
   })

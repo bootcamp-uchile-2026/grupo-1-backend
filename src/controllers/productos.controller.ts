@@ -54,7 +54,7 @@ export class ProductosController {
   })
   @ApiParam({
     name: 'id',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     required: true,
     description: 'Identificador del producto obtenido desde GET /productos.',
     example: 1,
