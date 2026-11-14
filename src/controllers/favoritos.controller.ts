@@ -65,4 +65,3 @@ export class FavoritosController {
     return this.favoritosService.agregarFavorito(usuarioId, dto);
   }
 }
-
