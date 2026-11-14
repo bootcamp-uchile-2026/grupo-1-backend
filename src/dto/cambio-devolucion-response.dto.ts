@@ -65,6 +65,7 @@ export class CambioDevolucionResponseDto {
 
   @ApiProperty({
     type: String,
+    format: 'date-time',
     description: 'Fecha de la solicitud en formato ISO 8601.',
     example: '2026-10-06T12:00:00.000Z',
   })
