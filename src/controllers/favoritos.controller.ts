@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Post,
 } from '@nestjs/common';
+import { ErrorResponseDto } from '../dto/error-response.dto';
 import {
   ApiBody,
   ApiOperation,
@@ -28,10 +29,11 @@ export class FavoritosController {
   @ApiParam({ name: 'usuarioId', type: Number })
   @ApiResponse({ status: 200, type: [ProductoDetalleResponseDto] })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 400,
     description: 'El identificador no es un entero.',
   })
-  @ApiResponse({ status: 404, description: 'El usuario no existe.' })
+  @ApiResponse({ type: ErrorResponseDto, status: 404, description: 'El usuario no existe.' })
   listar(
     @Param('usuarioId', ParseIntPipe) usuarioId: number,
   ): Promise<ProductoDetalleResponseDto[]> {
@@ -62,14 +64,17 @@ export class FavoritosController {
     type: FavoritoResponseDto,
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 400,
     description: 'usuarioId o productoId no son enteros validos.',
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 404,
     description: 'No existe el usuario o no existe el producto.',
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 409,
     description: 'El producto ya esta en la lista de favoritos.',
   })

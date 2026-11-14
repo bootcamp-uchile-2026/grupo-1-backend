@@ -1,3 +1,4 @@
+import { ErrorResponseDto } from '../dto/error-response.dto';
 import {
   Body,
   Controller,
@@ -56,11 +57,13 @@ export class CambiosDevolucionesController {
     type: CambioDevolucionResponseDto,
   })
   @ApiBadRequestResponse({
+    type: ErrorResponseDto,
     description:
       'Body invalido, cambio sin nuevaVarianteId, cambio por la misma variante o ' +
       'devolucion con nuevaVarianteId.',
   })
   @ApiNotFoundResponse({
+    type: ErrorResponseDto,
     description:
       'No existe el usuario, el pedido no existe o no es suyo, el item no es de ' +
       'ese pedido, o la nueva variante no es del producto comprado.',
@@ -90,6 +93,7 @@ export class CambiosDevolucionesController {
     type: [CambioDevolucionResponseDto],
   })
   @ApiNotFoundResponse({
+    type: ErrorResponseDto,
     description: 'No existe el usuario, o el pedido no existe o no es suyo.',
   })
   @Get('pedidos/:pedidoId/cambios-devoluciones')
@@ -115,6 +119,7 @@ export class CambiosDevolucionesController {
     type: CambioDevolucionResponseDto,
   })
   @ApiNotFoundResponse({
+    type: ErrorResponseDto,
     description: 'No existe el usuario, o la solicitud no existe o no es suya.',
   })
   @Get('cambios-devoluciones/:solicitudId')

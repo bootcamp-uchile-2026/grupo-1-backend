@@ -1,3 +1,4 @@
+import type { ErrorResponseDto } from '../dto/error-response.dto';
 import { STATUS_CODES } from 'node:http';
 import {
   ArgumentsHost,
@@ -29,20 +30,6 @@ export const EVENTO_ERROR_HTTP = 'http_error' as const;
 export const MENSAJE_ERROR_INTERNO = 'Internal server error';
 
 /**
- * Cuerpo de toda respuesta de error. Conserva los tres campos que ya
- * entregaba Nest (statusCode, message, error) y agrega la correlacion.
- * message puede ser una lista: asi lo entrega el ValidationPipe.
- */
-export interface RespuestaError {
-  statusCode: number;
-  message: string | string[];
-  error: string;
-  requestId: string;
-  timestamp: string;
-  path: string;
-}
-
-/**
  * Registro de diagnostico de un error no controlado (500).
  * Solo correlacion y clasificacion. No incluye message, stack ni cause: esos
  * textos los arma codigo propio o de terceros y pueden contener credenciales
@@ -71,7 +58,7 @@ const textoDeStatus = (status: number) =>
   STATUS_CODES[status] ?? 'Internal Server Error';
 
 type DescripcionExcepcion = Pick<
-  RespuestaError,
+  ErrorResponseDto,
   'statusCode' | 'message' | 'error'
 > & { controlado: boolean };
 
@@ -245,7 +232,7 @@ export class FiltroExcepcionesGlobal implements ExceptionFilter {
       this.logger.error(registro);
     }
 
-    const cuerpo: RespuestaError = {
+    const cuerpo: ErrorResponseDto = {
       ...descripcion,
       requestId,
       timestamp: new Date().toISOString(),
