@@ -5,7 +5,8 @@ import {
   IsIn,
   IsInt,
   IsNotEmpty,
-  IsOptional,
+  ValidateIf,
+  ValidateBy,
   IsPositive,
   IsString,
 } from 'class-validator';
@@ -44,10 +45,22 @@ export class CrearCambioDevolucionDto {
 
   @ApiPropertyOptional({
     type: Number,
-    description: 'Variante que se solicita cuando el tipo es cambio.',
+    description: 'Obligatoria para cambio. No se permite para devolucion.',
+    minimum: 1,
     example: 101,
   })
-  @IsOptional()
+  @ValidateIf(
+    (datos: CrearCambioDevolucionDto) =>
+      datos.tipo === 'cambio' || datos.nuevaVarianteId !== undefined,
+  )
+  @ValidateBy({
+    name: 'varianteSoloParaCambio',
+    validator: {
+      validate: (_valor: unknown, args) =>
+        (args?.object as CrearCambioDevolucionDto).tipo === 'cambio',
+      defaultMessage: () => 'Una devolucion no admite nuevaVarianteId',
+    },
+  })
   @IsInt()
   @IsPositive()
   nuevaVarianteId?: number;
