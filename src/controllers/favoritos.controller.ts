@@ -1,4 +1,11 @@
-import { Body, Controller, Param, ParseIntPipe, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import {
   ApiBody,
   ApiOperation,
@@ -6,21 +13,30 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { ProductoDetalleResponseDto } from '../dto/producto-detalle-response.dto';
 import { AgregarFavoritoDto } from '../dto/agregar-favorito.dto';
 import { FavoritoResponseDto } from '../dto/favorito-response.dto';
 import { FavoritosService } from '../services/favoritos.service';
 
-/**
- * Recurso Favoritos.
- * El contrato cubre unicamente el boton "Agregar a favoritos" de la ficha de
- * producto, que es la unica accion que el wireframe demuestra. La lectura y
- * el borrado de favoritos se definiran cuando se analice formalmente la
- * vista Favoritos de Mi Cuenta.
- */
 @ApiTags('favoritos')
 @Controller('usuarios/:usuarioId/favoritos')
 export class FavoritosController {
   constructor(private readonly favoritosService: FavoritosService) {}
+
+  @Get()
+  @ApiOperation({ summary: 'Lista los productos favoritos del usuario' })
+  @ApiParam({ name: 'usuarioId', type: Number })
+  @ApiResponse({ status: 200, type: [ProductoDetalleResponseDto] })
+  @ApiResponse({
+    status: 400,
+    description: 'El identificador no es un entero.',
+  })
+  @ApiResponse({ status: 404, description: 'El usuario no existe.' })
+  listar(
+    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+  ): Promise<ProductoDetalleResponseDto[]> {
+    return this.favoritosService.listar(usuarioId);
+  }
 
   @ApiOperation({
     summary: 'Agrega un producto a favoritos',
@@ -65,4 +81,3 @@ export class FavoritosController {
     return this.favoritosService.agregarFavorito(usuarioId, dto);
   }
 }
-

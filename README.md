@@ -181,7 +181,7 @@ Todos los endpoints de Swagger funcionan con datos dummy en memoria:
 - **Alertas:** de precio y de reposición; listar y eliminar.
 - **Cambios y devoluciones:** crear solicitudes sobre items de un pedido y
   consultarlas.
-- **Favoritos:** agregar un producto a los favoritos del usuario (el mismo
+- **Favoritos:** consultar con GET /usuarios/{usuarioId}/favoritos el arreglo de detalles de sus productos guardados. Un usuario sin favoritos recibe una lista vacía. Agregar un producto a los favoritos del usuario (el mismo
   producto dos veces responde 409).
 - **Colecciones:** listado de colecciones editoriales (solo lectura).
 - **Comunidad:** listado de publicaciones (`/posts`, solo lectura).
