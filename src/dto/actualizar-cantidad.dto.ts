@@ -7,6 +7,7 @@ import { IsInt, IsPositive } from 'class-validator';
  */
 export class ActualizarCantidadDto {
   @ApiProperty({
+    minimum: 1,
     type: Number,
     title: 'Cantidad',
     description:

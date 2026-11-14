@@ -17,6 +17,7 @@ import {
  */
 export class CrearCambioDevolucionDto {
   @ApiProperty({
+    minimum: 1,
     type: Number,
     description:
       'Identificador del item, obtenido del detalle del pedido (items[].id).',
@@ -35,6 +36,7 @@ export class CrearCambioDevolucionDto {
   tipo: TipoSolicitud;
 
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Motivo de la solicitud.',
     example: 'La talla me quedo grande',
@@ -44,6 +46,7 @@ export class CrearCambioDevolucionDto {
   motivo: string;
 
   @ApiPropertyOptional({
+    minimum: 1,
     type: Number,
     description: 'Obligatoria para cambio. No se permite para devolucion.',
     minimum: 1,
@@ -66,6 +69,7 @@ export class CrearCambioDevolucionDto {
   nuevaVarianteId?: number;
 
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Forma en que el cliente entrega el producto.',
     example: 'retiro_domicilio',

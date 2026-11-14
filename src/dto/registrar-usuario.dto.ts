@@ -7,6 +7,7 @@ import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
  */
 export class RegistrarUsuarioDto {
   @ApiProperty({
+    minLength: 1,
     type: String,
     title: 'Nombre',
     description: 'Nombre con el que se saluda al cliente en la tienda.',
@@ -18,6 +19,7 @@ export class RegistrarUsuarioDto {
   nombre: string;
 
   @ApiProperty({
+    format: 'email',
     type: String,
     title: 'Correo electronico',
     description:
@@ -29,6 +31,7 @@ export class RegistrarUsuarioDto {
   correoElectronico: string;
 
   @ApiProperty({
+    minLength: 1,
     type: String,
     title: 'Contrasena',
     description:

@@ -16,6 +16,7 @@ import {
  */
 export class LookProductoDto {
   @ApiProperty({
+    minimum: 1,
     type: Number,
     description: 'Identificador del producto.',
     example: 1,
@@ -25,6 +26,7 @@ export class LookProductoDto {
   productoId: number;
 
   @ApiProperty({
+    minimum: 1,
     type: Number,
     description: 'Identificador de la variante elegida.',
     example: 101,
@@ -40,6 +42,7 @@ export class LookProductoDto {
  */
 export class CrearLookDto {
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Nombre del look.',
     example: 'Look urbano',

@@ -7,6 +7,7 @@ import { IsInt, IsOptional, IsPositive } from 'class-validator';
  */
 export class CrearAvisoReposicionDto {
   @ApiProperty({
+    minimum: 1,
     type: Number,
     description: 'Identificador del producto.',
     example: 1,
@@ -16,6 +17,7 @@ export class CrearAvisoReposicionDto {
   productoId: number;
 
   @ApiPropertyOptional({
+    minimum: 1,
     type: Number,
     description: 'Variante (color y talla) que se espera.',
     example: 101,

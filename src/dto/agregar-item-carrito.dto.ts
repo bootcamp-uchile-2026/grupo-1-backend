@@ -9,6 +9,7 @@ import { IsInt, IsPositive } from 'class-validator';
  */
 export class AgregarItemCarritoDto {
   @ApiProperty({
+    minimum: 1,
     type: Number,
     title: 'Identificador de variante',
     description:
@@ -21,6 +22,7 @@ export class AgregarItemCarritoDto {
   varianteId: number;
 
   @ApiProperty({
+    minimum: 1,
     type: Number,
     title: 'Cantidad',
     description: 'Unidades que se agregan al carrito. Debe ser mayor que cero.',
