@@ -6,3 +6,10 @@ coverage
 .env
 *.log
 npm-debug.log*
+
+test
+docs
+*.md
+**/*.md
+.env*
+**/.env*

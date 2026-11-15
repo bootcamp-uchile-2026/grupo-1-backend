@@ -1,7 +1,7 @@
 {
-  "name": "prueba_bootcamp",
+  "name": "stylenow-backend",
   "version": "0.0.1",
-  "description": "",
+  "description": "API de catalogo, cuentas y pedidos de StyleNow",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
