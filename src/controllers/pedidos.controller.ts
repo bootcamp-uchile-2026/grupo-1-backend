@@ -1,5 +1,6 @@
 import { IdPositivoPipe } from '../common/id-positivo.pipe';
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { ErrorResponseDto } from '../dto/error-response.dto';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
@@ -42,12 +43,17 @@ export class PedidosController {
     type: PedidoDetalleResponseDto,
   })
   @ApiBadRequestResponse({
+    type: ErrorResponseDto,
     description:
       'El body no cumple el contrato, el carrito no tiene items o alguna linea supera ' +
       'el stock disponible. En estos casos no se crea el pedido y el carrito no cambia.',
   })
-  @ApiNotFoundResponse({ description: 'No existe el carrito indicado.' })
+  @ApiNotFoundResponse({
+    type: ErrorResponseDto,
+    description: 'No existe el carrito indicado.',
+  })
   @ApiConflictResponse({
+    type: ErrorResponseDto,
     description: 'Ya hay un checkout en curso para el mismo carrito.',
   })
   @Post('pedidos')
@@ -68,7 +74,10 @@ export class PedidosController {
     description: 'Pedidos obtenidos. Puede venir vacio.',
     type: [PedidoResponseDto],
   })
-  @ApiNotFoundResponse({ description: 'No existe el usuario.' })
+  @ApiNotFoundResponse({
+    type: ErrorResponseDto,
+    description: 'No existe el usuario.',
+  })
   @Get('usuarios/:usuarioId/pedidos')
   async obtenerPedidos(
     @Param('usuarioId', IdPositivoPipe) usuarioId: number,
@@ -99,6 +108,7 @@ export class PedidosController {
     type: PedidoDetalleResponseDto,
   })
   @ApiNotFoundResponse({
+    type: ErrorResponseDto,
     description: 'No existe el usuario, o el pedido no existe o no es suyo.',
   })
   @Get('usuarios/:usuarioId/pedidos/:pedidoId')

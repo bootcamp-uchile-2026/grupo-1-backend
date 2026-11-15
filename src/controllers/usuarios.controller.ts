@@ -1,4 +1,5 @@
 import { IdPositivoPipe } from '../common/id-positivo.pipe';
+import { ErrorResponseDto } from '../dto/error-response.dto';
 import {
   Body,
   Controller,
@@ -28,6 +29,7 @@ import { UsuariosService } from '../services/usuarios.service';
  */
 @ApiTags('usuarios')
 @ApiBadRequestResponse({
+  type: ErrorResponseDto,
   description: 'La entrada no cumple el contrato del endpoint.',
 })
 @ApiParam({
@@ -36,7 +38,10 @@ import { UsuariosService } from '../services/usuarios.service';
   description: 'Identificador del usuario.',
   example: 1,
 })
-@ApiNotFoundResponse({ description: 'No existe un usuario con ese id.' })
+@ApiNotFoundResponse({
+  type: ErrorResponseDto,
+  description: 'No existe un usuario con ese id.',
+})
 @Controller('usuarios/:usuarioId')
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
@@ -80,6 +85,7 @@ export class UsuariosController {
   })
   @ApiNoContentResponse({ description: 'Contrasena cambiada.' })
   @ApiBadRequestResponse({
+    type: ErrorResponseDto,
     description:
       'Falta algun campo, la contrasena actual no es correcta o la nueva es igual a la ' +
       'actual.',

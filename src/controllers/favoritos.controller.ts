@@ -1,5 +1,6 @@
 import { IdPositivoPipe } from '../common/id-positivo.pipe';
 import { Body, Controller, Param, Post } from '@nestjs/common';
+import { ErrorResponseDto } from '../dto/error-response.dto';
 import {
   ApiBody,
   ApiOperation,
@@ -47,14 +48,17 @@ export class FavoritosController {
     type: FavoritoResponseDto,
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 400,
     description: 'usuarioId o productoId no son enteros validos.',
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 404,
     description: 'No existe el usuario o no existe el producto.',
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 409,
     description: 'El producto ya esta en la lista de favoritos.',
   })
