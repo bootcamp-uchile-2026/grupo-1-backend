@@ -13,7 +13,7 @@ export class CrearAlertaPrecioDto {
   })
   @IsInt()
   @IsPositive()
-  productoId: number;
+  productoId!: number;
 
   @ApiPropertyOptional({
     type: Number,

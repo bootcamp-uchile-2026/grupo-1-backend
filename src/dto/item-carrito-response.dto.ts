@@ -14,7 +14,7 @@ export class ItemCarritoResponseDto {
     example: 1,
     required: true,
   })
-  productoId: number;
+  productoId!: number;
 
   @ApiProperty({
     type: Number,
@@ -23,7 +23,7 @@ export class ItemCarritoResponseDto {
     example: 101,
     required: true,
   })
-  varianteId: number;
+  varianteId!: number;
 
   @ApiProperty({
     type: String,
@@ -32,7 +32,7 @@ export class ItemCarritoResponseDto {
     example: 'Vestido de lino',
     required: true,
   })
-  nombre: string;
+  nombre!: string;
 
   @ApiProperty({
     type: String,
@@ -41,7 +41,7 @@ export class ItemCarritoResponseDto {
     example: 'https://cdn.stylenow.cl/productos/vestido-lino.jpg',
     required: true,
   })
-  imagenUrl: string;
+  imagenUrl!: string;
 
   @ApiProperty({
     type: String,
@@ -50,7 +50,7 @@ export class ItemCarritoResponseDto {
     example: 'M',
     required: true,
   })
-  talla: string;
+  talla!: string;
 
   @ApiProperty({
     type: String,
@@ -59,7 +59,7 @@ export class ItemCarritoResponseDto {
     example: 'Beige',
     required: true,
   })
-  color: string;
+  color!: string;
 
   @ApiProperty({
     type: Number,
@@ -69,7 +69,7 @@ export class ItemCarritoResponseDto {
     example: 29990,
     required: true,
   })
-  precioUnitario: number;
+  precioUnitario!: number;
 
   @ApiProperty({
     type: Number,
@@ -78,7 +78,7 @@ export class ItemCarritoResponseDto {
     example: 2,
     required: true,
   })
-  cantidad: number;
+  cantidad!: number;
 
   @ApiProperty({
     type: Number,
@@ -88,5 +88,5 @@ export class ItemCarritoResponseDto {
     example: 59980,
     required: true,
   })
-  subtotal: number;
+  subtotal!: number;
 }

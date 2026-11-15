@@ -23,7 +23,7 @@ export class ContactoPedidoDto {
   })
   @IsString()
   @IsNotEmpty()
-  nombre: string;
+  nombre!: string;
 
   @ApiProperty({
     type: String,
@@ -31,7 +31,7 @@ export class ContactoPedidoDto {
     example: 'cliente@stylenow.cl',
   })
   @IsEmail()
-  email: string;
+  email!: string;
 
   @ApiProperty({
     type: String,
@@ -40,7 +40,7 @@ export class ContactoPedidoDto {
   })
   @IsString()
   @IsNotEmpty()
-  telefono: string;
+  telefono!: string;
 }
 
 /**
@@ -55,7 +55,7 @@ export class DireccionPedidoDto {
   })
   @IsString()
   @IsNotEmpty()
-  calle: string;
+  calle!: string;
 
   @ApiProperty({
     type: String,
@@ -64,7 +64,7 @@ export class DireccionPedidoDto {
   })
   @IsString()
   @IsNotEmpty()
-  numero: string;
+  numero!: string;
 
   @ApiPropertyOptional({
     type: String,
@@ -83,7 +83,7 @@ export class DireccionPedidoDto {
   })
   @IsString()
   @IsNotEmpty()
-  comuna: string;
+  comuna!: string;
 
   @ApiProperty({
     type: String,
@@ -92,7 +92,7 @@ export class DireccionPedidoDto {
   })
   @IsString()
   @IsNotEmpty()
-  region: string;
+  region!: string;
 }
 
 /**
@@ -107,7 +107,7 @@ export class CrearPedidoDto {
   })
   @IsInt()
   @IsPositive()
-  carritoId: number;
+  carritoId!: number;
 
   @ApiProperty({
     type: ContactoPedidoDto,
@@ -116,7 +116,7 @@ export class CrearPedidoDto {
   @IsObject()
   @ValidateNested()
   @Type(() => ContactoPedidoDto)
-  contacto: ContactoPedidoDto;
+  contacto!: ContactoPedidoDto;
 
   @ApiProperty({
     type: DireccionPedidoDto,
@@ -125,7 +125,7 @@ export class CrearPedidoDto {
   @IsObject()
   @ValidateNested()
   @Type(() => DireccionPedidoDto)
-  direccion: DireccionPedidoDto;
+  direccion!: DireccionPedidoDto;
 
   @ApiProperty({
     type: String,
@@ -134,5 +134,5 @@ export class CrearPedidoDto {
   })
   @IsString()
   @IsNotEmpty()
-  metodoPago: string;
+  metodoPago!: string;
 }

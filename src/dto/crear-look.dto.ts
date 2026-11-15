@@ -22,7 +22,7 @@ export class LookProductoDto {
   })
   @IsInt()
   @IsPositive()
-  productoId: number;
+  productoId!: number;
 
   @ApiProperty({
     type: Number,
@@ -31,7 +31,7 @@ export class LookProductoDto {
   })
   @IsInt()
   @IsPositive()
-  varianteId: number;
+  varianteId!: number;
 }
 
 /**
@@ -46,7 +46,7 @@ export class CrearLookDto {
   })
   @IsString()
   @IsNotEmpty()
-  nombre: string;
+  nombre!: string;
 
   @ApiProperty({
     type: [LookProductoDto],
@@ -56,5 +56,5 @@ export class CrearLookDto {
   @ArrayMinSize(1)
   @ValidateNested({ each: true })
   @Type(() => LookProductoDto)
-  productos: LookProductoDto[];
+  productos!: LookProductoDto[];
 }

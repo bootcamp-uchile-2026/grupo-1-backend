@@ -12,7 +12,7 @@ export class CategoriaResponseDto {
     example: 1,
     required: true,
   })
-  id: number;
+  id!: number;
 
   @ApiProperty({
     type: String,
@@ -21,7 +21,7 @@ export class CategoriaResponseDto {
     example: 'Mujer',
     required: true,
   })
-  nombre: string;
+  nombre!: string;
 
   @ApiProperty({
     type: String,
@@ -31,7 +31,7 @@ export class CategoriaResponseDto {
     example: 'mujer',
     required: true,
   })
-  slug: string;
+  slug!: string;
 
   @ApiProperty({
     type: String,
@@ -40,7 +40,7 @@ export class CategoriaResponseDto {
     example: 'https://cdn.stylenow.cl/categorias/mujer.jpg',
     required: true,
   })
-  imagenUrl: string;
+  imagenUrl!: string;
 
   @ApiProperty({
     type: Boolean,
@@ -50,5 +50,5 @@ export class CategoriaResponseDto {
     example: true,
     required: true,
   })
-  destacada: boolean;
+  destacada!: boolean;
 }

@@ -10,19 +10,19 @@ export class PedidoSeguimientoResponseDto {
     description: 'Identificador del pedido.',
     example: 1,
   })
-  pedidoId: number;
+  pedidoId!: number;
 
   @ApiProperty({
     type: String,
     description: 'Estado actual del pedido.',
     example: 'en_camino',
   })
-  estado: string;
+  estado!: string;
 
   @ApiProperty({
     type: String,
     description: 'Fecha del ultimo cambio de estado en formato ISO 8601.',
     example: '2026-10-05T10:00:00.000Z',
   })
-  fechaActualizacion: string;
+  fechaActualizacion!: string;
 }

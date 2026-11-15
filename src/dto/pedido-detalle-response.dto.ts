@@ -13,49 +13,49 @@ export class PedidoItemResponseDto {
       'Identificador propio del item. Es el pedidoItemId de cambios y devoluciones.',
     example: 5001,
   })
-  id: number;
+  id!: number;
 
   @ApiProperty({
     type: Number,
     description: 'Identificador del producto.',
     example: 1,
   })
-  productoId: number;
+  productoId!: number;
 
   @ApiProperty({
     type: Number,
     description: 'Identificador de la variante comprada.',
     example: 102,
   })
-  varianteId: number;
+  varianteId!: number;
 
   @ApiProperty({
     type: String,
     description: 'Nombre del producto.',
     example: 'Vestido de lino blanco',
   })
-  nombre: string;
+  nombre!: string;
 
   @ApiProperty({
     type: Number,
     description: 'Unidades compradas.',
     example: 1,
   })
-  cantidad: number;
+  cantidad!: number;
 
   @ApiProperty({
     type: Number,
     description: 'Precio unitario, en pesos chilenos.',
     example: 39990,
   })
-  precioUnitario: number;
+  precioUnitario!: number;
 
   @ApiProperty({
     type: Number,
     description: 'Precio unitario por cantidad, en pesos chilenos.',
     example: 39990,
   })
-  subtotal: number;
+  subtotal!: number;
 }
 
 /**
@@ -67,5 +67,5 @@ export class PedidoDetalleResponseDto extends PedidoResponseDto {
     type: [PedidoItemResponseDto],
     description: 'Lineas del pedido.',
   })
-  items: PedidoItemResponseDto[];
+  items!: PedidoItemResponseDto[];
 }

@@ -10,28 +10,28 @@ export class DireccionResponseDto {
     description: 'Identificador de la direccion.',
     example: 1,
   })
-  id: number;
+  id!: number;
 
   @ApiProperty({
     type: String,
     description: 'Nombre con que el usuario identifica la direccion.',
     example: 'Casa',
   })
-  nombre: string;
+  nombre!: string;
 
   @ApiProperty({
     type: String,
     description: 'Nombre de la calle.',
     example: 'Av. Providencia',
   })
-  calle: string;
+  calle!: string;
 
   @ApiProperty({
     type: String,
     description: 'Numero de la direccion.',
     example: '1234',
   })
-  numero: string;
+  numero!: string;
 
   @ApiPropertyOptional({
     type: String,
@@ -45,19 +45,19 @@ export class DireccionResponseDto {
     description: 'Comuna de despacho.',
     example: 'Providencia',
   })
-  comuna: string;
+  comuna!: string;
 
   @ApiProperty({
     type: String,
     description: 'Region de despacho.',
     example: 'Region Metropolitana',
   })
-  region: string;
+  region!: string;
 
   @ApiProperty({
     type: Boolean,
     description: 'Indica si es la direccion principal del usuario.',
     example: true,
   })
-  principal: boolean;
+  principal!: boolean;
 }
