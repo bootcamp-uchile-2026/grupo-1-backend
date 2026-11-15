@@ -12,7 +12,7 @@ export class FavoritoResponseDto {
     example: 1,
     required: true,
   })
-  usuarioId: number;
+  usuarioId!: number;
 
   @ApiProperty({
     type: Number,
@@ -21,7 +21,7 @@ export class FavoritoResponseDto {
     example: 1,
     required: true,
   })
-  productoId: number;
+  productoId!: number;
 
   @ApiProperty({
     type: String,
@@ -31,5 +31,5 @@ export class FavoritoResponseDto {
     example: 'Producto agregado a favoritos',
     required: true,
   })
-  mensaje: string;
+  mensaje!: string;
 }

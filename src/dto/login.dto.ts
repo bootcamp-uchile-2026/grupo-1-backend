@@ -15,7 +15,7 @@ export class LoginDto {
     required: true,
   })
   @IsEmail()
-  correoElectronico: string;
+  correoElectronico!: string;
 
   @ApiProperty({
     type: String,
@@ -26,5 +26,5 @@ export class LoginDto {
   })
   @IsString()
   @IsNotEmpty()
-  contrasena: string;
+  contrasena!: string;
 }

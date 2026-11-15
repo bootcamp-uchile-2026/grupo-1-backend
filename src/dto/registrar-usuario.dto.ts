@@ -15,7 +15,7 @@ export class RegistrarUsuarioDto {
   })
   @IsString()
   @IsNotEmpty()
-  nombre: string;
+  nombre!: string;
 
   @ApiProperty({
     type: String,
@@ -26,7 +26,7 @@ export class RegistrarUsuarioDto {
     required: true,
   })
   @IsEmail()
-  correoElectronico: string;
+  correoElectronico!: string;
 
   @ApiProperty({
     type: String,
@@ -39,5 +39,5 @@ export class RegistrarUsuarioDto {
   })
   @IsString()
   @IsNotEmpty()
-  contrasena: string;
+  contrasena!: string;
 }

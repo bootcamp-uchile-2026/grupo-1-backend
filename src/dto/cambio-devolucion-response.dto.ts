@@ -12,42 +12,42 @@ export class CambioDevolucionResponseDto {
     description: 'Identificador de la solicitud.',
     example: 1,
   })
-  id: number;
+  id!: number;
 
   @ApiProperty({
     type: Number,
     description: 'Identificador del pedido asociado.',
     example: 1001,
   })
-  pedidoId: number;
+  pedidoId!: number;
 
   @ApiProperty({
     type: Number,
     description: 'Identificador del item del pedido.',
     example: 5001,
   })
-  pedidoItemId: number;
+  pedidoItemId!: number;
 
   @ApiProperty({
     enum: TIPOS_SOLICITUD,
     description: 'Tipo de solicitud: cambio o devolucion.',
     example: 'cambio',
   })
-  tipo: TipoSolicitud;
+  tipo!: TipoSolicitud;
 
   @ApiProperty({
     enum: ESTADOS_SOLICITUD,
     description: 'Estado actual de la solicitud.',
     example: 'solicitada',
   })
-  estado: EstadoSolicitud;
+  estado!: EstadoSolicitud;
 
   @ApiProperty({
     type: String,
     description: 'Motivo de la solicitud.',
     example: 'La talla me quedo grande',
   })
-  motivo: string;
+  motivo!: string;
 
   @ApiPropertyOptional({
     type: Number,
@@ -61,7 +61,7 @@ export class CambioDevolucionResponseDto {
     description: 'Forma en que el cliente entrega el producto.',
     example: 'retiro_domicilio',
   })
-  metodoEntrega: string;
+  metodoEntrega!: string;
 
   @ApiProperty({
     type: String,
@@ -69,5 +69,5 @@ export class CambioDevolucionResponseDto {
     description: 'Fecha de la solicitud en formato ISO 8601.',
     example: '2026-10-06T12:00:00.000Z',
   })
-  fechaSolicitud: string;
+  fechaSolicitud!: string;
 }

@@ -15,7 +15,7 @@ export class ProductoResponseDto {
     example: 1,
     required: true,
   })
-  id: number;
+  id!: number;
 
   @ApiProperty({
     type: String,
@@ -24,7 +24,7 @@ export class ProductoResponseDto {
     example: 'Vestido de lino',
     required: true,
   })
-  nombre: string;
+  nombre!: string;
 
   @ApiProperty({
     type: Number,
@@ -33,7 +33,7 @@ export class ProductoResponseDto {
     example: 29990,
     required: true,
   })
-  precio: number;
+  precio!: number;
 
   @ApiProperty({
     type: String,
@@ -42,7 +42,7 @@ export class ProductoResponseDto {
     example: 'https://cdn.stylenow.cl/productos/vestido-lino.jpg',
     required: true,
   })
-  imagenUrl: string;
+  imagenUrl!: string;
 
   @ApiProperty({
     type: String,
@@ -51,7 +51,7 @@ export class ProductoResponseDto {
     example: 'mujer',
     required: true,
   })
-  categoria: string;
+  categoria!: string;
 
   @ApiProperty({
     type: Boolean,
@@ -61,7 +61,7 @@ export class ProductoResponseDto {
     example: true,
     required: true,
   })
-  novedad: boolean;
+  novedad!: boolean;
 
   @ApiProperty({
     type: Boolean,
@@ -70,5 +70,5 @@ export class ProductoResponseDto {
     example: false,
     required: true,
   })
-  oferta: boolean;
+  oferta!: boolean;
 }

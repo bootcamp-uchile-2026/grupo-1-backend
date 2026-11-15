@@ -18,7 +18,7 @@ export class AgregarItemCarritoDto {
   })
   @IsInt()
   @IsPositive()
-  varianteId: number;
+  varianteId!: number;
 
   @ApiProperty({
     type: Number,
@@ -29,5 +29,5 @@ export class AgregarItemCarritoDto {
   })
   @IsInt()
   @IsPositive()
-  cantidad: number;
+  cantidad!: number;
 }

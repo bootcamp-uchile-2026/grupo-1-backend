@@ -10,14 +10,14 @@ export class LookProductoResponseDto {
     description: 'Identificador del producto.',
     example: 1,
   })
-  productoId: number;
+  productoId!: number;
 
   @ApiProperty({
     type: Number,
     description: 'Identificador de la variante elegida.',
     example: 101,
   })
-  varianteId: number;
+  varianteId!: number;
 }
 
 /**
@@ -30,25 +30,25 @@ export class LookResponseDto {
     description: 'Identificador del look.',
     example: 1,
   })
-  id: number;
+  id!: number;
 
   @ApiProperty({
     type: String,
     description: 'Nombre del look.',
     example: 'Look urbano',
   })
-  nombre: string;
+  nombre!: string;
 
   @ApiProperty({
     type: [LookProductoResponseDto],
     description: 'Productos que componen el look.',
   })
-  productos: LookProductoResponseDto[];
+  productos!: LookProductoResponseDto[];
 
   @ApiProperty({
     type: Number,
     description: 'Suma de los precios de los productos, en pesos chilenos.',
     example: 89970,
   })
-  precioTotal: number;
+  precioTotal!: number;
 }

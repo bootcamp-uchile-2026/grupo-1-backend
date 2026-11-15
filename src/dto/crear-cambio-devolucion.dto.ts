@@ -23,7 +23,7 @@ export class CrearCambioDevolucionDto {
   })
   @IsInt()
   @IsPositive()
-  pedidoItemId: number;
+  pedidoItemId!: number;
 
   @ApiProperty({
     enum: TIPOS_SOLICITUD,
@@ -31,7 +31,7 @@ export class CrearCambioDevolucionDto {
     example: 'cambio',
   })
   @IsIn(TIPOS_SOLICITUD)
-  tipo: TipoSolicitud;
+  tipo!: TipoSolicitud;
 
   @ApiProperty({
     type: String,
@@ -40,7 +40,7 @@ export class CrearCambioDevolucionDto {
   })
   @IsString()
   @IsNotEmpty()
-  motivo: string;
+  motivo!: string;
 
   @ApiPropertyOptional({
     type: Number,
@@ -59,5 +59,5 @@ export class CrearCambioDevolucionDto {
   })
   @IsString()
   @IsNotEmpty()
-  metodoEntrega: string;
+  metodoEntrega!: string;
 }

@@ -13,7 +13,7 @@ export class ProductosPaginadosResponseDto {
     description: 'Productos de la pagina solicitada, ya filtrados y ordenados.',
     required: true,
   })
-  productos: ProductoResponseDto[];
+  productos!: ProductoResponseDto[];
 
   @ApiProperty({
     type: Number,
@@ -22,7 +22,7 @@ export class ProductosPaginadosResponseDto {
     example: 1,
     required: true,
   })
-  pagina: number;
+  pagina!: number;
 
   @ApiProperty({
     type: Number,
@@ -31,7 +31,7 @@ export class ProductosPaginadosResponseDto {
     example: 12,
     required: true,
   })
-  limite: number;
+  limite!: number;
 
   @ApiProperty({
     type: Number,
@@ -41,5 +41,5 @@ export class ProductosPaginadosResponseDto {
     example: 8,
     required: true,
   })
-  total: number;
+  total!: number;
 }

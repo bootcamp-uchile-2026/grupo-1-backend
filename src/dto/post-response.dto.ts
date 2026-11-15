@@ -13,7 +13,7 @@ export class PostResponseDto {
     example: 1,
     required: true,
   })
-  id: number;
+  id!: number;
 
   @ApiProperty({
     type: String,
@@ -22,7 +22,7 @@ export class PostResponseDto {
     example: 'Como combinar tus basicos de temporada',
     required: true,
   })
-  titulo: string;
+  titulo!: string;
 
   @ApiProperty({
     type: String,
@@ -32,7 +32,7 @@ export class PostResponseDto {
       'Tres combinaciones simples para renovar tu closet sin comprar de mas.',
     required: true,
   })
-  contenido: string;
+  contenido!: string;
 
   @ApiProperty({
     type: String,
@@ -41,5 +41,5 @@ export class PostResponseDto {
     example: 'https://cdn.stylenow.cl/comunidad/basicos-temporada.jpg',
     required: true,
   })
-  imagenUrl: string;
+  imagenUrl!: string;
 }

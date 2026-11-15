@@ -13,7 +13,7 @@ export class UsuarioResponseDto {
     example: 1,
     required: true,
   })
-  id: number;
+  id!: number;
 
   @ApiProperty({
     type: String,
@@ -22,7 +22,7 @@ export class UsuarioResponseDto {
     example: 'Fernanda Rojas',
     required: true,
   })
-  nombre: string;
+  nombre!: string;
 
   @ApiProperty({
     type: String,
@@ -31,5 +31,5 @@ export class UsuarioResponseDto {
     example: 'cliente@stylenow.cl',
     required: true,
   })
-  correoElectronico: string;
+  correoElectronico!: string;
 }
