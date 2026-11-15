@@ -5,9 +5,6 @@ FROM node:24-alpine AS builder
 
 WORKDIR /app
 
-# Usamos la misma version de npm con la que fue validado Hito 2
-RUN npm install -g npm@11.6.2
-
 COPY package.json package-lock.json ./
 
 RUN npm ci
@@ -26,14 +23,13 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Mantener la misma version de npm que en build
-RUN npm install -g npm@11.6.2
-
 COPY package.json package-lock.json ./
 
 RUN npm ci --omit=dev && npm cache clean --force
 
-COPY --from=builder /app/dist ./dist
+COPY --from=builder --chown=node:node /app/dist ./dist
+
+USER node
 
 EXPOSE 3000
 
