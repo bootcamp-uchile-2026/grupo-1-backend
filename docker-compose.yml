@@ -1,16 +1,13 @@
 services:
   backend:
-    image: bbtechgroup/stylenow-backend:hito-2
-
-    container_name: stylenow-backend
-
+    build: .
+    image: ${BACKEND_IMAGE:-stylenow-backend:local}
     restart: unless-stopped
-
+    env_file:
+      - path: .env
+        required: false
     ports:
-      - "3000:3000"
-
+      - "${HOST_PORT:-${PORT:-3000}}:${PORT:-3000}"
     environment:
-      PORT: 3000
-      APP_NAME: "StyleNow API"
-      APP_VERSION: "1.0"
-      SWAGGER_PATH: "api"
+      PORT: ${PORT:-3000}
+      APP_VERSION: ${APP_VERSION:-0.0.1}
