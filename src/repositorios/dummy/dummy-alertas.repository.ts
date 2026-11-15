@@ -6,22 +6,15 @@ import {
 } from '../../data/alertas.dummy';
 import { AlertaResponseDto } from '../../dto/alerta-response.dto';
 import { AlertasRepository, NuevaAlerta } from '../alertas.repository';
-import { copiar, RepositorioReiniciable } from './reiniciable';
+import { copiar } from './reiniciable';
 
 @Injectable()
-export class DummyAlertasRepository
-  extends AlertasRepository
-  implements RepositorioReiniciable
-{
+export class DummyAlertasRepository extends AlertasRepository {
   private alertas: AlertaDummy[] = [];
   private siguienteId = ALERTA_NUEVA_ID;
 
   constructor() {
     super();
-    this.reiniciar();
-  }
-
-  reiniciar(): void {
     this.alertas = copiar(ALERTAS_DUMMY);
     this.siguienteId = ALERTA_NUEVA_ID;
   }

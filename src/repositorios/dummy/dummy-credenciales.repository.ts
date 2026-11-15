@@ -4,21 +4,14 @@ import {
   CredencialesRepository,
   CredencialPersistida,
 } from '../credenciales.repository';
-import { copiar, RepositorioReiniciable } from './reiniciable';
+import { copiar } from './reiniciable';
 
 @Injectable()
-export class DummyCredencialesRepository
-  extends CredencialesRepository
-  implements RepositorioReiniciable
-{
+export class DummyCredencialesRepository extends CredencialesRepository {
   private credenciales: CredencialPersistida[] = [];
 
   constructor() {
     super();
-    this.reiniciar();
-  }
-
-  reiniciar(): void {
     this.credenciales = copiar(CREDENCIALES_DUMMY);
   }
 

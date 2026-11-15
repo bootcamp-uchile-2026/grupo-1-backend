@@ -9,22 +9,15 @@ import {
   DireccionesRepository,
   NuevaDireccion,
 } from '../direcciones.repository';
-import { copiar, RepositorioReiniciable } from './reiniciable';
+import { copiar } from './reiniciable';
 
 @Injectable()
-export class DummyDireccionesRepository
-  extends DireccionesRepository
-  implements RepositorioReiniciable
-{
+export class DummyDireccionesRepository extends DireccionesRepository {
   private direcciones: DireccionDummy[] = [];
   private siguienteId = DIRECCION_NUEVA_ID;
 
   constructor() {
     super();
-    this.reiniciar();
-  }
-
-  reiniciar(): void {
     this.direcciones = copiar(DIRECCIONES_DUMMY);
     this.siguienteId = DIRECCION_NUEVA_ID;
   }
