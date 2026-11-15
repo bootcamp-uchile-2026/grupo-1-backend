@@ -7,6 +7,7 @@ import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
  */
 export class CrearDireccionDto {
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Nombre con que el usuario identifica la direccion.',
     example: 'Casa',
@@ -16,6 +17,7 @@ export class CrearDireccionDto {
   nombre!: string;
 
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Nombre de la calle.',
     example: 'Av. Providencia',
@@ -25,6 +27,7 @@ export class CrearDireccionDto {
   calle!: string;
 
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Numero de la direccion.',
     example: '1234',
@@ -34,6 +37,7 @@ export class CrearDireccionDto {
   numero!: string;
 
   @ApiPropertyOptional({
+    minLength: 1,
     type: String,
     description: 'Departamento, oficina o casa interior.',
     example: 'Depto 502',
@@ -44,6 +48,7 @@ export class CrearDireccionDto {
   departamento?: string;
 
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Comuna de despacho.',
     example: 'Providencia',
@@ -53,6 +58,7 @@ export class CrearDireccionDto {
   comuna!: string;
 
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Region de despacho.',
     example: 'Region Metropolitana',

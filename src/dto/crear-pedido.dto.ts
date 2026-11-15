@@ -17,6 +17,7 @@ import {
  */
 export class ContactoPedidoDto {
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Nombre de quien recibe el pedido.',
     example: 'Fernanda Rojas',
@@ -26,6 +27,7 @@ export class ContactoPedidoDto {
   nombre!: string;
 
   @ApiProperty({
+    format: 'email',
     type: String,
     description: 'Correo electronico de contacto.',
     example: 'cliente@stylenow.cl',
@@ -34,6 +36,7 @@ export class ContactoPedidoDto {
   email!: string;
 
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Telefono de contacto.',
     example: '+56912345678',
@@ -49,6 +52,7 @@ export class ContactoPedidoDto {
  */
 export class DireccionPedidoDto {
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Nombre de la calle.',
     example: 'Av. Providencia',
@@ -58,6 +62,7 @@ export class DireccionPedidoDto {
   calle!: string;
 
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Numero de la direccion.',
     example: '1234',
@@ -67,6 +72,7 @@ export class DireccionPedidoDto {
   numero!: string;
 
   @ApiPropertyOptional({
+    minLength: 1,
     type: String,
     description: 'Departamento, oficina o casa interior.',
     example: 'Depto 502',
@@ -77,6 +83,7 @@ export class DireccionPedidoDto {
   departamento?: string;
 
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Comuna de despacho.',
     example: 'Providencia',
@@ -86,6 +93,7 @@ export class DireccionPedidoDto {
   comuna!: string;
 
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Region de despacho.',
     example: 'Region Metropolitana',
@@ -101,6 +109,7 @@ export class DireccionPedidoDto {
  */
 export class CrearPedidoDto {
   @ApiProperty({
+    minimum: 1,
     type: Number,
     description: 'Identificador del carrito que se convierte en pedido.',
     example: 1,
@@ -128,6 +137,7 @@ export class CrearPedidoDto {
   direccion!: DireccionPedidoDto;
 
   @ApiProperty({
+    minLength: 1,
     type: String,
     description: 'Metodo de pago elegido en el checkout.',
     example: 'webpay',
