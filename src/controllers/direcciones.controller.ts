@@ -1,3 +1,4 @@
+import { IdPositivoPipe } from '../common/id-positivo.pipe';
 import {
   Body,
   Controller,
@@ -6,7 +7,6 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -35,7 +35,7 @@ import { DireccionesService } from '../services/direcciones.service';
 })
 @ApiParam({
   name: 'usuarioId',
-  type: Number,
+  schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
   description: 'Identificador del usuario dueno de las direcciones.',
   example: 1,
 })
@@ -53,7 +53,7 @@ export class DireccionesController {
   })
   @Get()
   async obtenerDirecciones(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
   ): Promise<DireccionResponseDto[]> {
     return this.direccionesService.obtenerDirecciones(usuarioId);
   }
@@ -65,7 +65,7 @@ export class DireccionesController {
   })
   @Post()
   async crearDireccion(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
     @Body() datos: CrearDireccionDto,
   ): Promise<DireccionResponseDto> {
     return this.direccionesService.crearDireccion(usuarioId, datos);
@@ -77,7 +77,7 @@ export class DireccionesController {
   })
   @ApiParam({
     name: 'direccionId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador de la direccion.',
     example: 1,
   })
@@ -87,8 +87,8 @@ export class DireccionesController {
   })
   @Patch(':direccionId')
   async actualizarDireccion(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
-    @Param('direccionId', ParseIntPipe) direccionId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
+    @Param('direccionId', IdPositivoPipe) direccionId: number,
     @Body() datos: ActualizarDireccionDto,
   ): Promise<DireccionResponseDto> {
     return this.direccionesService.actualizarDireccion(
@@ -101,7 +101,7 @@ export class DireccionesController {
   @ApiOperation({ summary: 'Elimina una direccion' })
   @ApiParam({
     name: 'direccionId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador de la direccion.',
     example: 1,
   })
@@ -109,8 +109,8 @@ export class DireccionesController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':direccionId')
   async eliminarDireccion(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
-    @Param('direccionId', ParseIntPipe) direccionId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
+    @Param('direccionId', IdPositivoPipe) direccionId: number,
   ): Promise<void> {
     await this.direccionesService.eliminarDireccion(usuarioId, direccionId);
   }

@@ -1,4 +1,5 @@
-import { Body, Controller, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { IdPositivoPipe } from '../common/id-positivo.pipe';
+import { Body, Controller, Param, Post } from '@nestjs/common';
 import {
   ApiBody,
   ApiOperation,
@@ -31,7 +32,7 @@ export class FavoritosController {
   })
   @ApiParam({
     name: 'usuarioId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     required: true,
     description: 'Identificador del usuario dueno de la lista de favoritos.',
     example: 1,
@@ -59,7 +60,7 @@ export class FavoritosController {
   })
   @Post()
   async agregarFavorito(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
     @Body() dto: AgregarFavoritoDto,
   ): Promise<FavoritoResponseDto> {
     return this.favoritosService.agregarFavorito(usuarioId, dto);
