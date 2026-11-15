@@ -163,6 +163,7 @@ transforma los tipos.
 
 Todos los endpoints de Swagger funcionan con datos dummy en memoria:
 
+- **Convención REST:** `POST /auth/registro` agrupa la creación de cuentas con las acciones de acceso (login y logout). Crea el usuario y su carrito, responde 201 con el perfil público y devuelve 409 si el correo ya existe. El perfil creado se consulta en `GET /usuarios/{usuarioId}`.
 - **Auth:** registro (crea la cuenta y su carrito vacío; correo repetido
   responde 409), login (401 si el correo o la contraseña no coinciden) y
   logout (confirmación). No hay JWT, tokens ni sesiones de servidor.
