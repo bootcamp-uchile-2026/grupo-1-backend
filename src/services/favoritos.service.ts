@@ -1,3 +1,4 @@
+import { ProductoDetalleResponseDto } from '../dto/producto-detalle-response.dto';
 import { Injectable } from '@nestjs/common';
 import { ConflictoDominioError } from '../dominio/errores-dominio';
 import { AgregarFavoritoDto } from '../dto/agregar-favorito.dto';
@@ -17,6 +18,14 @@ export class FavoritosService {
     private readonly usuariosService: UsuariosService,
     private readonly productosService: ProductosService,
   ) {}
+
+  async listar(usuarioId: number): Promise<ProductoDetalleResponseDto[]> {
+    await this.usuariosService.obtenerUsuario(usuarioId);
+    const ids = await this.favoritos.listarProductos(usuarioId);
+    return Promise.all(
+      ids.map((id) => this.productosService.obtenerProductoPorId(id)),
+    );
+  }
 
   /** Guarda un producto en la lista de favoritos del usuario. */
   async agregarFavorito(

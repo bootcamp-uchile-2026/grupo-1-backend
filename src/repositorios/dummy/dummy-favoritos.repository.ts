@@ -11,21 +11,26 @@ export class DummyFavoritosRepository
   extends FavoritosRepository
   implements RepositorioReiniciable
 {
-  private readonly favoritos = new Set<string>();
+  private readonly favoritos = new Map<number, Set<number>>();
 
   reiniciar(): void {
     this.favoritos.clear();
   }
 
+  listarProductos(usuarioId: number): Promise<number[]> {
+    return Promise.resolve(Array.from(this.favoritos.get(usuarioId) ?? []));
+  }
+
   agregar(usuarioId: number, productoId: number): Promise<boolean> {
-    const clave = `${usuarioId}:${productoId}`;
-    if (this.favoritos.has(clave)) return Promise.resolve(false);
-    this.favoritos.add(clave);
+    const productos = this.favoritos.get(usuarioId) ?? new Set<number>();
+    if (productos.has(productoId)) return Promise.resolve(false);
+    productos.add(productoId);
+    this.favoritos.set(usuarioId, productos);
     return Promise.resolve(true);
   }
 
   /** Solo para tests: indica si el par esta guardado. */
   contiene(usuarioId: number, productoId: number): boolean {
-    return this.favoritos.has(`${usuarioId}:${productoId}`);
+    return this.favoritos.get(usuarioId)?.has(productoId) ?? false;
   }
 }

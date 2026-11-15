@@ -1,5 +1,6 @@
 import { IdPositivoPipe } from '../common/id-positivo.pipe';
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { ErrorResponseDto } from '../dto/error-response.dto';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -24,6 +25,7 @@ import { LooksService } from '../services/looks.service';
  */
 @ApiTags('looks')
 @ApiBadRequestResponse({
+  type: ErrorResponseDto,
   description: 'La entrada no cumple el contrato del endpoint.',
 })
 @Controller()
@@ -50,7 +52,10 @@ export class LooksController {
     example: 1,
   })
   @ApiOkResponse({ description: 'Look encontrado.', type: LookResponseDto })
-  @ApiNotFoundResponse({ description: 'No existe un look con ese id.' })
+  @ApiNotFoundResponse({
+    type: ErrorResponseDto,
+    description: 'No existe un look con ese id.',
+  })
   @Get('looks/:lookId')
   async obtenerLook(
     @Param('lookId', IdPositivoPipe) lookId: number,
@@ -66,6 +71,7 @@ export class LooksController {
   })
   @ApiCreatedResponse({ description: 'Look creado.', type: LookResponseDto })
   @ApiNotFoundResponse({
+    type: ErrorResponseDto,
     description:
       'Algun producto no existe o la variante no pertenece a ese producto.',
   })
@@ -91,6 +97,7 @@ export class LooksController {
     type: LookResponseDto,
   })
   @ApiNotFoundResponse({
+    type: ErrorResponseDto,
     description: 'No existe el usuario o no existe el look.',
   })
   @Post('usuarios/:usuarioId/looks')

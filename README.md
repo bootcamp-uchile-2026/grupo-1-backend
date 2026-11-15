@@ -163,6 +163,7 @@ transforma los tipos.
 
 Todos los endpoints de Swagger funcionan con datos dummy en memoria:
 
+- **Convención REST:** `POST /auth/registro` agrupa la creación de cuentas con las acciones de acceso (login y logout). Crea el usuario y su carrito, responde 201 con el perfil público y devuelve 409 si el correo ya existe. El perfil creado se consulta en `GET /usuarios/{usuarioId}`.
 - **Auth:** registro (crea la cuenta y su carrito vacío; correo repetido
   responde 409), login (401 si el correo o la contraseña no coinciden) y
   logout (confirmación). No hay JWT, tokens ni sesiones de servidor.
@@ -181,7 +182,7 @@ Todos los endpoints de Swagger funcionan con datos dummy en memoria:
 - **Alertas:** de precio y de reposición; listar y eliminar.
 - **Cambios y devoluciones:** crear solicitudes sobre items de un pedido y
   consultarlas.
-- **Favoritos:** agregar un producto a los favoritos del usuario (el mismo
+- **Favoritos:** consultar con GET /usuarios/{usuarioId}/favoritos el arreglo de detalles de sus productos guardados. Un usuario sin favoritos recibe una lista vacía. Agregar un producto a los favoritos del usuario (el mismo
   producto dos veces responde 409).
 - **Colecciones:** listado de colecciones editoriales (solo lectura).
 - **Comunidad:** listado de publicaciones (`/posts`, solo lectura).

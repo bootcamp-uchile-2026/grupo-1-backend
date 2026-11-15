@@ -1,3 +1,4 @@
+import { ErrorResponseDto } from '../dto/error-response.dto';
 import { Controller, Get, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -33,6 +34,7 @@ export class CategoriasController {
     type: [CategoriaResponseDto],
   })
   @ApiBadRequestResponse({
+    type: ErrorResponseDto,
     description:
       'destacada no es true ni false, o se envio un parametro no declarado.',
   })

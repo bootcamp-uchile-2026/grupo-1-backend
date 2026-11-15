@@ -1,5 +1,6 @@
 import { IdPositivoPipe } from '../common/id-positivo.pipe';
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { ErrorResponseDto } from '../dto/error-response.dto';
 import {
   ApiBody,
   ApiOperation,
@@ -7,21 +8,38 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { ProductoDetalleResponseDto } from '../dto/producto-detalle-response.dto';
 import { AgregarFavoritoDto } from '../dto/agregar-favorito.dto';
 import { FavoritoResponseDto } from '../dto/favorito-response.dto';
 import { FavoritosService } from '../services/favoritos.service';
 
-/**
- * Recurso Favoritos.
- * El contrato cubre unicamente el boton "Agregar a favoritos" de la ficha de
- * producto, que es la unica accion que el wireframe demuestra. La lectura y
- * el borrado de favoritos se definiran cuando se analice formalmente la
- * vista Favoritos de Mi Cuenta.
- */
 @ApiTags('favoritos')
 @Controller('usuarios/:usuarioId/favoritos')
 export class FavoritosController {
   constructor(private readonly favoritosService: FavoritosService) {}
+
+  @Get()
+  @ApiOperation({ summary: 'Lista los productos favoritos del usuario' })
+  @ApiParam({
+    name: 'usuarioId',
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
+  })
+  @ApiResponse({ status: 200, type: [ProductoDetalleResponseDto] })
+  @ApiResponse({
+    type: ErrorResponseDto,
+    status: 400,
+    description: 'El identificador debe ser un entero positivo seguro.',
+  })
+  @ApiResponse({
+    type: ErrorResponseDto,
+    status: 404,
+    description: 'El usuario no existe.',
+  })
+  listar(
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
+  ): Promise<ProductoDetalleResponseDto[]> {
+    return this.favoritosService.listar(usuarioId);
+  }
 
   @ApiOperation({
     summary: 'Agrega un producto a favoritos',
@@ -47,14 +65,17 @@ export class FavoritosController {
     type: FavoritoResponseDto,
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 400,
     description: 'usuarioId o productoId no son enteros validos.',
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 404,
     description: 'No existe el usuario o no existe el producto.',
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 409,
     description: 'El producto ya esta en la lista de favoritos.',
   })

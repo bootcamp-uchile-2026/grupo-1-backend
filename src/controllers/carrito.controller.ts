@@ -1,4 +1,5 @@
 import { IdPositivoPipe } from '../common/id-positivo.pipe';
+import { ErrorResponseDto } from '../dto/error-response.dto';
 import {
   Body,
   Controller,
@@ -53,10 +54,15 @@ export class CarritoController {
     type: CarritoResponseDto,
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 400,
     description: 'usuarioId no es un entero mayor que cero.',
   })
-  @ApiResponse({ status: 404, description: 'No existe un usuario con ese id.' })
+  @ApiResponse({
+    type: ErrorResponseDto,
+    status: 404,
+    description: 'No existe un usuario con ese id.',
+  })
   @Get()
   async obtenerCarrito(
     @Param('usuarioId', IdPositivoPipe) usuarioId: number,
@@ -88,12 +94,14 @@ export class CarritoController {
     type: CarritoResponseDto,
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 400,
     description:
       'La cantidad no es un entero mayor que cero, la variante no tiene stock o la ' +
       'cantidad total de la variante en el carrito superaria su stock.',
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 404,
     description: 'No existe el usuario o no existe la variante.',
   })
@@ -137,11 +145,13 @@ export class CarritoController {
     type: CarritoResponseDto,
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 400,
     description:
       'La cantidad no es un entero mayor que cero o supera el stock disponible.',
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 404,
     description: 'No existe el usuario, o la variante no esta en el carrito.',
   })
@@ -182,10 +192,12 @@ export class CarritoController {
     type: CarritoResponseDto,
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 400,
     description: 'usuarioId o varianteId no son enteros validos.',
   })
   @ApiResponse({
+    type: ErrorResponseDto,
     status: 404,
     description: 'No existe el usuario, o la variante no esta en el carrito.',
   })
