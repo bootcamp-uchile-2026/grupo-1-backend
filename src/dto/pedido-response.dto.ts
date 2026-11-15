@@ -28,6 +28,7 @@ export class PedidoResponseDto {
 
   @ApiProperty({
     type: String,
+    format: 'date-time',
     description: 'Fecha de creacion del pedido en formato ISO 8601.',
     example: '2026-10-04T15:30:00.000Z',
   })
