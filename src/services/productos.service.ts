@@ -15,14 +15,10 @@ import {
   VarianteConProducto,
 } from '../repositorios/productos.repository';
 
-/**
- * Catalogo de StyleNow.
- * Los datos vienen de ProductosRepository. Los demas dominios validan sus
- * referencias al catalogo a traves de este servicio.
- */
-/** Paginacion por defecto cuando el llamador no la indica. */
-const PAGINA_POR_DEFECTO = 1;
-const LIMITE_POR_DEFECTO = 12;
+import {
+  LIMITE_POR_DEFECTO,
+  PAGINA_POR_DEFECTO,
+} from '../dto/paginacion-query.dto';
 
 /** Comparadores de cada criterio de orden. El empate se resuelve por id. */
 const COMPARADORES: Record<
@@ -35,6 +31,11 @@ const COMPARADORES: Record<
   nombre_asc: (a, b) => a.nombre.localeCompare(b.nombre, 'es') || a.id - b.id,
 };
 
+/**
+ * Catalogo de StyleNow.
+ * Los datos vienen de ProductosRepository. Los demas dominios validan sus
+ * referencias al catalogo a traves de este servicio.
+ */
 @Injectable()
 export class ProductosService {
   constructor(private readonly productos: ProductosRepository) {}
