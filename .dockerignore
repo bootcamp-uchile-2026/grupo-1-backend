@@ -13,3 +13,35 @@ docs
 **/*.md
 .env*
 **/.env*
+
+# Artefactos de build y Git en directorios anidados
+**/node_modules
+**/dist
+**/coverage
+**/.git
+
+# Auditorias y evidencias locales
+**/auditoria
+**/auditorias
+**/auditoria-*
+**/evidencia
+**/evidencias
+**/evidencia-*
+**/audits
+**/evidence
+
+# Respaldos y archivos temporales
+**/backup
+**/backups
+**/respaldo
+**/respaldos
+**/respaldos-*
+**/tmp
+**/temp
+**/*.bundle
+**/*.tmp
+**/*.temp
+**/*.bak
+**/*.swp
+**/*.swo
+**/*~
