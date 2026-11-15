@@ -70,7 +70,7 @@ function validarRutaSwagger(ruta: string, rutasNegocio: string[]): void {
  * variables, la API escucha en el puerto 3000 y Swagger queda en /api.
  * Todavia no se configura BearerAuth: la autenticacion real llega en una fase posterior.
  */
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   configurarApp(app);
 
@@ -131,7 +131,7 @@ async function bootstrap() {
   SwaggerModule.setup(rutaSwagger, app, document);
 
   await app.listen(puerto);
-  console.log(`🚀 Backend ejecutándose en puerto: ${puerto}`);
+  new Logger('Bootstrap').log('Backend escuchando en puerto ' + puerto);
 }
 bootstrap().catch((error: unknown) => {
   const logger = new Logger('Bootstrap');

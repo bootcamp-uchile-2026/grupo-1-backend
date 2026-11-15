@@ -6,22 +6,15 @@ import {
   NuevoUsuario,
   UsuariosRepository,
 } from '../usuarios.repository';
-import { copiar, RepositorioReiniciable } from './reiniciable';
+import { copiar } from './reiniciable';
 
 @Injectable()
-export class DummyUsuariosRepository
-  extends UsuariosRepository
-  implements RepositorioReiniciable
-{
+export class DummyUsuariosRepository extends UsuariosRepository {
   private usuarios: UsuarioDetalleResponseDto[] = [];
   private siguienteId = 0;
 
   constructor() {
     super();
-    this.reiniciar();
-  }
-
-  reiniciar(): void {
     this.usuarios = copiar(USUARIOS_DUMMY);
     this.siguienteId = Math.max(0, ...this.usuarios.map((u) => u.id)) + 1;
   }
