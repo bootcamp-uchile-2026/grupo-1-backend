@@ -1,3 +1,4 @@
+import { validarEntorno } from './validar-entorno';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UsuariosModule } from './modulos/usuarios.module';
@@ -15,7 +16,7 @@ import { PedidosModule } from './modulos/pedidos.module';
 import { CambiosDevolucionesModule } from './modulos/cambios-devoluciones.module';
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, validate: validarEntorno }),
     UsuariosModule,
     ProductosModule,
     CategoriasModule,
