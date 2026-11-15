@@ -47,6 +47,7 @@ export class FiltrarProductosDto extends PaginacionQueryDto {
   search?: string;
 
   @ApiPropertyOptional({
+    minLength: 1,
     type: String,
     description:
       'Slug de la categoria, obtenido desde GET /categorias. Una categoria ' +
@@ -59,6 +60,7 @@ export class FiltrarProductosDto extends PaginacionQueryDto {
   categoria?: string;
 
   @ApiPropertyOptional({
+    minLength: 1,
     type: String,
     description: 'Talla con stock disponible en alguna variante del producto.',
     example: 'M',
@@ -69,6 +71,7 @@ export class FiltrarProductosDto extends PaginacionQueryDto {
   talla?: string;
 
   @ApiPropertyOptional({
+    minLength: 1,
     type: String,
     description:
       'Color con stock disponible en alguna variante del producto. Si se ' +
