@@ -1,11 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Post,
-} from '@nestjs/common';
+import { IdPositivoPipe } from '../common/id-positivo.pipe';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -27,7 +21,7 @@ import { CambiosDevolucionesService } from '../services/cambios-devoluciones.ser
 @ApiTags('cambios-devoluciones')
 @ApiParam({
   name: 'usuarioId',
-  type: Number,
+  schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
   description: 'Identificador del usuario dueno del pedido.',
   example: 1,
 })
@@ -47,7 +41,7 @@ export class CambiosDevolucionesController {
   })
   @ApiParam({
     name: 'pedidoId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador del pedido.',
     example: 1001,
   })
@@ -67,8 +61,8 @@ export class CambiosDevolucionesController {
   })
   @Post('pedidos/:pedidoId/cambios-devoluciones')
   async crearSolicitud(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
-    @Param('pedidoId', ParseIntPipe) pedidoId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
+    @Param('pedidoId', IdPositivoPipe) pedidoId: number,
     @Body() datos: CrearCambioDevolucionDto,
   ): Promise<CambioDevolucionResponseDto> {
     return this.cambiosDevolucionesService.crearSolicitud(
@@ -81,7 +75,7 @@ export class CambiosDevolucionesController {
   @ApiOperation({ summary: 'Lista las solicitudes de un pedido' })
   @ApiParam({
     name: 'pedidoId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador del pedido.',
     example: 1001,
   })
@@ -94,8 +88,8 @@ export class CambiosDevolucionesController {
   })
   @Get('pedidos/:pedidoId/cambios-devoluciones')
   async obtenerSolicitudesDePedido(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
-    @Param('pedidoId', ParseIntPipe) pedidoId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
+    @Param('pedidoId', IdPositivoPipe) pedidoId: number,
   ): Promise<CambioDevolucionResponseDto[]> {
     return this.cambiosDevolucionesService.obtenerSolicitudesDePedido(
       usuarioId,
@@ -106,7 +100,7 @@ export class CambiosDevolucionesController {
   @ApiOperation({ summary: 'Obtiene el detalle de una solicitud' })
   @ApiParam({
     name: 'solicitudId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador de la solicitud.',
     example: 1,
   })
@@ -119,8 +113,8 @@ export class CambiosDevolucionesController {
   })
   @Get('cambios-devoluciones/:solicitudId')
   async obtenerSolicitud(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
-    @Param('solicitudId', ParseIntPipe) solicitudId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
+    @Param('solicitudId', IdPositivoPipe) solicitudId: number,
   ): Promise<CambioDevolucionResponseDto> {
     return this.cambiosDevolucionesService.obtenerSolicitud(
       usuarioId,

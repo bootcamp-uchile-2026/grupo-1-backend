@@ -1,4 +1,5 @@
-import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { IdPositivoPipe } from '../common/id-positivo.pipe';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FiltrarProductosDto } from '../dto/filtrar-productos.dto';
 import { ProductoDetalleResponseDto } from '../dto/producto-detalle-response.dto';
@@ -53,7 +54,7 @@ export class ProductosController {
   })
   @ApiParam({
     name: 'id',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     required: true,
     description: 'Identificador del producto obtenido desde GET /productos.',
     example: 1,
@@ -73,7 +74,7 @@ export class ProductosController {
   })
   @Get(':id')
   async obtenerProductoPorId(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', IdPositivoPipe) id: number,
   ): Promise<ProductoDetalleResponseDto> {
     return this.productosService.obtenerProductoPorId(id);
   }

@@ -1,11 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Post,
-} from '@nestjs/common';
+import { IdPositivoPipe } from '../common/id-positivo.pipe';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
@@ -66,7 +60,7 @@ export class PedidosController {
   @ApiOperation({ summary: 'Lista los pedidos del usuario' })
   @ApiParam({
     name: 'usuarioId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador del usuario dueno de los pedidos.',
     example: 1,
   })
@@ -77,7 +71,7 @@ export class PedidosController {
   @ApiNotFoundResponse({ description: 'No existe el usuario.' })
   @Get('usuarios/:usuarioId/pedidos')
   async obtenerPedidos(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
   ): Promise<PedidoResponseDto[]> {
     return this.pedidosService.obtenerPedidos(usuarioId);
   }
@@ -90,13 +84,13 @@ export class PedidosController {
   })
   @ApiParam({
     name: 'usuarioId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador del usuario dueno del pedido.',
     example: 1,
   })
   @ApiParam({
     name: 'pedidoId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador del pedido.',
     example: 1001,
   })
@@ -109,8 +103,8 @@ export class PedidosController {
   })
   @Get('usuarios/:usuarioId/pedidos/:pedidoId')
   async obtenerPedido(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
-    @Param('pedidoId', ParseIntPipe) pedidoId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
+    @Param('pedidoId', IdPositivoPipe) pedidoId: number,
   ): Promise<PedidoDetalleResponseDto> {
     return this.pedidosService.obtenerPedido(usuarioId, pedidoId);
   }

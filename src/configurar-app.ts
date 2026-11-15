@@ -1,10 +1,11 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { FiltroExcepcionesGlobal } from './common/filtro-excepciones.filter';
 import { crearObservabilidadHttp } from './common/observabilidad-http.middleware';
 import {
   asignarRequestId,
   CABECERA_REQUEST_ID,
 } from './common/request-id.middleware';
+import { ValidacionGlobalPipe } from './common/validacion-global.pipe';
 
 /**
  * Configuracion global compartida por main.ts y por los tests e2e, para que
@@ -37,8 +38,9 @@ import {
  * ValidationPipe:
  * - whitelist + forbidNonWhitelisted: un campo que el DTO no declara
  *   responde 400 en vez de llegar al Service.
- * - transform: el body, la query y los parametros llegan como instancias
- *   tipadas del DTO.
+ * - transform: el body y la query llegan como instancias tipadas del DTO.
+ *   Los parametros de ruta llegan como texto a su pipe (IdPositivoPipe),
+ *   que exige la forma canonica del identificador (ValidacionGlobalPipe).
  */
 export function configurarApp(app: INestApplication): void {
   app.use(asignarRequestId);
@@ -46,7 +48,7 @@ export function configurarApp(app: INestApplication): void {
   app.enableCors({ exposedHeaders: [CABECERA_REQUEST_ID] });
   app.useGlobalFilters(new FiltroExcepcionesGlobal());
   app.useGlobalPipes(
-    new ValidationPipe({
+    new ValidacionGlobalPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,

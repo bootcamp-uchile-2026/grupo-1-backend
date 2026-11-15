@@ -1,12 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { IdPositivoPipe } from '../common/id-positivo.pipe';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -52,7 +45,7 @@ export class LooksController {
   @ApiOperation({ summary: 'Obtiene el detalle de un look' })
   @ApiParam({
     name: 'lookId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador del look.',
     example: 1,
   })
@@ -60,7 +53,7 @@ export class LooksController {
   @ApiNotFoundResponse({ description: 'No existe un look con ese id.' })
   @Get('looks/:lookId')
   async obtenerLook(
-    @Param('lookId', ParseIntPipe) lookId: number,
+    @Param('lookId', IdPositivoPipe) lookId: number,
   ): Promise<LookResponseDto> {
     return this.looksService.obtenerLook(lookId);
   }
@@ -89,7 +82,7 @@ export class LooksController {
   })
   @ApiParam({
     name: 'usuarioId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     description: 'Identificador del usuario que guarda el look.',
     example: 1,
   })
@@ -102,7 +95,7 @@ export class LooksController {
   })
   @Post('usuarios/:usuarioId/looks')
   async guardarLook(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
     @Body() datos: GuardarLookDto,
   ): Promise<LookResponseDto> {
     return this.looksService.guardarLook(usuarioId, datos);

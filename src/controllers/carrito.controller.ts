@@ -1,10 +1,10 @@
+import { IdPositivoPipe } from '../common/id-positivo.pipe';
 import {
   Body,
   Controller,
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -42,7 +42,7 @@ export class CarritoController {
   })
   @ApiParam({
     name: 'usuarioId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     required: true,
     description: 'Identificador del usuario dueno del carrito.',
     example: 1,
@@ -59,7 +59,7 @@ export class CarritoController {
   @ApiResponse({ status: 404, description: 'No existe un usuario con ese id.' })
   @Get()
   async obtenerCarrito(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
   ): Promise<CarritoResponseDto> {
     return this.carritoService.obtenerCarrito(usuarioId);
   }
@@ -73,7 +73,7 @@ export class CarritoController {
   })
   @ApiParam({
     name: 'usuarioId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     required: true,
     description: 'Identificador del usuario dueno del carrito.',
     example: 1,
@@ -99,7 +99,7 @@ export class CarritoController {
   })
   @Post('items')
   async agregarItem(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
     @Body() dto: AgregarItemCarritoDto,
   ): Promise<CarritoResponseDto> {
     return this.carritoService.agregarItem(usuarioId, dto);
@@ -114,14 +114,14 @@ export class CarritoController {
   })
   @ApiParam({
     name: 'usuarioId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     required: true,
     description: 'Identificador del usuario dueno del carrito.',
     example: 1,
   })
   @ApiParam({
     name: 'varianteId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     required: true,
     description:
       'Identificador de la variante que identifica la linea del carrito.',
@@ -147,8 +147,8 @@ export class CarritoController {
   })
   @Patch('items/:varianteId')
   async actualizarCantidad(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
-    @Param('varianteId', ParseIntPipe) varianteId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
+    @Param('varianteId', IdPositivoPipe) varianteId: number,
     @Body() dto: ActualizarCantidadDto,
   ): Promise<CarritoResponseDto> {
     return this.carritoService.actualizarCantidad(usuarioId, varianteId, dto);
@@ -163,14 +163,14 @@ export class CarritoController {
   })
   @ApiParam({
     name: 'usuarioId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     required: true,
     description: 'Identificador del usuario dueno del carrito.',
     example: 1,
   })
   @ApiParam({
     name: 'varianteId',
-    type: Number,
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
     required: true,
     description:
       'Identificador de la variante que identifica la linea del carrito.',
@@ -191,8 +191,8 @@ export class CarritoController {
   })
   @Delete('items/:varianteId')
   async eliminarItem(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
-    @Param('varianteId', ParseIntPipe) varianteId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
+    @Param('varianteId', IdPositivoPipe) varianteId: number,
   ): Promise<CarritoResponseDto> {
     return this.carritoService.eliminarItem(usuarioId, varianteId);
   }

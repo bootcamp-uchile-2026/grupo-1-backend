@@ -1,3 +1,4 @@
+import { IdPositivoPipe } from '../common/id-positivo.pipe';
 import {
   Body,
   Controller,
@@ -5,7 +6,6 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  ParseIntPipe,
   Patch,
 } from '@nestjs/common';
 import {
@@ -32,7 +32,7 @@ import { UsuariosService } from '../services/usuarios.service';
 })
 @ApiParam({
   name: 'usuarioId',
-  type: Number,
+  schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
   description: 'Identificador del usuario.',
   example: 1,
 })
@@ -48,7 +48,7 @@ export class UsuariosController {
   })
   @Get()
   async obtenerUsuario(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
   ): Promise<UsuarioDetalleResponseDto> {
     return this.usuariosService.obtenerUsuario(usuarioId);
   }
@@ -65,7 +65,7 @@ export class UsuariosController {
   })
   @Patch()
   async actualizarUsuario(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
     @Body() datos: ActualizarUsuarioDto,
   ): Promise<UsuarioDetalleResponseDto> {
     return this.usuariosService.actualizarUsuario(usuarioId, datos);
@@ -87,7 +87,7 @@ export class UsuariosController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Patch('contrasena')
   async cambiarContrasena(
-    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+    @Param('usuarioId', IdPositivoPipe) usuarioId: number,
     @Body() datos: CambiarContrasenaDto,
   ): Promise<void> {
     await this.usuariosService.cambiarContrasena(usuarioId, datos);
