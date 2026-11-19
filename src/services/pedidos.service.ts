@@ -1,3 +1,8 @@
+import {
+  aPedidoRespuesta,
+  aPedidoResumenRespuesta,
+  aPedidoItemRespuesta,
+} from './respuestas.mapper';
 import { Injectable } from '@nestjs/common';
 import {
   ConflictoDominioError,
@@ -51,7 +56,26 @@ export class PedidosService {
    * checkout. El carrito se vacia solo despues de crear el pedido: si algo
    * falla antes, queda intacto. El stock del catalogo no se descuenta.
    */
-  async crearPedido(datos: CrearPedidoDto): Promise<PedidoDetalleResponseDto> {
+  async crearPedido(
+    datos: CrearPedidoDto,
+    usuarioAutenticado: number,
+    clave?: string,
+  ): Promise<PedidoDetalleResponseDto> {
+    const sql = await this.pedidos.confirmarCheckout(
+      datos,
+      usuarioAutenticado,
+      clave,
+    );
+    if (sql) return aPedidoRespuesta(sql);
+    // El dueno sale del token, nunca del body: un carrito ajeno es inexistente.
+    const propio = await this.carritoService.obtenerParaCheckout(
+      datos.carritoId,
+    );
+    if (propio.usuarioId !== usuarioAutenticado) {
+      throw new RecursoNoEncontradoError(
+        `No existe el carrito con id ${datos.carritoId}`,
+      );
+    }
     if (this.checkoutsEnCurso.has(datos.carritoId)) {
       throw new ConflictoDominioError(
         `El carrito ${datos.carritoId} ya tiene un checkout en curso`,
@@ -59,8 +83,10 @@ export class PedidosService {
     }
     this.checkoutsEnCurso.add(datos.carritoId);
     try {
-      return await this.carritoService.ejecutarOperacion(datos.carritoId, () =>
-        this.convertirCarrito(datos),
+      return aPedidoRespuesta(
+        await this.carritoService.ejecutarOperacion(datos.carritoId, () =>
+          this.convertirCarrito(datos),
+        ),
       );
     } finally {
       this.checkoutsEnCurso.delete(datos.carritoId);
@@ -132,23 +158,14 @@ export class PedidosService {
       await this.carritoService.restaurarDespuesDeCheckout(carrito);
       throw error;
     }
-    return pedido;
+    return aPedidoRespuesta(pedido);
   }
 
   /** Devuelve el resumen de los pedidos del usuario. */
   async obtenerPedidos(usuarioId: number): Promise<PedidoResponseDto[]> {
     await this.usuariosService.obtenerUsuario(usuarioId);
     const pedidos = await this.pedidos.listarPorUsuario(usuarioId);
-    return pedidos.map((pedido) => ({
-      id: pedido.id,
-      numeroPedido: pedido.numeroPedido,
-      estado: pedido.estado,
-      fecha: pedido.fecha,
-      subtotal: pedido.subtotal,
-      costoEnvio: pedido.costoEnvio,
-      total: pedido.total,
-      metodoPago: pedido.metodoPago,
-    }));
+    return pedidos.map(aPedidoResumenRespuesta);
   }
 
   /** Devuelve el detalle de un pedido del usuario, con sus items. */
@@ -163,7 +180,7 @@ export class PedidosService {
         `No existe el pedido con id ${pedidoId}`,
       );
     }
-    return pedido;
+    return aPedidoRespuesta(pedido);
   }
 
   /**
@@ -182,6 +199,6 @@ export class PedidosService {
         `El pedido ${pedidoId} no tiene el item ${pedidoItemId}`,
       );
     }
-    return item;
+    return aPedidoItemRespuesta(item);
   }
 }

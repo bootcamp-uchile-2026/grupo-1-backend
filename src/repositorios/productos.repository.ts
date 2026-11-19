@@ -1,10 +1,9 @@
-import { ProductoDetalleResponseDto } from '../dto/producto-detalle-response.dto';
-import { VarianteResponseDto } from '../dto/variante-response.dto';
+import type { ProductoDetalle, Variante } from '../dominio/modelos';
 
 /** Una variante junto con el producto al que pertenece. */
 export interface VarianteConProducto {
-  producto: ProductoDetalleResponseDto;
-  variante: VarianteResponseDto;
+  producto: ProductoDetalle;
+  variante: Variante;
 }
 
 /**
@@ -13,9 +12,9 @@ export interface VarianteConProducto {
  * exactamente su comportamiento.
  */
 export abstract class ProductosRepository {
-  abstract listar(): Promise<ProductoDetalleResponseDto[]>;
+  abstract listar(): Promise<ProductoDetalle[]>;
 
-  abstract buscarPorId(id: number): Promise<ProductoDetalleResponseDto | null>;
+  abstract buscarPorId(id: number): Promise<ProductoDetalle | null>;
 
   abstract buscarVariante(
     varianteId: number,

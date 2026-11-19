@@ -1,3 +1,8 @@
+import {
+  proveerRepositorio,
+  proveerDummy,
+} from '../persistencia/proveer-repositorio';
+import { TypeOrmPedidosRepository } from '../repositorios/typeorm/typeorm-pedidos.repository';
 import { Module } from '@nestjs/common';
 import { PedidosController } from '../controllers/pedidos.controller';
 import { PedidosService } from '../services/pedidos.service';
@@ -12,8 +17,12 @@ import { ProductosModule } from './productos.module';
   controllers: [PedidosController],
   providers: [
     PedidosService,
-    DummyPedidosRepository,
-    { provide: PedidosRepository, useExisting: DummyPedidosRepository },
+    proveerDummy(DummyPedidosRepository),
+    proveerRepositorio(
+      PedidosRepository,
+      DummyPedidosRepository,
+      TypeOrmPedidosRepository,
+    ),
   ],
   exports: [PedidosService, PedidosRepository],
 })

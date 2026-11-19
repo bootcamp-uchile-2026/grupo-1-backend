@@ -1,3 +1,8 @@
+import {
+  proveerRepositorio,
+  proveerDummy,
+} from '../persistencia/proveer-repositorio';
+import { TypeOrmCarritosRepository } from '../repositorios/typeorm/typeorm-carritos.repository';
 import { Module } from '@nestjs/common';
 import { CarritoController } from '../controllers/carrito.controller';
 import { CarritoService } from '../services/carrito.service';
@@ -11,8 +16,12 @@ import { ProductosModule } from './productos.module';
   controllers: [CarritoController],
   providers: [
     CarritoService,
-    DummyCarritosRepository,
-    { provide: CarritosRepository, useExisting: DummyCarritosRepository },
+    proveerDummy(DummyCarritosRepository),
+    proveerRepositorio(
+      CarritosRepository,
+      DummyCarritosRepository,
+      TypeOrmCarritosRepository,
+    ),
   ],
   exports: [CarritoService, CarritosRepository],
 })

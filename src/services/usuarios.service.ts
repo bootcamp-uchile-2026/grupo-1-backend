@@ -1,3 +1,4 @@
+import { aUsuarioRespuesta } from './respuestas.mapper';
 import { Injectable } from '@nestjs/common';
 import {
   RecursoNoEncontradoError,
@@ -7,6 +8,7 @@ import { ActualizarUsuarioDto } from '../dto/actualizar-usuario.dto';
 import { CambiarContrasenaDto } from '../dto/cambiar-contrasena.dto';
 import { UsuarioDetalleResponseDto } from '../dto/usuario-detalle-response.dto';
 import { CredencialesRepository } from '../repositorios/credenciales.repository';
+import { ServicioContrasenas } from '../seguridad/contrasenas';
 import {
   NuevoUsuario,
   UsuariosRepository,
@@ -22,6 +24,7 @@ export class UsuariosService {
   constructor(
     private readonly usuarios: UsuariosRepository,
     private readonly credenciales: CredencialesRepository,
+    private readonly contrasenas: ServicioContrasenas,
   ) {}
 
   /**
@@ -35,7 +38,7 @@ export class UsuariosService {
         `No existe el usuario con id ${usuarioId}`,
       );
     }
-    return usuario;
+    return aUsuarioRespuesta(usuario);
   }
 
   /** Aplica los campos recibidos y devuelve el perfil actualizado. */
@@ -54,12 +57,12 @@ export class UsuariosService {
         `No existe el usuario con id ${usuarioId}`,
       );
     }
-    return actualizado;
+    return aUsuarioRespuesta(actualizado);
   }
 
   /** Crea el perfil de un usuario nuevo. Lo usa el registro. */
   async crearUsuario(datos: NuevoUsuario): Promise<UsuarioDetalleResponseDto> {
-    return this.usuarios.crear(datos);
+    return aUsuarioRespuesta(await this.usuarios.crear(datos));
   }
 
   /**
@@ -84,12 +87,18 @@ export class UsuariosService {
         `El usuario ${usuarioId} no tiene credenciales`,
       );
     }
-    if (credencial.contrasena !== datos.contrasenaActual) {
+    if (
+      !(await this.contrasenas.verificar(
+        datos.contrasenaActual,
+        credencial.hashContrasena,
+      ))
+    ) {
       throw new ReglaNegocioError('La contrasena actual no es correcta');
     }
+    // Los JWT ya emitidos siguen vigentes hasta expirar (revocacion pendiente).
     await this.credenciales.actualizarContrasena(
       usuarioId,
-      datos.contrasenaNueva,
+      await this.contrasenas.hash(datos.contrasenaNueva),
     );
   }
 }

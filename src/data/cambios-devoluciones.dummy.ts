@@ -1,4 +1,4 @@
-import { CambioDevolucionResponseDto } from '../dto/cambio-devolucion-response.dto';
+import type { SolicitudCambioDevolucion } from '../dominio/modelos';
 
 /**
  * Solicitudes de ejemplo. No guardan dueno propio: una solicitud es de quien
@@ -7,7 +7,7 @@ import { CambioDevolucionResponseDto } from '../dto/cambio-devolucion-response.d
  *   (variante 102) por la talla S (variante 101).
  * - 2: usuario 2, pedido 2001, item 6001. Devolucion de la camisa.
  */
-export const CAMBIOS_DEVOLUCIONES_DUMMY: CambioDevolucionResponseDto[] = [
+export const CAMBIOS_DEVOLUCIONES_DUMMY: SolicitudCambioDevolucion[] = [
   {
     id: 1,
     pedidoId: 1001,

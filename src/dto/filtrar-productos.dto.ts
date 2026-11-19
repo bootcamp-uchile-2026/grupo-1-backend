@@ -84,7 +84,7 @@ export class FiltrarProductosDto extends PaginacionQueryDto {
   color?: string;
 
   @ApiPropertyOptional({
-    type: Number,
+    type: 'integer',
     description: 'Precio minimo en pesos chilenos, sin decimales. Inclusivo.',
     minimum: 0,
     example: 10000,
@@ -96,7 +96,7 @@ export class FiltrarProductosDto extends PaginacionQueryDto {
   precioMin?: number;
 
   @ApiPropertyOptional({
-    type: Number,
+    type: 'integer',
     description:
       'Precio maximo en pesos chilenos, sin decimales. Inclusivo. No puede ' +
       'ser menor que precioMin.',

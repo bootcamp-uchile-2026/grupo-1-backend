@@ -1,4 +1,4 @@
-import { UsuarioDetalleResponseDto } from '../dto/usuario-detalle-response.dto';
+import type { Usuario } from '../dominio/modelos';
 
 /**
  * Usuarios de la fase dummy.
@@ -6,7 +6,7 @@ import { UsuarioDetalleResponseDto } from '../dto/usuario-detalle-response.dto';
  * existe para que la pertenencia de los recursos se pueda comprobar: lo que
  * es de un usuario responde 404 cuando lo pide el otro.
  */
-export const USUARIOS_DUMMY: UsuarioDetalleResponseDto[] = [
+export const USUARIOS_DUMMY: Usuario[] = [
   {
     id: 1,
     nombre: 'Fernanda',

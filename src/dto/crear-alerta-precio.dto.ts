@@ -8,7 +8,7 @@ import { IsInt, IsOptional, IsPositive } from 'class-validator';
 export class CrearAlertaPrecioDto {
   @ApiProperty({
     minimum: 1,
-    type: Number,
+    type: 'integer',
     description: 'Identificador del producto.',
     example: 1,
   })
@@ -18,7 +18,7 @@ export class CrearAlertaPrecioDto {
 
   @ApiPropertyOptional({
     minimum: 1,
-    type: Number,
+    type: 'integer',
     description: 'Precio desde el cual se avisa, en pesos chilenos.',
     example: 29990,
   })

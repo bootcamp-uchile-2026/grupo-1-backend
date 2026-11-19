@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import request from 'supertest';
 import { App } from 'supertest/types';
 import { configurarApp } from '../src/configurar-app';
 import { AppModule } from './../src/app.module';
+import { solicitudAutenticada } from './utilidades/autenticacion';
 
 describe('StyleNow API (e2e)', () => {
   let app: INestApplication<App>;
@@ -20,7 +20,7 @@ describe('StyleNow API (e2e)', () => {
   });
 
   it('/productos (GET)', () => {
-    return request(app.getHttpServer())
+    return solicitudAutenticada(app)
       .get('/productos')
       .expect(200)
       .expect(({ body }) => {
@@ -35,7 +35,7 @@ describe('StyleNow API (e2e)', () => {
   });
 
   it('consulta el carrito del usuario mediante el repositorio registrado', () => {
-    return request(app.getHttpServer())
+    return solicitudAutenticada(app)
       .get('/usuarios/1/carrito')
       .expect(200)
       .expect(({ body }) => {
@@ -66,7 +66,7 @@ describe('StyleNow API (e2e)', () => {
     ['/productos/999999', 404],
     ['/productos/1', 200],
   ] as const)('valida %s con HTTP %i', async (ruta, estado) => {
-    await request(app.getHttpServer()).get(ruta).expect(estado);
+    await solicitudAutenticada(app).get(ruta).expect(estado);
   });
 
   const solicitud = {
@@ -86,14 +86,14 @@ describe('StyleNow API (e2e)', () => {
     [{ tipo: 'cambio', nuevaVarianteId: 102 }, 400],
     [{ tipo: 'cambio', nuevaVarianteId: 201 }, 404],
   ])('valida la solicitud %j con HTTP %i', async (datos, estado) => {
-    await request(app.getHttpServer())
+    await solicitudAutenticada(app)
       .post('/usuarios/1/pedidos/1001/cambios-devoluciones')
       .send({ ...solicitud, ...datos })
       .expect(estado);
   });
 
   it('informa simultaneamente motivo vacio y variante ausente', async () => {
-    const response = await request(app.getHttpServer())
+    const response = await solicitudAutenticada(app)
       .post('/usuarios/1/pedidos/1001/cambios-devoluciones')
       .send({ ...solicitud, tipo: 'cambio', motivo: '' })
       .expect(400);
@@ -107,7 +107,7 @@ describe('StyleNow API (e2e)', () => {
   });
 
   it('rechaza parametros desconocidos con el contrato HTTP real', async () => {
-    const response = await request(app.getHttpServer())
+    const response = await solicitudAutenticada(app)
       .get('/productos?desconocido=1')
       .expect(400);
     expect(response.headers['x-request-id']).toBeDefined();

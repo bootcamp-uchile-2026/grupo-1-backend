@@ -2,8 +2,12 @@
 
 API REST del ecommerce de moda **StyleNow**, construida con NestJS y
 documentada con Swagger/OpenAPI. Corresponde al Hito 2 del Bootcamp Backend:
-los datos viven en memoria (repositorios dummy con estado) y todavía no hay
-base de datos.
+el modo predeterminado conserva los repositorios dummy de Hito 2 (solo para
+pruebas). Con PERSISTENCIA=mysql (H3) se guardan en MySQL categorías,
+colecciones, publicaciones, productos, usuarios, credenciales y direcciones;
+carrito, favoritos, pedidos, looks, alertas y postventa siguen en memoria.
+No es persistencia total todavía. Las rutas de usuario exigen JWT (ver
+[H3-P2](docs/p2-identidad-mysql.md)).
 
 ## Contenidos
 
@@ -161,12 +165,15 @@ transforma los tipos.
 
 ## Funcionalidades
 
-Todos los endpoints de Swagger funcionan con datos dummy en memoria:
+En el modo predeterminado, los endpoints de Swagger funcionan con datos dummy:
 
 - **Convención REST:** `POST /auth/registro` agrupa la creación de cuentas con las acciones de acceso (login y logout). Crea el usuario y su carrito, responde 201 con el perfil público y devuelve 409 si el correo ya existe. El perfil creado se consulta en `GET /usuarios/{usuarioId}`.
 - **Auth:** registro (crea la cuenta y su carrito vacío; correo repetido
   responde 409), login (401 si el correo o la contraseña no coinciden) y
-  logout (confirmación). No hay JWT, tokens ni sesiones de servidor.
+  logout (confirmación). Desde H3-P2 el login además devuelve `accessToken`
+  (JWT HS256), `tipoToken` y `expiraEnSegundos`; las rutas `/usuarios/{id}/...`,
+  `POST /pedidos` y `POST /looks` exigen `Authorization: Bearer <token>` del
+  mismo usuario. Las contraseñas se guardan solo como hash scrypt.
 - **Productos:** listado con búsqueda, filtros (categoría, talla, color,
   precio, novedad, oferta), orden y paginación; ficha de producto.
 - **Categorías:** listado, con filtro de destacadas.
@@ -201,7 +208,9 @@ Los usuarios semilla tienen credenciales de demostración en
   y nunca aparecen en respuestas, logs ni mensajes de error.
 - Al reiniciar la aplicación se vuelve al estado inicial de los fixtures.
 - El checkout valida el stock, pero no lo descuenta del catálogo.
-- No hay SQL, base de datos, ORM ni JWT en esta fase.
+- El modo H2 predeterminado no necesita SQL ni conexión a base de datos.
+  El modo SQL se describe al final. `JWT_SECRET` (≥ 32 bytes) es obligatorio
+  en ambos modos: sin él la API no arranca.
 
 ## Observabilidad y errores
 
@@ -268,3 +277,61 @@ se usa por defecto la versión 0.0.1 del manifiesto actual.
 - Nunca subas `.env` ni secretos al repositorio. `.env` está en
   `.gitignore`.
 - `.env.example` solo contiene valores de ejemplo no sensibles.
+
+
+## H3: persistencia MySQL en modo híbrido
+
+> Actualización P1/P2: además de lo descrito abajo para PR0, productos
+> (P1) y usuarios, credenciales y direcciones (P2, migraciones
+> `1795050400000`/`1795050401000`) ya usan MySQL. El harness completo de P2
+> es `node test/persistencia/ejecutar-identidad-laboratorio.cjs`. Detalle,
+> autenticación JWT y cambios de contrato en `docs/p2-identidad-mysql.md`.
+
+El valor por defecto es PERSISTENCIA=dummy. No se abre conexión MySQL en
+ese modo y se conservan los tokens de repositorio y sus instancias dummy.
+PERSISTENCIA=mysql selecciona explícitamente los adaptadores SQL de
+categorías, colecciones y publicaciones; productos, cuentas, carrito,
+pedidos, favoritos, looks, alertas y postventa siguen en memoria.
+Si MySQL no inicia, el arranque falla; no hay fallback silencioso.
+
+Configurar DB_HOST, DB_PORT (3306 por defecto), DB_USERNAME, DB_PASSWORD y
+DB_DATABASE en un entorno propio; la validación comparte validarEntorno y
+no imprime sus valores. synchronize y migrationsRun permanecen en false.
+Las migraciones se ejecutan explícitamente, nunca al arrancar la API.
+Las dos migraciones originales del piloto crean únicamente categoria,
+coleccion y post, más la tabla técnica migrations; las semillas están
+versionadas en la segunda migración. No hay esquema completo H3 aquí.
+
+Para repetir las pruebas autorizadas en una base nueva y desechable:
+
+```powershell
+npm ci
+npm run test:mysql
+```
+
+El harness requiere Docker local, crea contenedor, usuario, base y volumen
+exclusivos y aleatorios de MySQL 8.4, publica solo en loopback y conserva
+las credenciales fuera del repositorio. No usa las variables DB del usuario
+para elegir su base. Ejecuta migraciones desde vacío y reversión dentro de
+esa base, repite seeds, comprueba SQL/contratos/transacciones y verifica
+persistencia tras reiniciar API y contenedor. Finalmente detiene su propio
+contenedor y conserva el volumen; no borra datos de otros proyectos.
+Los logs sanitizados se guardan en una carpeta temporal stylenow-pr0-evidencia-*
+o en EVIDENCIA_PILOTO_DIR si se configura fuera del código. Los secretos
+se conservan por separado, fuera de los logs y del contexto Docker.
+
+Las 42 E2E H2 siguen ejecutándose normalmente con npm run test:e2e.
+La suite SQL se omite si el harness no activa STYLENOW_SQL_TEST; esa omisión
+no es un PASS de MySQL. El harness ejecuta además las E2E H2 en modo híbrido.
+Las migraciones no agregan pedidos, pagos, reembolsos ni nuevas reglas de negocio.
+
+Para una base de laboratorio ya configurada y autorizada se dispone de
+migration:show, migration:run y migration:revert. No ejecutar revert contra
+una base compartida: elimina datos y tablas del piloto. El harness es la
+ruta recomendada para esta verificación desechable.
+
+El lock combinado se instala con npm ci en Windows y Linux. La herramienta
+tools/regenerar-lock.cjs reconstruye metadatos opcionales en un directorio
+limpio, fijando las versiones directas ya resueltas y manteniendo los rangos
+del proyecto. Su uso refresca transitivas y exige revisar el diff y repetir
+npm ci en ambos sistemas; no reemplaza npm ci en CI ni ejecuta audit fix.

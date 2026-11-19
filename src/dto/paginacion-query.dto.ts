@@ -14,7 +14,7 @@ export const LIMITE_MAXIMO_PAGINA = 50;
  */
 export class PaginacionQueryDto {
   @ApiPropertyOptional({
-    type: Number,
+    type: 'integer',
     description: 'Pagina solicitada. Comienza en 1.',
     default: PAGINA_POR_DEFECTO,
     minimum: 1,
@@ -27,7 +27,7 @@ export class PaginacionQueryDto {
   pagina: number = PAGINA_POR_DEFECTO;
 
   @ApiPropertyOptional({
-    type: Number,
+    type: 'integer',
     description: 'Elementos por pagina.',
     default: LIMITE_POR_DEFECTO,
     minimum: 1,

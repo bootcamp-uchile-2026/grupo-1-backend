@@ -85,12 +85,15 @@ async function bootstrap(): Promise<void> {
   const config = new DocumentBuilder()
     .setTitle(nombre)
     .setDescription(
-      'API REST del ecommerce StyleNow. Fase dummy de Hito 2: los datos viven en ' +
-        'memoria mientras el servidor esta arriba; las escrituras se reflejan en las ' +
-        'lecturas siguientes y se pierden al reiniciar. ' +
+      'API REST del ecommerce StyleNow. Con PERSISTENCIA=dummy los datos viven en ' +
+        'memoria; con PERSISTENCIA=mysql catalogo, editorial, usuarios, credenciales y ' +
+        'direcciones se guardan en MySQL y el resto sigue en memoria. ' +
+        'Las rutas de usuario y POST /pedidos exigen Authorization: Bearer <accessToken> ' +
+        'obtenido en POST /auth/login. ' +
         'Toda respuesta incluye la cabecera X-Request-Id, que identifica la peticion.',
     )
     .setVersion(version)
+    .addBearerAuth()
     .addTag(
       'productos',
       'Catalogo, buscador, novedades, ofertas y ficha de producto',

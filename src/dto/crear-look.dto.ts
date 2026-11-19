@@ -17,7 +17,7 @@ import {
 export class LookProductoDto {
   @ApiProperty({
     minimum: 1,
-    type: Number,
+    type: 'integer',
     description: 'Identificador del producto.',
     example: 1,
   })
@@ -27,7 +27,7 @@ export class LookProductoDto {
 
   @ApiProperty({
     minimum: 1,
-    type: Number,
+    type: 'integer',
     description: 'Identificador de la variante elegida.',
     example: 101,
   })
@@ -53,6 +53,7 @@ export class CrearLookDto {
 
   @ApiProperty({
     type: [LookProductoDto],
+    minItems: 1,
     description: 'Productos que componen el look.',
   })
   @IsArray()

@@ -1,4 +1,8 @@
+import { ImagenesModule } from './imagenes/imagenes.module';
+import { LogisticaModule } from './modulos/logistica.module';
 import { validarEntorno } from './validar-entorno';
+import { PersistenciaModule } from './persistencia/persistencia.module';
+import { SeguridadModule } from './seguridad/seguridad.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UsuariosModule } from './modulos/usuarios.module';
@@ -17,6 +21,10 @@ import { CambiosDevolucionesModule } from './modulos/cambios-devoluciones.module
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, validate: validarEntorno }),
+    PersistenciaModule,
+    LogisticaModule,
+    ImagenesModule,
+    SeguridadModule,
     UsuariosModule,
     ProductosModule,
     CategoriasModule,

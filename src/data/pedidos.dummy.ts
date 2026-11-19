@@ -1,15 +1,16 @@
-import { PedidoDetalleResponseDto } from '../dto/pedido-detalle-response.dto';
+import type { Pedido } from '../dominio/modelos';
+
 import type { SnapshotCheckout } from '../repositorios/pedidos.repository';
 
 /**
- * Pedido tal como vive en la fase dummy: el contrato HTTP mas su dueno.
+ * Almacenamiento dummy del modelo de pedido, separado de la respuesta HTTP.
  * usuarioId no forma parte del DTO de salida; equivale a la clave foranea
  * que tendra la tabla de pedidos. checkout guarda la copia del contacto y
  * la direccion del checkout; los pedidos historicos de ejemplo no la tienen.
  */
 export interface PedidoDummy {
   usuarioId: number;
-  pedido: PedidoDetalleResponseDto;
+  pedido: Omit<Pedido, 'usuarioId' | 'checkout'>;
   checkout?: SnapshotCheckout;
 }
 

@@ -1,3 +1,8 @@
+import {
+  proveerRepositorio,
+  proveerDummy,
+} from '../persistencia/proveer-repositorio';
+import { TypeOrmCambiosDevolucionesRepository } from '../repositorios/typeorm/typeorm-cambios-devoluciones.repository';
 import { Module } from '@nestjs/common';
 import { CambiosDevolucionesController } from '../controllers/cambios-devoluciones.controller';
 import { CambiosDevolucionesService } from '../services/cambios-devoluciones.service';
@@ -11,11 +16,12 @@ import { ProductosModule } from './productos.module';
   controllers: [CambiosDevolucionesController],
   providers: [
     CambiosDevolucionesService,
-    DummyCambiosDevolucionesRepository,
-    {
-      provide: CambiosDevolucionesRepository,
-      useExisting: DummyCambiosDevolucionesRepository,
-    },
+    proveerDummy(DummyCambiosDevolucionesRepository),
+    proveerRepositorio(
+      CambiosDevolucionesRepository,
+      DummyCambiosDevolucionesRepository,
+      TypeOrmCambiosDevolucionesRepository,
+    ),
   ],
   exports: [CambiosDevolucionesService, CambiosDevolucionesRepository],
 })

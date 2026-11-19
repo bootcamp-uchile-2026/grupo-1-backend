@@ -1,3 +1,8 @@
+import {
+  proveerRepositorio,
+  proveerDummy,
+} from '../persistencia/proveer-repositorio';
+import { TypeOrmLooksRepository } from '../repositorios/typeorm/typeorm-looks.repository';
 import { Module } from '@nestjs/common';
 import { LooksController } from '../controllers/looks.controller';
 import { LooksService } from '../services/looks.service';
@@ -11,8 +16,12 @@ import { ProductosModule } from './productos.module';
   controllers: [LooksController],
   providers: [
     LooksService,
-    DummyLooksRepository,
-    { provide: LooksRepository, useExisting: DummyLooksRepository },
+    proveerDummy(DummyLooksRepository),
+    proveerRepositorio(
+      LooksRepository,
+      DummyLooksRepository,
+      TypeOrmLooksRepository,
+    ),
   ],
   exports: [LooksService, LooksRepository],
 })

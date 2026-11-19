@@ -1,11 +1,11 @@
-import { LookResponseDto } from '../dto/look-response.dto';
+import type { Look } from '../dominio/modelos';
 
 /**
  * Looks publicados que se pueden explorar y guardar.
  * Cada producto y variante existe en el catalogo dummy, y precioTotal es la
  * suma de los precios de catalogo de sus productos.
  */
-export const LOOKS_DUMMY: LookResponseDto[] = [
+export const LOOKS_DUMMY: Look[] = [
   {
     id: 1,
     nombre: 'Look urbano',

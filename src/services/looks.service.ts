@@ -1,3 +1,4 @@
+import { aLookRespuesta } from './respuestas.mapper';
 import { Injectable } from '@nestjs/common';
 import { RecursoNoEncontradoError } from '../dominio/errores-dominio';
 import { CrearLookDto } from '../dto/crear-look.dto';
@@ -29,7 +30,7 @@ export class LooksService {
       (pagina - 1) * limite,
       limite,
     );
-    return { looks, pagina, limite, total };
+    return { looks: looks.map(aLookRespuesta), pagina, limite, total };
   }
 
   /** Devuelve el detalle de un look. */
@@ -38,7 +39,7 @@ export class LooksService {
     if (!look) {
       throw new RecursoNoEncontradoError(`No existe el look con id ${lookId}`);
     }
-    return look;
+    return aLookRespuesta(look);
   }
 
   /**
@@ -46,7 +47,10 @@ export class LooksService {
    * Cada variante debe pertenecer a su producto; el precio total se calcula
    * con los precios del catalogo.
    */
-  async crearLook(datos: CrearLookDto): Promise<LookResponseDto> {
+  async crearLook(
+    datos: CrearLookDto,
+    usuarioId?: number,
+  ): Promise<LookResponseDto> {
     let precioTotal = 0;
     const productos: LookResponseDto['productos'] = [];
     for (const item of datos.productos) {
@@ -58,7 +62,12 @@ export class LooksService {
       precioTotal += producto.precio;
       productos.push({ productoId: producto.id, varianteId: variante.id });
     }
-    return this.looks.crear({ nombre: datos.nombre, productos, precioTotal });
+    return aLookRespuesta(
+      await this.looks.crear(
+        { nombre: datos.nombre, productos, precioTotal },
+        usuarioId,
+      ),
+    );
   }
 
   /** Guarda un look existente en la cuenta del usuario. */
@@ -69,6 +78,6 @@ export class LooksService {
     await this.usuariosService.obtenerUsuario(usuarioId);
     const look = await this.obtenerLook(datos.lookId);
     await this.looks.guardarParaUsuario(usuarioId, look.id);
-    return look;
+    return aLookRespuesta(look);
   }
 }

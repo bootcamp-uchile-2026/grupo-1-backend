@@ -1,3 +1,4 @@
+import { aDireccionRespuesta } from './respuestas.mapper';
 import { Injectable } from '@nestjs/common';
 import { RecursoNoEncontradoError } from '../dominio/errores-dominio';
 import { ActualizarDireccionDto } from '../dto/actualizar-direccion.dto';
@@ -20,7 +21,9 @@ export class DireccionesService {
   /** Devuelve las direcciones guardadas por el usuario. */
   async obtenerDirecciones(usuarioId: number): Promise<DireccionResponseDto[]> {
     await this.usuariosService.obtenerUsuario(usuarioId);
-    return this.direcciones.listarPorUsuario(usuarioId);
+    return (await this.direcciones.listarPorUsuario(usuarioId)).map(
+      aDireccionRespuesta,
+    );
   }
 
   /** Registra una direccion nueva del usuario. */
@@ -29,15 +32,17 @@ export class DireccionesService {
     datos: CrearDireccionDto,
   ): Promise<DireccionResponseDto> {
     await this.usuariosService.obtenerUsuario(usuarioId);
-    return this.direcciones.crear(usuarioId, {
-      nombre: datos.nombre,
-      calle: datos.calle,
-      numero: datos.numero,
-      departamento: datos.departamento ?? undefined,
-      comuna: datos.comuna,
-      region: datos.region,
-      principal: datos.principal,
-    });
+    return aDireccionRespuesta(
+      await this.direcciones.crear(usuarioId, {
+        nombre: datos.nombre,
+        calle: datos.calle,
+        numero: datos.numero,
+        departamento: datos.departamento ?? undefined,
+        comuna: datos.comuna,
+        region: datos.region,
+        principal: datos.principal,
+      }),
+    );
   }
 
   /** Aplica los campos recibidos y devuelve la direccion actualizada. */
@@ -58,7 +63,7 @@ export class DireccionesService {
       principal: datos.principal ?? direccion.principal,
     });
     if (!actualizada) throw this.noExiste(direccionId);
-    return actualizada;
+    return aDireccionRespuesta(actualizada);
   }
 
   /** Elimina una direccion del usuario. */
@@ -81,7 +86,7 @@ export class DireccionesService {
       direccionId,
     );
     if (!direccion) throw this.noExiste(direccionId);
-    return direccion;
+    return aDireccionRespuesta(direccion);
   }
 
   private noExiste(direccionId: number): RecursoNoEncontradoError {

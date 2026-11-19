@@ -10,7 +10,7 @@ import { IsInt, IsPositive } from 'class-validator';
 export class AgregarFavoritoDto {
   @ApiProperty({
     minimum: 1,
-    type: Number,
+    type: 'integer',
     title: 'Identificador de producto',
     description: 'Producto que el cliente marca como favorito desde la ficha.',
     example: 1,

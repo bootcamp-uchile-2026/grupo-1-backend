@@ -1,3 +1,4 @@
+import { aCategoriaRespuesta } from './respuestas.mapper';
 import { Injectable } from '@nestjs/common';
 import { CategoriaResponseDto } from '../dto/categoria-response.dto';
 import { CategoriasRepository } from '../repositorios/categorias.repository';
@@ -14,7 +15,11 @@ export class CategoriasService {
    * Devuelve las categorias en el orden del menu.
    * Con destacada definido, solo las que tienen ese valor.
    */
-  obtenerCategorias(destacada?: boolean): Promise<CategoriaResponseDto[]> {
-    return this.categorias.listar({ destacada });
+  async obtenerCategorias(
+    destacada?: boolean,
+  ): Promise<CategoriaResponseDto[]> {
+    return (await this.categorias.listar({ destacada })).map(
+      aCategoriaRespuesta,
+    );
   }
 }

@@ -1,10 +1,11 @@
+import type { Alerta } from '../../dominio/modelos';
 import { Injectable } from '@nestjs/common';
 import {
   ALERTA_NUEVA_ID,
   AlertaDummy,
   ALERTAS_DUMMY,
 } from '../../data/alertas.dummy';
-import { AlertaResponseDto } from '../../dto/alerta-response.dto';
+
 import { AlertasRepository, NuevaAlerta } from '../alertas.repository';
 import { copiar } from './reiniciable';
 
@@ -19,7 +20,7 @@ export class DummyAlertasRepository extends AlertasRepository {
     this.siguienteId = ALERTA_NUEVA_ID;
   }
 
-  listarPorUsuario(usuarioId: number): Promise<AlertaResponseDto[]> {
+  listarPorUsuario(usuarioId: number): Promise<Alerta[]> {
     return Promise.resolve(
       this.alertas
         .filter((item) => item.usuarioId === usuarioId)
@@ -27,8 +28,8 @@ export class DummyAlertasRepository extends AlertasRepository {
     );
   }
 
-  crear(usuarioId: number, datos: NuevaAlerta): Promise<AlertaResponseDto> {
-    const alerta: AlertaResponseDto = {
+  crear(usuarioId: number, datos: NuevaAlerta): Promise<Alerta> {
+    const alerta: Alerta = {
       id: this.siguienteId,
       ...copiar(datos),
     };

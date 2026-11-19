@@ -6,8 +6,11 @@ export interface CredencialPersistida {
   usuarioId: number;
   /** Correo normalizado (sin espacios en los extremos y en minusculas). */
   correo: string;
-  /** Contrasena en texto plano: Hito 2 no aplica hashing (fase dummy). */
-  contrasena: string;
+  /**
+   * Hash scrypt de la contrasena (ver ServicioContrasenas). La contrasena en
+   * claro nunca se guarda ni sale del servicio de autenticacion.
+   */
+  hashContrasena: string;
 }
 
 /**
@@ -29,9 +32,9 @@ export abstract class CredencialesRepository {
    */
   abstract crear(credencial: CredencialPersistida): Promise<boolean>;
 
-  /** Reemplaza la contrasena. Devuelve false si el usuario no tiene credencial. */
+  /** Reemplaza el hash. Devuelve false si el usuario no tiene credencial. */
   abstract actualizarContrasena(
     usuarioId: number,
-    contrasena: string,
+    hashContrasena: string,
   ): Promise<boolean>;
 }

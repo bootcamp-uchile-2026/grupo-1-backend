@@ -1,3 +1,8 @@
+import { TypeOrmPostsRepository } from '../repositorios/typeorm/typeorm-posts.repository';
+import {
+  proveerRepositorio,
+  proveerDummy,
+} from '../persistencia/proveer-repositorio';
 import { Module } from '@nestjs/common';
 import { ComunidadController } from '../controllers/comunidad.controller';
 import { ComunidadService } from '../services/comunidad.service';
@@ -9,8 +14,12 @@ import { DummyPostsRepository } from '../repositorios/dummy/dummy-posts.reposito
   controllers: [ComunidadController],
   providers: [
     ComunidadService,
-    DummyPostsRepository,
-    { provide: PostsRepository, useExisting: DummyPostsRepository },
+    proveerDummy(DummyPostsRepository),
+    proveerRepositorio(
+      PostsRepository,
+      DummyPostsRepository,
+      TypeOrmPostsRepository,
+    ),
   ],
   exports: [ComunidadService, PostsRepository],
 })

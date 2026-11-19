@@ -1,3 +1,4 @@
+import { aColeccionRespuesta } from './respuestas.mapper';
 import { Injectable } from '@nestjs/common';
 import { ColeccionResponseDto } from '../dto/coleccion-response.dto';
 import { ColeccionesRepository } from '../repositorios/colecciones.repository';
@@ -12,6 +13,6 @@ export class ColeccionesService {
 
   /** Devuelve todas las colecciones publicadas. */
   async obtenerColecciones(): Promise<ColeccionResponseDto[]> {
-    return this.colecciones.listar();
+    return (await this.colecciones.listar()).map(aColeccionRespuesta);
   }
 }

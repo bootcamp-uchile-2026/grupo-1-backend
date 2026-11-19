@@ -1,6 +1,7 @@
+import type { Pedido } from '../../dominio/modelos';
 import { Injectable } from '@nestjs/common';
 import { PEDIDOS_DUMMY, PedidoDummy } from '../../data/pedidos.dummy';
-import { PedidoDetalleResponseDto } from '../../dto/pedido-detalle-response.dto';
+
 import { NuevoPedido, PedidosRepository } from '../pedidos.repository';
 import { copiar } from './reiniciable';
 
@@ -29,28 +30,37 @@ export class DummyPedidosRepository extends PedidosRepository {
       ) + 1;
   }
 
-  listarPorUsuario(usuarioId: number): Promise<PedidoDetalleResponseDto[]> {
+  listarPorUsuario(usuarioId: number): Promise<Pedido[]> {
     return Promise.resolve(
       this.pedidos
         .filter((item) => item.usuarioId === usuarioId)
-        .map((item) => copiar(item.pedido)),
+        .map((item) => ({
+          ...copiar(item.pedido),
+          usuarioId: item.usuarioId,
+          checkout: copiar(item.checkout),
+        })),
     );
   }
 
-  buscarDeUsuario(
-    usuarioId: number,
-    pedidoId: number,
-  ): Promise<PedidoDetalleResponseDto | null> {
+  buscarDeUsuario(usuarioId: number, pedidoId: number): Promise<Pedido | null> {
     const encontrado = this.pedidos.find(
       (item) => item.usuarioId === usuarioId && item.pedido.id === pedidoId,
     );
-    return Promise.resolve(encontrado ? copiar(encontrado.pedido) : null);
+    return Promise.resolve(
+      encontrado
+        ? {
+            ...copiar(encontrado.pedido),
+            usuarioId: encontrado.usuarioId,
+            checkout: copiar(encontrado.checkout),
+          }
+        : null,
+    );
   }
 
-  crear(datos: NuevoPedido): Promise<PedidoDetalleResponseDto> {
+  crear(datos: NuevoPedido): Promise<Pedido> {
     const id = this.siguientePedidoId;
     this.siguientePedidoId += 1;
-    const pedido: PedidoDetalleResponseDto = {
+    const pedido: Omit<Pedido, 'usuarioId' | 'checkout'> = {
       id,
       numeroPedido: `SN-${datos.fecha.slice(0, 4)}-${id}`,
       estado: datos.estado,
@@ -70,7 +80,11 @@ export class DummyPedidosRepository extends PedidosRepository {
       pedido,
       checkout: copiar(datos.checkout),
     });
-    return Promise.resolve(copiar(pedido));
+    return Promise.resolve({
+      ...copiar(pedido),
+      usuarioId: datos.usuarioId,
+      checkout: copiar(datos.checkout),
+    });
   }
 
   /** Compensacion acotada: no toca fixtures ni reutiliza ids asignados. */

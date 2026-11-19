@@ -1,10 +1,11 @@
+import type { Direccion } from '../../dominio/modelos';
 import { Injectable } from '@nestjs/common';
 import {
   DIRECCION_NUEVA_ID,
   DIRECCIONES_DUMMY,
   DireccionDummy,
 } from '../../data/direcciones.dummy';
-import { DireccionResponseDto } from '../../dto/direccion-response.dto';
+
 import {
   DireccionesRepository,
   NuevaDireccion,
@@ -22,7 +23,7 @@ export class DummyDireccionesRepository extends DireccionesRepository {
     this.siguienteId = DIRECCION_NUEVA_ID;
   }
 
-  listarPorUsuario(usuarioId: number): Promise<DireccionResponseDto[]> {
+  listarPorUsuario(usuarioId: number): Promise<Direccion[]> {
     return Promise.resolve(
       this.direcciones
         .filter((item) => item.usuarioId === usuarioId)
@@ -33,18 +34,15 @@ export class DummyDireccionesRepository extends DireccionesRepository {
   buscarDeUsuario(
     usuarioId: number,
     direccionId: number,
-  ): Promise<DireccionResponseDto | null> {
+  ): Promise<Direccion | null> {
     const encontrada = this.posicion(usuarioId, direccionId);
     return Promise.resolve(
       encontrada === -1 ? null : copiar(this.direcciones[encontrada].direccion),
     );
   }
 
-  crear(
-    usuarioId: number,
-    datos: NuevaDireccion,
-  ): Promise<DireccionResponseDto> {
-    const direccion: DireccionResponseDto = {
+  crear(usuarioId: number, datos: NuevaDireccion): Promise<Direccion> {
+    const direccion: Direccion = {
       id: this.siguienteId,
       ...copiar(datos),
     };
@@ -55,8 +53,8 @@ export class DummyDireccionesRepository extends DireccionesRepository {
 
   actualizar(
     usuarioId: number,
-    direccion: DireccionResponseDto,
-  ): Promise<DireccionResponseDto | null> {
+    direccion: Direccion,
+  ): Promise<Direccion | null> {
     const encontrada = this.posicion(usuarioId, direccion.id);
     if (encontrada === -1) return Promise.resolve(null);
     this.direcciones[encontrada] = { usuarioId, direccion: copiar(direccion) };

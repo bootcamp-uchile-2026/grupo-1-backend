@@ -1,3 +1,4 @@
+import { Publico } from '../seguridad/publico.decorator';
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ColeccionResponseDto } from '../dto/coleccion-response.dto';
@@ -10,6 +11,7 @@ import { ColeccionesService } from '../services/colecciones.service';
  * que agrupan productos y tienen precio.
  */
 @ApiTags('colecciones')
+@Publico()
 @Controller('colecciones')
 export class ColeccionesController {
   constructor(private readonly coleccionesService: ColeccionesService) {}

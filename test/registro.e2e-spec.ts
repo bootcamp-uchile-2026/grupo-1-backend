@@ -1,9 +1,9 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
 import { configurarApp } from '../src/configurar-app';
+import { solicitudAutenticada } from './utilidades/autenticacion';
 
 describe('registro', () => {
   let app: INestApplication<App>;
@@ -19,7 +19,7 @@ describe('registro', () => {
 
   afterAll(async () => app.close());
   it('crea el perfil público y rechaza repetir el correo', async () => {
-    const api = request(app.getHttpServer());
+    const api = solicitudAutenticada(app);
     const cuenta = {
       nombre: 'Prueba',
       correoElectronico: 'registro@example.org',

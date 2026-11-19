@@ -1,6 +1,7 @@
+import type { Usuario } from '../../dominio/modelos';
 import { Injectable } from '@nestjs/common';
 import { USUARIOS_DUMMY } from '../../data/usuarios.dummy';
-import { UsuarioDetalleResponseDto } from '../../dto/usuario-detalle-response.dto';
+
 import {
   CambiosUsuario,
   NuevoUsuario,
@@ -10,7 +11,7 @@ import { copiar } from './reiniciable';
 
 @Injectable()
 export class DummyUsuariosRepository extends UsuariosRepository {
-  private usuarios: UsuarioDetalleResponseDto[] = [];
+  private usuarios: Usuario[] = [];
   private siguienteId = 0;
 
   constructor() {
@@ -19,23 +20,20 @@ export class DummyUsuariosRepository extends UsuariosRepository {
     this.siguienteId = Math.max(0, ...this.usuarios.map((u) => u.id)) + 1;
   }
 
-  buscarPorId(id: number): Promise<UsuarioDetalleResponseDto | null> {
+  buscarPorId(id: number): Promise<Usuario | null> {
     const usuario = this.usuarios.find((item) => item.id === id);
     return Promise.resolve(usuario ? copiar(usuario) : null);
   }
 
-  actualizar(
-    id: number,
-    cambios: CambiosUsuario,
-  ): Promise<UsuarioDetalleResponseDto | null> {
+  actualizar(id: number, cambios: CambiosUsuario): Promise<Usuario | null> {
     const posicion = this.usuarios.findIndex((item) => item.id === id);
     if (posicion === -1) return Promise.resolve(null);
     this.usuarios[posicion] = { ...this.usuarios[posicion], ...cambios };
     return Promise.resolve(copiar(this.usuarios[posicion]));
   }
 
-  crear(datos: NuevoUsuario): Promise<UsuarioDetalleResponseDto> {
-    const usuario: UsuarioDetalleResponseDto = {
+  crear(datos: NuevoUsuario): Promise<Usuario> {
+    const usuario: Usuario = {
       id: this.siguienteId,
       ...copiar(datos),
     };

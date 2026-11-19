@@ -1,3 +1,4 @@
+import { Publico } from '../seguridad/publico.decorator';
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PostResponseDto } from '../dto/post-response.dto';
@@ -10,6 +11,7 @@ import { ComunidadService } from '../services/comunidad.service';
  * limita a una unica consulta de lectura.
  */
 @ApiTags('comunidad')
+@Publico()
 @Controller('posts')
 export class ComunidadController {
   constructor(private readonly comunidadService: ComunidadService) {}

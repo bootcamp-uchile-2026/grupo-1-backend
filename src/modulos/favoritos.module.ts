@@ -1,3 +1,8 @@
+import {
+  proveerRepositorio,
+  proveerDummy,
+} from '../persistencia/proveer-repositorio';
+import { TypeOrmFavoritosRepository } from '../repositorios/typeorm/typeorm-favoritos.repository';
 import { Module } from '@nestjs/common';
 import { FavoritosController } from '../controllers/favoritos.controller';
 import { FavoritosService } from '../services/favoritos.service';
@@ -11,8 +16,12 @@ import { ProductosModule } from './productos.module';
   controllers: [FavoritosController],
   providers: [
     FavoritosService,
-    DummyFavoritosRepository,
-    { provide: FavoritosRepository, useExisting: DummyFavoritosRepository },
+    proveerDummy(DummyFavoritosRepository),
+    proveerRepositorio(
+      FavoritosRepository,
+      DummyFavoritosRepository,
+      TypeOrmFavoritosRepository,
+    ),
   ],
   exports: [FavoritosService, FavoritosRepository],
 })

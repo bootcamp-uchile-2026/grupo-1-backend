@@ -18,7 +18,7 @@ import {
 export class CrearCambioDevolucionDto {
   @ApiProperty({
     minimum: 1,
-    type: Number,
+    type: 'integer',
     description:
       'Identificador del item, obtenido del detalle del pedido (items[].id).',
     example: 5001,
@@ -47,7 +47,7 @@ export class CrearCambioDevolucionDto {
 
   @ApiPropertyOptional({
     minimum: 1,
-    type: Number,
+    type: 'integer',
     description: 'Obligatoria para cambio. No se permite para devolucion.',
     example: 101,
   })

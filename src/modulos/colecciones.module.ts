@@ -1,3 +1,8 @@
+import { TypeOrmColeccionesRepository } from '../repositorios/typeorm/typeorm-colecciones.repository';
+import {
+  proveerRepositorio,
+  proveerDummy,
+} from '../persistencia/proveer-repositorio';
 import { Module } from '@nestjs/common';
 import { ColeccionesController } from '../controllers/colecciones.controller';
 import { ColeccionesService } from '../services/colecciones.service';
@@ -9,8 +14,12 @@ import { DummyColeccionesRepository } from '../repositorios/dummy/dummy-coleccio
   controllers: [ColeccionesController],
   providers: [
     ColeccionesService,
-    DummyColeccionesRepository,
-    { provide: ColeccionesRepository, useExisting: DummyColeccionesRepository },
+    proveerDummy(DummyColeccionesRepository),
+    proveerRepositorio(
+      ColeccionesRepository,
+      DummyColeccionesRepository,
+      TypeOrmColeccionesRepository,
+    ),
   ],
   exports: [ColeccionesService, ColeccionesRepository],
 })

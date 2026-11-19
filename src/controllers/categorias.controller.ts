@@ -1,3 +1,4 @@
+import { Publico } from '../seguridad/publico.decorator';
 import { ErrorResponseDto } from '../dto/error-response.dto';
 import { Controller, Get, Query } from '@nestjs/common';
 import {
@@ -17,6 +18,7 @@ import { CategoriasService } from '../services/categorias.service';
  * GET /productos?categoria={slug}.
  */
 @ApiTags('categorias')
+@Publico()
 @Controller('categorias')
 export class CategoriasController {
   constructor(private readonly categoriasService: CategoriasService) {}
