@@ -1,3 +1,4 @@
+import { Publico } from '../seguridad/publico.decorator';
 import { ErrorResponseDto } from '../dto/error-response.dto';
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -10,11 +11,12 @@ import { AuthService } from '../services/auth.service';
 
 /**
  * Recurso Auth.
- * Cubre los accesos "Crear cuenta" e "Iniciar sesion" del header. En Hito 2
- * las cuentas y credenciales viven en memoria (fase dummy); no hay JWT,
- * hashing de contrasenas, guards ni sesiones de servidor.
+ * Cubre los accesos "Crear cuenta" e "Iniciar sesion" del header. Rutas
+ * publicas. Desde H3-P2 las contrasenas se guardan solo como hash scrypt y
+ * el login emite un JWT que exigen las rutas de usuario (AutenticacionGuard).
  */
 @ApiTags('auth')
+@Publico()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -25,8 +27,8 @@ export class AuthController {
       'Crea la cuenta del formulario "Crear cuenta" del header, junto con su carrito ' +
       'vacio. El correo electronico identifica la cuenta y no se puede repetir (se compara ' +
       'sin distinguir mayusculas). El perfil nace con apellido vacio, que se completa en ' +
-      'PATCH /usuarios/{usuarioId}. La respuesta nunca incluye la contrasena. En la fase ' +
-      'dummy de Hito 2 la contrasena se guarda en memoria sin hashing.',
+      'PATCH /usuarios/{usuarioId}. La respuesta nunca incluye la contrasena; ' +
+      'solo se guarda su hash scrypt. Usuario y credencial se crean en una misma transaccion.',
   })
   @ApiBody({
     description: 'Datos del formulario de registro.',
@@ -60,8 +62,9 @@ export class AuthController {
     summary: 'Inicia sesion',
     description:
       'Valida el correo electronico y la contrasena del formulario "Iniciar sesion". ' +
-      'La respuesta devuelve un mensaje y los datos publicos del usuario. No devuelve token ' +
-      'ni accessToken porque JWT esta fuera del alcance de Hito 2.',
+      'La respuesta devuelve un mensaje, los datos publicos del usuario y un JWT HS256 ' +
+      '(accessToken, tipoToken Bearer, expiraEnSegundos). Enviar Authorization: Bearer ' +
+      '<accessToken> en las rutas /usuarios/{usuarioId}/..., POST /pedidos y POST /looks.',
   })
   @ApiBody({
     description: 'Credenciales del formulario de inicio de sesion.',
@@ -92,10 +95,10 @@ export class AuthController {
     summary: 'Cierra la sesion del frontend',
     description:
       'Devuelve la confirmacion de cierre de sesion que el header necesita para volver al ' +
-      'estado de visitante. IMPORTANTE: Hito 2 no implementa JWT ni sesiones de servidor, ' +
-      'por lo tanto este endpoint representa el contrato de cierre de sesion del frontend ' +
-      'pero no invalida ningun token ni ninguna sesion en el servidor. El frontend es quien ' +
-      'descarta los datos del usuario que mantiene localmente.',
+      'estado de visitante. IMPORTANTE: el JWT es sin estado; ' +
+      'este endpoint no revoca el token en el servidor (la revocacion esta pendiente de ' +
+      'decision). El frontend descarta el token y los datos del usuario; el token vence ' +
+      'por expiracion.',
   })
   @ApiResponse({
     status: 200,

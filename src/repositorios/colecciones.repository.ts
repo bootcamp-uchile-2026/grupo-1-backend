@@ -1,6 +1,6 @@
-import { ColeccionResponseDto } from '../dto/coleccion-response.dto';
+import type { Coleccion } from '../dominio/modelos';
 
 /** Acceso de solo lectura a las colecciones editoriales. */
 export abstract class ColeccionesRepository {
-  abstract listar(): Promise<ColeccionResponseDto[]>;
+  abstract listar(): Promise<Coleccion[]>;
 }

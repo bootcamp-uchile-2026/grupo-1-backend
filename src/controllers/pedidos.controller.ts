@@ -1,5 +1,6 @@
+import { UsuarioAutenticado } from '../seguridad/usuario-autenticado.decorator';
 import { IdPositivoPipe } from '../common/id-positivo.pipe';
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Headers, Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ErrorResponseDto } from '../dto/error-response.dto';
 import {
   ApiBadRequestResponse,
@@ -8,6 +9,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiHeader,
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
@@ -34,7 +36,7 @@ export class PedidosController {
       'Revalida stock, copia nombre y precio vigentes de cada producto en sus items, ' +
       'guarda contacto y direccion como foto del checkout y vacia el carrito. El ' +
       'envio no se cobra (costoEnvio 0) porque el checkout no indica modalidad de ' +
-      'despacho, y el stock del catalogo no se descuenta. Devuelve el detalle ' +
+      'despacho, y en modo MySQL descuenta stock transaccionalmente al confirmar. Devuelve el detalle ' +
       'completo, con items, para que el frontend no necesite una segunda consulta.',
   })
   @ApiCreatedResponse({
@@ -56,11 +58,19 @@ export class PedidosController {
     type: ErrorResponseDto,
     description: 'Ya hay un checkout en curso para el mismo carrito.',
   })
+  @ApiHeader({
+    name: 'Idempotency-Key',
+    required: false,
+    description:
+      'En MySQL: clave ASCII de 1 a 128 caracteres; mismo checkout devuelve el pedido original, payload distinto 409.',
+  })
   @Post('pedidos')
   async crearPedido(
     @Body() datos: CrearPedidoDto,
+    @Headers('idempotency-key') clave: string | undefined,
+    @UsuarioAutenticado() usuarioId: number,
   ): Promise<PedidoDetalleResponseDto> {
-    return this.pedidosService.crearPedido(datos);
+    return this.pedidosService.crearPedido(datos, usuarioId, clave);
   }
 
   @ApiOperation({ summary: 'Lista los pedidos del usuario' })
@@ -77,6 +87,11 @@ export class PedidosController {
   @ApiNotFoundResponse({
     type: ErrorResponseDto,
     description: 'No existe el usuario.',
+  })
+  @ApiBadRequestResponse({
+    type: ErrorResponseDto,
+    description:
+      'Los identificadores deben ser enteros positivos en formato canonico.',
   })
   @Get('usuarios/:usuarioId/pedidos')
   async obtenerPedidos(
@@ -110,6 +125,11 @@ export class PedidosController {
   @ApiNotFoundResponse({
     type: ErrorResponseDto,
     description: 'No existe el usuario, o el pedido no existe o no es suyo.',
+  })
+  @ApiBadRequestResponse({
+    type: ErrorResponseDto,
+    description:
+      'Los identificadores deben ser enteros positivos en formato canonico.',
   })
   @Get('usuarios/:usuarioId/pedidos/:pedidoId')
   async obtenerPedido(

@@ -40,13 +40,13 @@ export class DummyCredencialesRepository extends CredencialesRepository {
 
   actualizarContrasena(
     usuarioId: number,
-    contrasena: string,
+    hashContrasena: string,
   ): Promise<boolean> {
     const credencial = this.credenciales.find(
       (item) => item.usuarioId === usuarioId,
     );
     if (!credencial) return Promise.resolve(false);
-    credencial.contrasena = contrasena;
+    credencial.hashContrasena = hashContrasena;
     return Promise.resolve(true);
   }
 }

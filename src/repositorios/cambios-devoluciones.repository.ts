@@ -1,11 +1,11 @@
-import { CambioDevolucionResponseDto } from '../dto/cambio-devolucion-response.dto';
+import type { SolicitudCambioDevolucion } from '../dominio/modelos';
 
 /**
  * Datos de una solicitud sin id ni fecha: los asigna el repositorio al
  * registrarla.
  */
 export type NuevaSolicitud = Omit<
-  CambioDevolucionResponseDto,
+  SolicitudCambioDevolucion,
   'id' | 'fechaSolicitud'
 >;
 
@@ -14,11 +14,22 @@ export type NuevaSolicitud = Omit<
  * la pertenencia al usuario la resuelve el Service a traves del pedido.
  */
 export abstract class CambiosDevolucionesRepository {
+  historial(
+    _id: number,
+  ): Promise<{ estado: string; fecha: Date; resolucion: string | null }[]> {
+    void _id;
+    return Promise.resolve([]);
+  }
+
   abstract listarPorPedido(
     pedidoId: number,
-  ): Promise<CambioDevolucionResponseDto[]>;
+  ): Promise<SolicitudCambioDevolucion[]>;
 
-  abstract buscarPorId(id: number): Promise<CambioDevolucionResponseDto | null>;
+  abstract buscarPorId(id: number): Promise<SolicitudCambioDevolucion | null>;
 
-  abstract crear(datos: NuevaSolicitud): Promise<CambioDevolucionResponseDto>;
+  abstract crear(
+    datos: NuevaSolicitud,
+    actor?: number,
+    clave?: string,
+  ): Promise<SolicitudCambioDevolucion>;
 }

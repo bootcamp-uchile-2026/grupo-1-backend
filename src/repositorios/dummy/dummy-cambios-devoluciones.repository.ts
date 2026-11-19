@@ -1,10 +1,11 @@
+import type { SolicitudCambioDevolucion } from '../../dominio/modelos';
 import { Injectable } from '@nestjs/common';
 import {
   CAMBIOS_DEVOLUCIONES_DUMMY,
   SOLICITUD_NUEVA_FECHA,
   SOLICITUD_NUEVA_ID,
 } from '../../data/cambios-devoluciones.dummy';
-import { CambioDevolucionResponseDto } from '../../dto/cambio-devolucion-response.dto';
+
 import {
   CambiosDevolucionesRepository,
   NuevaSolicitud,
@@ -13,7 +14,7 @@ import { copiar } from './reiniciable';
 
 @Injectable()
 export class DummyCambiosDevolucionesRepository extends CambiosDevolucionesRepository {
-  private solicitudes: CambioDevolucionResponseDto[] = [];
+  private solicitudes: SolicitudCambioDevolucion[] = [];
   private siguienteId = SOLICITUD_NUEVA_ID;
 
   constructor() {
@@ -22,20 +23,20 @@ export class DummyCambiosDevolucionesRepository extends CambiosDevolucionesRepos
     this.siguienteId = SOLICITUD_NUEVA_ID;
   }
 
-  listarPorPedido(pedidoId: number): Promise<CambioDevolucionResponseDto[]> {
+  listarPorPedido(pedidoId: number): Promise<SolicitudCambioDevolucion[]> {
     return Promise.resolve(
       copiar(this.solicitudes.filter((item) => item.pedidoId === pedidoId)),
     );
   }
 
-  buscarPorId(id: number): Promise<CambioDevolucionResponseDto | null> {
+  buscarPorId(id: number): Promise<SolicitudCambioDevolucion | null> {
     const solicitud = this.solicitudes.find((item) => item.id === id);
     return Promise.resolve(solicitud ? copiar(solicitud) : null);
   }
 
   /** La fecha es fija en la fase dummy para que las respuestas sean estables. */
-  crear(datos: NuevaSolicitud): Promise<CambioDevolucionResponseDto> {
-    const solicitud: CambioDevolucionResponseDto = {
+  crear(datos: NuevaSolicitud): Promise<SolicitudCambioDevolucion> {
+    const solicitud: SolicitudCambioDevolucion = {
       id: this.siguienteId,
       ...copiar(datos),
       fechaSolicitud: SOLICITUD_NUEVA_FECHA,

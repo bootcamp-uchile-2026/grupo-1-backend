@@ -1,9 +1,9 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
 import { configurarApp } from '../src/configurar-app';
+import { solicitudAutenticada } from './utilidades/autenticacion';
 
 describe('favoritos', () => {
   let app: INestApplication<App>;
@@ -19,7 +19,7 @@ describe('favoritos', () => {
 
   afterAll(async () => app.close());
   it('lista solo los productos del usuario y conserva el alta existente', async () => {
-    const api = request(app.getHttpServer());
+    const api = solicitudAutenticada(app);
     await api.get('/usuarios/1/favoritos').expect(200, []);
     await api.post('/usuarios/1/favoritos').send({ productoId: 1 }).expect(201);
     const res = await api.get('/usuarios/1/favoritos').expect(200);

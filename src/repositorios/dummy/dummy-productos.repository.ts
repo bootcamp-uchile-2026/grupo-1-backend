@@ -1,6 +1,7 @@
+import type { ProductoDetalle } from '../../dominio/modelos';
 import { Injectable } from '@nestjs/common';
 import { PRODUCTOS_DUMMY } from '../../data/productos.dummy';
-import { ProductoDetalleResponseDto } from '../../dto/producto-detalle-response.dto';
+
 import {
   ProductosRepository,
   VarianteConProducto,
@@ -10,11 +11,11 @@ import { copiar } from './reiniciable';
 /** Solo lectura: no tiene estado propio que reiniciar. */
 @Injectable()
 export class DummyProductosRepository extends ProductosRepository {
-  listar(): Promise<ProductoDetalleResponseDto[]> {
+  listar(): Promise<ProductoDetalle[]> {
     return Promise.resolve(copiar(PRODUCTOS_DUMMY));
   }
 
-  buscarPorId(id: number): Promise<ProductoDetalleResponseDto | null> {
+  buscarPorId(id: number): Promise<ProductoDetalle | null> {
     const producto = PRODUCTOS_DUMMY.find((item) => item.id === id);
     return Promise.resolve(producto ? copiar(producto) : null);
   }

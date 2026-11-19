@@ -1,4 +1,4 @@
-import { AlertaResponseDto } from '../dto/alerta-response.dto';
+import type { Alerta } from '../dominio/modelos';
 
 /**
  * Alerta tal como vive en la fase dummy: el contrato HTTP mas su dueno.
@@ -6,7 +6,7 @@ import { AlertaResponseDto } from '../dto/alerta-response.dto';
  */
 export interface AlertaDummy {
   usuarioId: number;
-  alerta: AlertaResponseDto;
+  alerta: Alerta;
 }
 
 /** Alertas de ejemplo. Productos y variantes existen en el catalogo dummy. */

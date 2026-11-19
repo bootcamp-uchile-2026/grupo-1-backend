@@ -1,11 +1,11 @@
-import { ColeccionResponseDto } from '../dto/coleccion-response.dto';
+import type { Coleccion } from '../dominio/modelos';
 
 /**
  * Colecciones editoriales de la fase dummy ("Inspiracion para ti").
  * Son contenido independiente de los looks de /looks: solo tienen titulo,
  * texto e imagen, sin productos ni precios.
  */
-export const COLECCIONES_DUMMY: ColeccionResponseDto[] = [
+export const COLECCIONES_DUMMY: Coleccion[] = [
   {
     id: 1,
     nombre: 'Look urbano',

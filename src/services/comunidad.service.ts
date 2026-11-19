@@ -1,3 +1,4 @@
+import { aPublicacionRespuesta } from './respuestas.mapper';
 import { Injectable } from '@nestjs/common';
 import { PostResponseDto } from '../dto/post-response.dto';
 import { PostsRepository } from '../repositorios/posts.repository';
@@ -9,6 +10,6 @@ export class ComunidadService {
 
   /** Devuelve las publicaciones que se muestran en Comunidad. */
   async obtenerPosts(): Promise<PostResponseDto[]> {
-    return this.posts.listar();
+    return (await this.posts.listar()).map(aPublicacionRespuesta);
   }
 }

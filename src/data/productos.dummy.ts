@@ -1,4 +1,4 @@
-import { ProductoDetalleResponseDto } from '../dto/producto-detalle-response.dto';
+import type { ProductoDetalle } from '../dominio/modelos';
 
 const GUIA_TALLAS = 'https://www.stylenow.cl/ayuda/guia-de-tallas';
 
@@ -8,7 +8,7 @@ const GUIA_TALLAS = 'https://www.stylenow.cl/ayuda/guia-de-tallas';
  * ninguno guarda una copia propia del precio.
  * El id de una variante es unico en todo el catalogo.
  */
-export const PRODUCTOS_DUMMY: ProductoDetalleResponseDto[] = [
+export const PRODUCTOS_DUMMY: ProductoDetalle[] = [
   {
     id: 1,
     nombre: 'Vestido de lino blanco',

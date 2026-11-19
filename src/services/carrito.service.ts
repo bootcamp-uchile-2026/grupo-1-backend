@@ -109,7 +109,9 @@ export class CarritoService {
     operacion: () => Promise<T>,
   ): Promise<T> {
     const anterior = this.operaciones.get(carritoId) ?? Promise.resolve();
-    const resultado = anterior.then(operacion);
+    const resultado = anterior.then(() =>
+      this.carritos.ejecutarBloqueado(carritoId, operacion),
+    );
     const cola = resultado.then(
       () => undefined,
       () => undefined,

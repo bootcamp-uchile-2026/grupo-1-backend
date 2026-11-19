@@ -1,3 +1,4 @@
+import { aProductoDetalleRespuesta } from './respuestas.mapper';
 import { Injectable } from '@nestjs/common';
 import {
   RecursoNoEncontradoError,
@@ -85,7 +86,7 @@ export class ProductosService {
         `No existe el producto con id ${productoId}`,
       );
     }
-    return producto;
+    return aProductoDetalleRespuesta(producto);
   }
 
   /** Busca una variante en todo el catalogo y devuelve tambien su producto. */

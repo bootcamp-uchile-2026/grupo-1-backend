@@ -29,6 +29,8 @@ RUN npm ci --omit=dev && npm cache clean --force
 
 COPY --from=builder --chown=node:node /app/dist ./dist
 
+RUN mkdir -p /app/uploads/productos && chown -R node:node /app/uploads
+
 USER node
 
 EXPOSE 3000

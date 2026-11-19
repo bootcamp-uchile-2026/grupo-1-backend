@@ -1,3 +1,4 @@
+import { aSolicitudCambioDevolucionRespuesta } from './respuestas.mapper';
 import { Injectable } from '@nestjs/common';
 import {
   RecursoNoEncontradoError,
@@ -27,6 +28,7 @@ export class CambiosDevolucionesService {
     usuarioId: number,
     pedidoId: number,
     datos: CrearCambioDevolucionDto,
+    clave?: string,
   ): Promise<CambioDevolucionResponseDto> {
     const item = await this.pedidosService.obtenerItemDePedido(
       usuarioId,
@@ -53,15 +55,26 @@ export class CambiosDevolucionesService {
       );
     }
 
-    return this.solicitudes.crear({
-      pedidoId,
-      pedidoItemId: item.id,
-      tipo: datos.tipo,
-      estado: 'solicitada',
-      motivo: datos.motivo,
-      nuevaVarianteId,
-      metodoEntrega: datos.metodoEntrega,
-    });
+    return aSolicitudCambioDevolucionRespuesta(
+      await this.solicitudes.crear(
+        {
+          pedidoId,
+          pedidoItemId: item.id,
+          tipo: datos.tipo,
+          estado: 'solicitada',
+          motivo: datos.motivo,
+          nuevaVarianteId,
+          metodoEntrega: datos.metodoEntrega,
+        },
+        usuarioId,
+        clave,
+      ),
+    );
+  }
+
+  async historial(usuarioId: number, id: number) {
+    await this.obtenerSolicitud(usuarioId, id);
+    return this.solicitudes.historial(id);
   }
 
   /** Devuelve las solicitudes asociadas a un pedido del usuario. */
@@ -70,7 +83,9 @@ export class CambiosDevolucionesService {
     pedidoId: number,
   ): Promise<CambioDevolucionResponseDto[]> {
     const pedido = await this.pedidosService.obtenerPedido(usuarioId, pedidoId);
-    return this.solicitudes.listarPorPedido(pedido.id);
+    return (await this.solicitudes.listarPorPedido(pedido.id)).map(
+      aSolicitudCambioDevolucionRespuesta,
+    );
   }
 
   /**
@@ -90,6 +105,6 @@ export class CambiosDevolucionesService {
         `No existe la solicitud con id ${solicitudId}`,
       );
     }
-    return solicitud;
+    return aSolicitudCambioDevolucionRespuesta(solicitud);
   }
 }

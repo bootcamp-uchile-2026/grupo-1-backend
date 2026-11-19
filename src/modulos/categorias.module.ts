@@ -1,3 +1,8 @@
+import { TypeOrmCategoriasRepository } from '../repositorios/typeorm/typeorm-categorias.repository';
+import {
+  proveerRepositorio,
+  proveerDummy,
+} from '../persistencia/proveer-repositorio';
 import { Module } from '@nestjs/common';
 import { CategoriasController } from '../controllers/categorias.controller';
 import { CategoriasService } from '../services/categorias.service';
@@ -9,8 +14,12 @@ import { DummyCategoriasRepository } from '../repositorios/dummy/dummy-categoria
   controllers: [CategoriasController],
   providers: [
     CategoriasService,
-    DummyCategoriasRepository,
-    { provide: CategoriasRepository, useExisting: DummyCategoriasRepository },
+    proveerDummy(DummyCategoriasRepository),
+    proveerRepositorio(
+      CategoriasRepository,
+      DummyCategoriasRepository,
+      TypeOrmCategoriasRepository,
+    ),
   ],
   exports: [CategoriasService, CategoriasRepository],
 })

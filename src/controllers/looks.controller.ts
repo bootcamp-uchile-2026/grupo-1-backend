@@ -1,3 +1,5 @@
+import { UsuarioAutenticado } from '../seguridad/usuario-autenticado.decorator';
+import { Publico } from '../seguridad/publico.decorator';
 import { IdPositivoPipe } from '../common/id-positivo.pipe';
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ErrorResponseDto } from '../dto/error-response.dto';
@@ -37,6 +39,7 @@ export class LooksController {
     description: 'Looks obtenidos correctamente.',
     type: LooksPaginadosResponseDto,
   })
+  @Publico()
   @Get('looks')
   async obtenerLooks(
     @Query() paginacion: PaginacionQueryDto,
@@ -56,6 +59,7 @@ export class LooksController {
     type: ErrorResponseDto,
     description: 'No existe un look con ese id.',
   })
+  @Publico()
   @Get('looks/:lookId')
   async obtenerLook(
     @Param('lookId', IdPositivoPipe) lookId: number,
@@ -76,8 +80,11 @@ export class LooksController {
       'Algun producto no existe o la variante no pertenece a ese producto.',
   })
   @Post('looks')
-  async crearLook(@Body() datos: CrearLookDto): Promise<LookResponseDto> {
-    return this.looksService.crearLook(datos);
+  async crearLook(
+    @Body() datos: CrearLookDto,
+    @UsuarioAutenticado() usuarioId: number,
+  ): Promise<LookResponseDto> {
+    return this.looksService.crearLook(datos, usuarioId);
   }
 
   @ApiOperation({

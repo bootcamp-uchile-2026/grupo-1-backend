@@ -1,3 +1,4 @@
+import { aAlertaRespuesta } from './respuestas.mapper';
 import { Injectable } from '@nestjs/common';
 import { RecursoNoEncontradoError } from '../dominio/errores-dominio';
 import { AlertaResponseDto } from '../dto/alerta-response.dto';
@@ -24,7 +25,9 @@ export class AlertasService {
   /** Devuelve las alertas registradas por el usuario. */
   async obtenerAlertas(usuarioId: number): Promise<AlertaResponseDto[]> {
     await this.usuariosService.obtenerUsuario(usuarioId);
-    return this.alertas.listarPorUsuario(usuarioId);
+    return (await this.alertas.listarPorUsuario(usuarioId)).map(
+      aAlertaRespuesta,
+    );
   }
 
   /** Registra una alerta de baja de precio sobre un producto del catalogo. */
@@ -36,12 +39,14 @@ export class AlertasService {
     const producto = await this.productosService.obtenerProductoPorId(
       datos.productoId,
     );
-    return this.alertas.crear(usuarioId, {
-      tipo: 'precio',
-      productoId: producto.id,
-      precioObjetivo: datos.precioObjetivo ?? undefined,
-      estado: 'activa',
-    });
+    return aAlertaRespuesta(
+      await this.alertas.crear(usuarioId, {
+        tipo: 'precio',
+        productoId: producto.id,
+        precioObjetivo: datos.precioObjetivo ?? undefined,
+        estado: 'activa',
+      }),
+    );
   }
 
   /**
@@ -63,12 +68,14 @@ export class AlertasService {
         datos.varianteId,
       );
     }
-    return this.alertas.crear(usuarioId, {
-      tipo: 'reposicion',
-      productoId: producto.id,
-      varianteId: datos.varianteId ?? undefined,
-      estado: 'activa',
-    });
+    return aAlertaRespuesta(
+      await this.alertas.crear(usuarioId, {
+        tipo: 'reposicion',
+        productoId: producto.id,
+        varianteId: datos.varianteId ?? undefined,
+        estado: 'activa',
+      }),
+    );
   }
 
   /** Elimina una alerta del usuario. */

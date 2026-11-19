@@ -1,3 +1,8 @@
+import {
+  proveerRepositorio,
+  proveerDummy,
+} from '../persistencia/proveer-repositorio';
+import { TypeOrmAlertasRepository } from '../repositorios/typeorm/typeorm-alertas.repository';
 import { Module } from '@nestjs/common';
 import { AlertasController } from '../controllers/alertas.controller';
 import { AlertasService } from '../services/alertas.service';
@@ -11,8 +16,12 @@ import { ProductosModule } from './productos.module';
   controllers: [AlertasController],
   providers: [
     AlertasService,
-    DummyAlertasRepository,
-    { provide: AlertasRepository, useExisting: DummyAlertasRepository },
+    proveerDummy(DummyAlertasRepository),
+    proveerRepositorio(
+      AlertasRepository,
+      DummyAlertasRepository,
+      TypeOrmAlertasRepository,
+    ),
   ],
   exports: [AlertasService, AlertasRepository],
 })

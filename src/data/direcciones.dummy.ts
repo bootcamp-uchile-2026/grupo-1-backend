@@ -1,4 +1,4 @@
-import { DireccionResponseDto } from '../dto/direccion-response.dto';
+import type { Direccion } from '../dominio/modelos';
 
 /**
  * Direccion tal como vive en la fase dummy: el contrato HTTP mas su dueno.
@@ -6,7 +6,7 @@ import { DireccionResponseDto } from '../dto/direccion-response.dto';
  */
 export interface DireccionDummy {
   usuarioId: number;
-  direccion: DireccionResponseDto;
+  direccion: Direccion;
 }
 
 export const DIRECCIONES_DUMMY: DireccionDummy[] = [

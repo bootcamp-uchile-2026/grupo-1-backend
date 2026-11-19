@@ -1,9 +1,9 @@
 import type { App } from 'supertest/types';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { configurarApp } from '../src/configurar-app';
+import { solicitudAutenticada } from './utilidades/autenticacion';
 
 describe('Modulos de dominio', () => {
   let app: INestApplication<App>;
@@ -22,7 +22,7 @@ describe('Modulos de dominio', () => {
   });
 
   it('comparte el carrito entre auth, usuarios y carrito', async () => {
-    const registro = await request(app.getHttpServer())
+    const registro = await solicitudAutenticada(app)
       .post('/auth/registro')
       .send({
         nombre: 'Prueba',
@@ -31,11 +31,11 @@ describe('Modulos de dominio', () => {
       });
     expect(registro.status).toBe(201);
     const user = registro.body as { id: number };
-    await request(app.getHttpServer())
+    await solicitudAutenticada(app)
       .post('/usuarios/' + user.id + '/carrito/items')
       .send({ varianteId: 101, cantidad: 1 })
       .expect(201);
-    const carrito = await request(app.getHttpServer())
+    const carrito = await solicitudAutenticada(app)
       .get('/usuarios/' + user.id + '/carrito')
       .expect(200);
     expect((carrito.body as { items: unknown[] }).items).toHaveLength(1);

@@ -1,5 +1,5 @@
 import { IdPositivoPipe } from '../common/id-positivo.pipe';
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Headers, Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ErrorResponseDto } from '../dto/error-response.dto';
 import {
   ApiBadRequestResponse,
@@ -7,6 +7,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiHeader,
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
@@ -62,16 +63,24 @@ export class CambiosDevolucionesController {
       'No existe el usuario, el pedido no existe o no es suyo, el item no es de ' +
       'ese pedido, o la nueva variante no es del producto comprado.',
   })
+  @ApiHeader({
+    name: 'Idempotency-Key',
+    required: false,
+    description:
+      'En MySQL evita repetir la misma solicitud; otra carga con la misma clave responde 409.',
+  })
   @Post('pedidos/:pedidoId/cambios-devoluciones')
   async crearSolicitud(
     @Param('usuarioId', IdPositivoPipe) usuarioId: number,
     @Param('pedidoId', IdPositivoPipe) pedidoId: number,
     @Body() datos: CrearCambioDevolucionDto,
+    @Headers('idempotency-key') clave: string | undefined,
   ): Promise<CambioDevolucionResponseDto> {
     return this.cambiosDevolucionesService.crearSolicitud(
       usuarioId,
       pedidoId,
       datos,
+      clave,
     );
   }
 
@@ -89,6 +98,11 @@ export class CambiosDevolucionesController {
   @ApiNotFoundResponse({
     type: ErrorResponseDto,
     description: 'No existe el usuario, o el pedido no existe o no es suyo.',
+  })
+  @ApiBadRequestResponse({
+    type: ErrorResponseDto,
+    description:
+      'Los identificadores deben ser enteros positivos en formato canonico.',
   })
   @Get('pedidos/:pedidoId/cambios-devoluciones')
   async obtenerSolicitudesDePedido(
@@ -116,6 +130,11 @@ export class CambiosDevolucionesController {
     type: ErrorResponseDto,
     description: 'No existe el usuario, o la solicitud no existe o no es suya.',
   })
+  @ApiBadRequestResponse({
+    type: ErrorResponseDto,
+    description:
+      'Los identificadores deben ser enteros positivos en formato canonico.',
+  })
   @Get('cambios-devoluciones/:solicitudId')
   async obtenerSolicitud(
     @Param('usuarioId', IdPositivoPipe) usuarioId: number,
@@ -125,5 +144,20 @@ export class CambiosDevolucionesController {
       usuarioId,
       solicitudId,
     );
+  }
+  @ApiParam({
+    name: 'solicitudId',
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
+  })
+  @ApiParam({
+    name: 'usuarioId',
+    schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
+  })
+  @Get('cambios-devoluciones/:solicitudId/eventos')
+  historial(
+    @Param('usuarioId', IdPositivoPipe) u: number,
+    @Param('solicitudId', IdPositivoPipe) id: number,
+  ) {
+    return this.cambiosDevolucionesService.historial(u, id);
   }
 }

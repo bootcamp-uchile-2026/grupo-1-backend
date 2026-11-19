@@ -1,7 +1,7 @@
-import { PostResponseDto } from '../dto/post-response.dto';
+import type { Publicacion } from '../dominio/modelos';
 
 /** Publicaciones de la seccion Comunidad en la fase dummy. */
-export const POSTS_DUMMY: PostResponseDto[] = [
+export const POSTS_DUMMY: Publicacion[] = [
   {
     id: 1,
     titulo: 'Como combinar tus basicos de temporada',

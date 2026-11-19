@@ -108,9 +108,20 @@ export class DireccionPedidoDto {
  * Datos del checkout con que se crea un pedido a partir de un carrito.
  */
 export class CrearPedidoDto {
+  @ApiPropertyOptional({
+    description:
+      'Direccion guardada del usuario; si se omite se conserva la direccion libre H2.',
+    type: 'integer',
+    minimum: 1,
+  })
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  direccionId?: number;
+
   @ApiProperty({
     minimum: 1,
-    type: Number,
+    type: 'integer',
     description: 'Identificador del carrito que se convierte en pedido.',
     example: 1,
   })

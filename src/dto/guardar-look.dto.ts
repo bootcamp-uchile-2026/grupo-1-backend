@@ -8,7 +8,7 @@ import { IsInt, IsPositive } from 'class-validator';
 export class GuardarLookDto {
   @ApiProperty({
     minimum: 1,
-    type: Number,
+    type: 'integer',
     description: 'Identificador del look que se guarda.',
     example: 1,
   })

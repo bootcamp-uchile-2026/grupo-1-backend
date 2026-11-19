@@ -1,3 +1,4 @@
+import { Publico } from '../seguridad/publico.decorator';
 import { IdPositivoPipe } from '../common/id-positivo.pipe';
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ErrorResponseDto } from '../dto/error-response.dto';
@@ -14,6 +15,7 @@ import { ProductosService } from '../services/productos.service';
  * es una combinacion distinta de query params, no un endpoint distinto.
  */
 @ApiTags('productos')
+@Publico()
 @Controller('productos')
 export class ProductosController {
   constructor(private readonly productosService: ProductosService) {}

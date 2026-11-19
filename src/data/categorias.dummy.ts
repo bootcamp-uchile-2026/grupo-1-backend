@@ -1,4 +1,4 @@
-import { CategoriaResponseDto } from '../dto/categoria-response.dto';
+import type { Categoria } from '../dominio/modelos';
 
 /**
  * Categorias del catalogo, en el orden del menu principal.
@@ -6,7 +6,7 @@ import { CategoriaResponseDto } from '../dto/categoria-response.dto';
  * slug de una de estas categorias (lo comprueba dummy-coherencia.spec.ts).
  * Una categoria existe aunque hoy no tenga productos, como calzado.
  */
-export const CATEGORIAS_DUMMY: CategoriaResponseDto[] = [
+export const CATEGORIAS_DUMMY: Categoria[] = [
   {
     id: 1,
     nombre: 'Mujer',

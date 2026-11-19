@@ -8,7 +8,7 @@ import { IsInt, IsPositive } from 'class-validator';
 export class ActualizarCantidadDto {
   @ApiProperty({
     minimum: 1,
-    type: Number,
+    type: 'integer',
     title: 'Cantidad',
     description:
       'Nueva cantidad de la linea del carrito. Debe ser mayor que cero.',

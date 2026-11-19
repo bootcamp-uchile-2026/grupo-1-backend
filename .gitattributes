@@ -1,0 +1,2 @@
+# Prettier usa LF; evitar que autocrlf transforme los fuentes al clonar.
+*.ts text eol=lf

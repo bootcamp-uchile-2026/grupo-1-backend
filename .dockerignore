@@ -45,3 +45,6 @@ docs
 **/*.swp
 **/*.swo
 **/*~
+
+# Archivos persistentes P5: fuera de Git y del build
+uploads/
