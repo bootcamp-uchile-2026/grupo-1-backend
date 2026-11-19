@@ -78,6 +78,7 @@ cp .env.example .env
 | `APP_NAME` | No | `StyleNow API` | Nombre mostrado en Swagger/OpenAPI. |
 | `APP_VERSION` | No | `1.0` | Versión mostrada en Swagger/OpenAPI. |
 | `SWAGGER_PATH` | No | `api` | Ruta relativa de Swagger. Los slashes de los extremos se ignoran. |
+| `CORS_ORIGENES` | Sí en producción para un frontend en otro origen | Vite local fuera de producción; ninguno con `NODE_ENV=production` | Orígenes exactos del frontend, separados por coma. Ver [Integración frontend](docs/p6-contrato-frontend.md). |
 
 Ninguna es obligatoria: si una variable falta o viene vacía, se usa su
 valor por defecto. Sin `.env` la API funciona igual, con los defaults.
@@ -263,7 +264,9 @@ Para desarrollo, ejecutar `docker compose up --build -d` desde el repositorio.
 Compose lee el archivo local `.env` si existe. `PORT` controla el puerto de
 la API dentro del contenedor y `HOST_PORT` permite publicarlo en otro puerto.
 Sin configuración ambos usan 3000. Consultar `/productos` y `/api` en el
-puerto publicado. Dos proyectos locales pueden usar nombres de proyecto
+puerto publicado. La imagen corre con `NODE_ENV=production`: para que un
+frontend en otro origen consuma la API, definir `CORS_ORIGENES` en `.env`.
+Dos proyectos locales pueden usar nombres de proyecto
 (`docker compose -p <nombre>`) y puertos de host distintos.
 
 Para consumir una imagen ya publicada, definir `BACKEND_IMAGE` en el entorno
@@ -277,6 +280,9 @@ se usa por defecto la versión 0.0.1 del manifiesto actual.
 - Nunca subas `.env` ni secretos al repositorio. `.env` está en
   `.gitignore`.
 - `.env.example` solo contiene valores de ejemplo no sensibles.
+- CORS admite solo los orígenes de `CORS_ORIGENES`, sin credenciales
+  (la API usa JWT Bearer, no cookies). Un origen inválido o `*` detiene el
+  arranque.
 
 
 ## H3: persistencia MySQL en modo híbrido

@@ -68,7 +68,7 @@ function validarRutaSwagger(ruta: string, rutasNegocio: string[]): void {
  * Levanta la aplicacion y publica la documentacion Swagger. Puerto, nombre,
  * version y ruta de Swagger se leen del entorno (ver .env.example); sin
  * variables, la API escucha en el puerto 3000 y Swagger queda en /api.
- * Todavia no se configura BearerAuth: la autenticacion real llega en una fase posterior.
+ * Swagger declara el esquema bearer (JWT HS256 emitido por POST /auth/login).
  */
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
@@ -85,15 +85,33 @@ async function bootstrap(): Promise<void> {
   const config = new DocumentBuilder()
     .setTitle(nombre)
     .setDescription(
-      'API REST del ecommerce StyleNow. Con PERSISTENCIA=dummy los datos viven en ' +
-        'memoria; con PERSISTENCIA=mysql catalogo, editorial, usuarios, credenciales y ' +
-        'direcciones se guardan en MySQL y el resto sigue en memoria. ' +
-        'Las rutas de usuario y POST /pedidos exigen Authorization: Bearer <accessToken> ' +
-        'obtenido en POST /auth/login. ' +
+      'API REST del ecommerce StyleNow (Hito 3). ' +
+        'Persistencia: con PERSISTENCIA=mysql todos los dominios se guardan en MySQL 8.4 ' +
+        'mediante TypeORM y migraciones versionadas (catalogo, categorias, colecciones y ' +
+        'publicaciones; usuarios, credenciales y direcciones; carrito, favoritos y pedidos; ' +
+        'looks, alertas, postventa y logistica; imagenes de producto). ' +
+        'PERSISTENCIA=dummy usa datos en memoria y existe solo para pruebas; ' +
+        'no hay fallback de MySQL a memoria. ' +
+        'Autenticacion: POST /auth/login devuelve accessToken (JWT HS256) con tipoToken ' +
+        'Bearer y expiraEnSegundos. Las rutas /usuarios/{usuarioId}/..., POST /pedidos, ' +
+        'POST /looks y las de administracion exigen Authorization: Bearer <accessToken>. ' +
+        'Un usuarioId distinto del dueno del token responde 404. Sin token o con token ' +
+        'invalido o expirado: 401. Las operaciones administrativas de imagenes y logistica ' +
+        'requieren ademas un permiso configurado y responden 403 si falta. ' +
+        'Catalogo, categorias, colecciones, publicaciones, looks publicados, imagenes ' +
+        'publicadas y registro/login son publicos. ' +
+        'Las URLs de imagen relativas (/imagenes/productos/...) se resuelven contra la ' +
+        'URL base de la API. ' +
         'Toda respuesta incluye la cabecera X-Request-Id, que identifica la peticion.',
     )
     .setVersion(version)
-    .addBearerAuth()
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      description:
+        'accessToken de POST /auth/login. Enviar Authorization: Bearer <accessToken>.',
+    })
     .addTag(
       'productos',
       'Catalogo, buscador, novedades, ofertas y ficha de producto',

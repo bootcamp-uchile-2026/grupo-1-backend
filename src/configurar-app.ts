@@ -1,11 +1,10 @@
 import { LogEntradaInterceptor } from './common/log-entrada.interceptor';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { leerOrigenesCors, opcionesCors } from './common/cors';
 import { FiltroExcepcionesGlobal } from './common/filtro-excepciones.filter';
 import { crearObservabilidadHttp } from './common/observabilidad-http.middleware';
-import {
-  asignarRequestId,
-  CABECERA_REQUEST_ID,
-} from './common/request-id.middleware';
+import { asignarRequestId } from './common/request-id.middleware';
 import { ValidacionGlobalPipe } from './common/validacion-global.pipe';
 
 /**
@@ -28,8 +27,12 @@ import { ValidacionGlobalPipe } from './common/validacion-global.pipe';
  * medir y registrar tambien esas respuestas tempranas. Es un access log:
  * metodo, ruta, status y duracion. El detalle de errores no le corresponde.
  *
- * CORS: expone X-Request-Id para que el frontend, que corre en otro origen,
- * pueda leer la cabecera y citarla al reportar un error.
+ * CORS: solo los origenes de CORS_ORIGENES (o los de desarrollo local de
+ * Vite si no se define y NODE_ENV no es production). Permite Authorization,
+ * Content-Type, X-Request-Id e Idempotency-Key; expone X-Request-Id para que
+ * el frontend pueda citarlo al reportar un error. Sin credenciales: la API
+ * autentica con JWT Bearer y no usa cookies. Un origen invalido detiene el
+ * arranque. El preflight OPTIONS lo responde CORS antes de los guards.
  *
  * Filtro global de excepciones: da el mismo formato a todo error que llega a
  * Nest (dominio, HttpException, ValidationPipe, errores no controlados) y
@@ -44,9 +47,19 @@ import { ValidacionGlobalPipe } from './common/validacion-global.pipe';
  *   que exige la forma canonica del identificador (ValidacionGlobalPipe).
  */
 export function configurarApp(app: INestApplication): void {
+  const config = app.get(ConfigService);
+  const origenes = leerOrigenesCors(
+    config.get<string>('CORS_ORIGENES'),
+    config.get<string>('NODE_ENV'),
+  );
+  if (origenes.length === 0) {
+    new Logger('Cors').warn(
+      'CORS_ORIGENES no esta definido en produccion: no se admiten origenes cruzados.',
+    );
+  }
   app.use(asignarRequestId);
   app.use(crearObservabilidadHttp());
-  app.enableCors({ exposedHeaders: [CABECERA_REQUEST_ID] });
+  app.enableCors(opcionesCors(origenes));
   app.useGlobalInterceptors(new LogEntradaInterceptor());
   app.useGlobalFilters(new FiltroExcepcionesGlobal());
   app.useGlobalPipes(
