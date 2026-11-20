@@ -20,6 +20,8 @@ import {
   ApiOperation,
   ApiParam,
   ApiTags,
+  ApiBearerAuth,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ActualizarDireccionDto } from '../dto/actualizar-direccion.dto';
 import { CrearDireccionDto } from '../dto/crear-direccion.dto';
@@ -44,6 +46,11 @@ import { DireccionesService } from '../services/direcciones.service';
 @ApiNotFoundResponse({
   type: ErrorResponseDto,
   description: 'No existe el usuario, o la direccion no existe o no es suya.',
+})
+@ApiBearerAuth()
+@ApiUnauthorizedResponse({
+  type: ErrorResponseDto,
+  description: 'JWT ausente, invalido o expirado.',
 })
 @Controller('usuarios/:usuarioId/direcciones')
 export class DireccionesController {

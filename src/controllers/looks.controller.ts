@@ -11,6 +11,8 @@ import {
   ApiOperation,
   ApiParam,
   ApiTags,
+  ApiBearerAuth,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { CrearLookDto } from '../dto/crear-look.dto';
 import { GuardarLookDto } from '../dto/guardar-look.dto';
@@ -79,6 +81,11 @@ export class LooksController {
     description:
       'Algun producto no existe o la variante no pertenece a ese producto.',
   })
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse({
+    type: ErrorResponseDto,
+    description: 'JWT ausente, invalido o expirado.',
+  })
   @Post('looks')
   async crearLook(
     @Body() datos: CrearLookDto,
@@ -106,6 +113,11 @@ export class LooksController {
   @ApiNotFoundResponse({
     type: ErrorResponseDto,
     description: 'No existe el usuario o no existe el look.',
+  })
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse({
+    type: ErrorResponseDto,
+    description: 'JWT ausente, invalido o expirado.',
   })
   @Post('usuarios/:usuarioId/looks')
   async guardarLook(

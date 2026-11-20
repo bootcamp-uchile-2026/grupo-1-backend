@@ -4,33 +4,15 @@ import {
   aPedidoItemRespuesta,
 } from './respuestas.mapper';
 import { Injectable } from '@nestjs/common';
-import {
-  ConflictoDominioError,
-  RecursoNoEncontradoError,
-  ReglaNegocioError,
-} from '../dominio/errores-dominio';
+import { RecursoNoEncontradoError } from '../dominio/errores-dominio';
 import { CrearPedidoDto } from '../dto/crear-pedido.dto';
 import {
   PedidoDetalleResponseDto,
   PedidoItemResponseDto,
 } from '../dto/pedido-detalle-response.dto';
 import { PedidoResponseDto } from '../dto/pedido-response.dto';
-import {
-  NuevoPedidoItem,
-  PedidosRepository,
-} from '../repositorios/pedidos.repository';
-import { CarritoService } from './carrito.service';
-import { ProductosService } from './productos.service';
+import { PedidosRepository } from '../repositorios/pedidos.repository';
 import { UsuariosService } from './usuarios.service';
-
-/** Estado con que nace todo pedido creado desde el checkout. */
-const ESTADO_INICIAL = 'confirmado';
-
-/**
- * El checkout no recibe modalidad ni tarifa de despacho, asi que no hay con
- * que calcular un costo: por ahora el envio no se cobra.
- */
-const COSTO_ENVIO = 0;
 
 /**
  * Pedidos del usuario.
@@ -39,126 +21,20 @@ const COSTO_ENVIO = 0;
  */
 @Injectable()
 export class PedidosService {
-  /** Carritos con un checkout en curso, para no convertirlos dos veces. */
-  private readonly checkoutsEnCurso = new Set<number>();
-
   constructor(
     private readonly pedidos: PedidosRepository,
     private readonly usuariosService: UsuariosService,
-    private readonly carritoService: CarritoService,
-    private readonly productosService: ProductosService,
   ) {}
 
-  /**
-   * Convierte un carrito en un pedido del dueno del carrito.
-   * Revalida variantes y stock con el catalogo, copia nombre y precio de
-   * cada producto en el item y guarda contacto y direccion como foto del
-   * checkout. El carrito se vacia solo despues de crear el pedido: si algo
-   * falla antes, queda intacto. El stock del catalogo no se descuenta.
-   */
+  /** Confirma pedido, detalle, inventario y vaciado en la transaccion SQL. */
   async crearPedido(
     datos: CrearPedidoDto,
     usuarioAutenticado: number,
     clave?: string,
   ): Promise<PedidoDetalleResponseDto> {
-    const sql = await this.pedidos.confirmarCheckout(
-      datos,
-      usuarioAutenticado,
-      clave,
+    return aPedidoRespuesta(
+      await this.pedidos.confirmarCheckout(datos, usuarioAutenticado, clave),
     );
-    if (sql) return aPedidoRespuesta(sql);
-    // El dueno sale del token, nunca del body: un carrito ajeno es inexistente.
-    const propio = await this.carritoService.obtenerParaCheckout(
-      datos.carritoId,
-    );
-    if (propio.usuarioId !== usuarioAutenticado) {
-      throw new RecursoNoEncontradoError(
-        `No existe el carrito con id ${datos.carritoId}`,
-      );
-    }
-    if (this.checkoutsEnCurso.has(datos.carritoId)) {
-      throw new ConflictoDominioError(
-        `El carrito ${datos.carritoId} ya tiene un checkout en curso`,
-      );
-    }
-    this.checkoutsEnCurso.add(datos.carritoId);
-    try {
-      return aPedidoRespuesta(
-        await this.carritoService.ejecutarOperacion(datos.carritoId, () =>
-          this.convertirCarrito(datos),
-        ),
-      );
-    } finally {
-      this.checkoutsEnCurso.delete(datos.carritoId);
-    }
-  }
-
-  private async convertirCarrito(
-    datos: CrearPedidoDto,
-  ): Promise<PedidoDetalleResponseDto> {
-    const carrito = await this.carritoService.obtenerParaCheckout(
-      datos.carritoId,
-    );
-    await this.usuariosService.obtenerUsuario(carrito.usuarioId);
-    if (carrito.items.length === 0) {
-      throw new ReglaNegocioError('El carrito no tiene items');
-    }
-
-    const items: NuevoPedidoItem[] = [];
-    for (const linea of carrito.items) {
-      const { producto, variante } =
-        await this.productosService.obtenerVarianteDeProducto(
-          linea.productoId,
-          linea.varianteId,
-        );
-      this.carritoService.comprobarStock(variante, linea.cantidad);
-      items.push({
-        productoId: producto.id,
-        varianteId: variante.id,
-        nombre: producto.nombre,
-        cantidad: linea.cantidad,
-        precioUnitario: producto.precio,
-        subtotal: producto.precio * linea.cantidad,
-      });
-    }
-    const subtotal = items.reduce((total, item) => total + item.subtotal, 0);
-
-    const pedido = await this.pedidos.crear({
-      usuarioId: carrito.usuarioId,
-      estado: ESTADO_INICIAL,
-      fecha: new Date().toISOString(),
-      subtotal,
-      costoEnvio: COSTO_ENVIO,
-      total: subtotal + COSTO_ENVIO,
-      metodoPago: datos.metodoPago,
-      items,
-      checkout: {
-        contacto: {
-          nombre: datos.contacto.nombre,
-          email: datos.contacto.email,
-          telefono: datos.contacto.telefono,
-        },
-        direccion: {
-          calle: datos.direccion.calle,
-          numero: datos.direccion.numero,
-          departamento: datos.direccion.departamento ?? undefined,
-          comuna: datos.direccion.comuna,
-          region: datos.direccion.region,
-        },
-      },
-    });
-    try {
-      await this.carritoService.vaciarDespuesDeCheckout(carrito.id);
-    } catch (error) {
-      const eliminado = await this.pedidos.eliminarCreado(
-        carrito.usuarioId,
-        pedido.id,
-      );
-      if (!eliminado) throw new Error('No se pudo compensar el checkout');
-      await this.carritoService.restaurarDespuesDeCheckout(carrito);
-      throw error;
-    }
-    return aPedidoRespuesta(pedido);
   }
 
   /** Devuelve el resumen de los pedidos del usuario. */

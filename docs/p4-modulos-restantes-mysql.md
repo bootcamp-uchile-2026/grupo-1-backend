@@ -1,5 +1,7 @@
 # P4 — módulos restantes y logística
 
+> **Alcance histórico.** Registro del incremento P4. Las referencias a dominios todavía en memoria y a funcionalidades ausentes describen esa etapa, no el backend consolidado P0–P5. Las pruebas citadas no se han repetido con SQL en esta revisión. El estado vigente y los límites de verificación están en [README](../README.md).
+
 Implementación de laboratorio del 18/11/2026. Los trece puertos comerciales
 existentes tienen adaptador SQL. En modo MySQL los proveedores dummy devuelven
 null: no se crean sus estados en memoria y ninguna operación los utiliza.

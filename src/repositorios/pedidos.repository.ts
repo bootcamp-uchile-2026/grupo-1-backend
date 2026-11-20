@@ -9,7 +9,7 @@ export type {
 export type NuevoPedidoItem = Omit<PedidoItem, 'id'>;
 
 /**
- * Pedido ya calculado por PedidosService. El repositorio solo le asigna
+ * Pedido calculado por el checkout transaccional. El repositorio le asigna
  * id, numeroPedido e ids de items, y lo guarda.
  */
 export interface NuevoPedido {
@@ -32,16 +32,11 @@ export interface CheckoutPersistencia extends SnapshotCheckout {
 
 /** Acceso a los pedidos. Toda lectura se limita al usuario indicado. */
 export abstract class PedidosRepository {
-  confirmarCheckout(
-    _datos: CheckoutPersistencia,
-    _usuarioId: number,
-    _clave?: string,
-  ): Promise<Pedido | null> {
-    void _datos;
-    void _usuarioId;
-    void _clave;
-    return Promise.resolve(null);
-  }
+  abstract confirmarCheckout(
+    datos: CheckoutPersistencia,
+    usuarioId: number,
+    clave?: string,
+  ): Promise<Pedido>;
   abstract listarPorUsuario(usuarioId: number): Promise<Pedido[]>;
 
   abstract buscarDeUsuario(

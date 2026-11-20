@@ -115,7 +115,13 @@ export const PostventaIdempotenciaSql = new EntitySchema({
   tableName: 'postventa_idempotencia',
   columns: {
     usuario_id: { type: 'int', unsigned: true, primary: true },
-    clave: { type: 'varchar', length: 128, primary: true },
+    clave: {
+      type: 'varchar',
+      length: 128,
+      primary: true,
+      charset: 'ascii',
+      collation: 'ascii_bin',
+    },
     solicitud_id: { type: 'int', unsigned: true },
     huella: { type: 'char', length: 64 },
   },

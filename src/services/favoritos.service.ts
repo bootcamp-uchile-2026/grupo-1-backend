@@ -10,7 +10,7 @@ import { UsuariosService } from './usuarios.service';
 
 /**
  * Favoritos de StyleNow: el boton "Agregar a favoritos" de la ficha.
- * Se guarda el producto completo, sin variante, y una sola vez por usuario.
+ * La asociacion se realiza por producto, sin variante, una vez por usuario.
  */
 @Injectable()
 export class FavoritosService {

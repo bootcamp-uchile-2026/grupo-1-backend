@@ -1,3 +1,9 @@
+import {
+  contratoHttp,
+  normalizarContrato,
+  direccionesEsperadas,
+} from './utilidades/contratos-http';
+import { credencialPrueba } from './utilidades/credenciales-prueba';
 import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
@@ -16,12 +22,17 @@ import { TypeOrmDireccionesRepository } from '../src/repositorios/typeorm/typeor
 import { TypeOrmUsuariosRepository } from '../src/repositorios/typeorm/typeorm-usuarios.repository';
 import { bearer } from './utilidades/autenticacion';
 import {
+  cambiosPendientesDeEsquema,
+  migracionesAplicadas,
+  verificarMigracionesCompletas,
+} from './utilidades/migraciones';
+import {
   conectarLaboratorio,
   laboratorioDesechable,
   reiniciarIdentidadSql,
 } from './utilidades/estado-identidad-sql';
 
-const sql = process.env.STYLENOW_SQL_TEST === '1' ? describe : describe.skip;
+const sql = describe;
 const errno = (e: unknown) =>
   (e as { errno?: number; driverError?: { errno?: number } }).driverError
     ?.errno ?? (e as { errno?: number }).errno;
@@ -29,9 +40,7 @@ const errno = (e: unknown) =>
 sql('P2 identidad MySQL exclusivo (usuario, credencial, direccion)', () => {
   let source: DataSource;
   let conexion: Connection;
-  const abrir = async (
-    modo: 'dummy' | 'mysql',
-  ): Promise<INestApplication<App>> => {
+  const abrir = async (modo: 'mysql'): Promise<INestApplication<App>> => {
     const modulo = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(ConfigService)
       .useValue(new ConfigService({ ...process.env, PERSISTENCIA: modo }))
@@ -58,18 +67,15 @@ sql('P2 identidad MySQL exclusivo (usuario, credencial, direccion)', () => {
     if (source?.isInitialized) await source.destroy();
   });
 
-  it('M03/S03 aplicadas, entidades = DDL y semilla equivalente a dummy', async () => {
-    const migraciones: { name: string }[] = await source.query(
-      'SELECT name FROM migrations ORDER BY id',
-    );
-    expect(migraciones.map((m) => m.name).slice(-2)).toEqual([
+  it('M03/S03 aplicadas, entidades = DDL y semilla y contrato historico', async () => {
+    await verificarMigracionesCompletas(source);
+    const aplicadas = await migracionesAplicadas(source);
+    const m03 = aplicadas.indexOf('CrearIdentidad1795050400000');
+    expect(aplicadas.slice(m03, m03 + 2)).toEqual([
       'CrearIdentidad1795050400000',
       'SembrarIdentidad1795050401000',
     ]);
-    expect((await source.driver.createSchemaBuilder().log()).upQueries).toEqual(
-      [],
-    );
-    const a = await abrir('dummy');
+    expect(await cambiosPendientesDeEsquema()).toEqual([]);
     const b = await abrir('mysql');
     try {
       expect(b.get(UsuariosRepository)).toBeInstanceOf(
@@ -90,24 +96,14 @@ sql('P2 identidad MySQL exclusivo (usuario, credencial, direccion)', () => {
         ['/usuarios/99999', 99999],
         ['/usuarios/4294967296', 4294967296],
       ] as const) {
-        const ra = await request(a.getHttpServer())
-          .get(url)
-          .set('Authorization', bearer(a, id));
+        const ra = contratoHttp(url);
         const rb = await request(b.getHttpServer())
           .get(url)
           .set('Authorization', bearer(b, id));
         expect(rb.status).toBe(ra.status);
-        const sinTiempo = (x: Record<string, unknown>) => ({
-          ...x,
-          timestamp: 0,
-          requestId: 0,
-        });
-        expect(sinTiempo(rb.body as Record<string, unknown>)).toEqual(
-          sinTiempo(ra.body as Record<string, unknown>),
-        );
+        expect(normalizarContrato(rb.body)).toEqual(ra.body);
       }
     } finally {
-      await a.close();
       await b.close();
     }
   });
@@ -138,7 +134,7 @@ sql('P2 identidad MySQL exclusivo (usuario, credencial, direccion)', () => {
           1062,
         ],
         [
-          "UPDATE credencial SET hash_contrasena='demo-cliente-1' WHERE usuario_id=1",
+          "UPDATE credencial SET hash_contrasena='texto-plano-invalido' WHERE usuario_id=1",
           [],
           3819,
         ],
@@ -234,14 +230,14 @@ sql('P2 identidad MySQL exclusivo (usuario, credencial, direccion)', () => {
         .post('/auth/login')
         .send({
           correoElectronico: 'nadie@stylenow.cl',
-          contrasena: 'demo-cliente-1',
+          contrasena: credencialPrueba(1).contrasena,
         })
         .expect(401);
       const login = await api()
         .post('/auth/login')
         .send({
           correoElectronico: 'CLIENTE@stylenow.cl',
-          contrasena: 'demo-cliente-1',
+          contrasena: credencialPrueba(1).contrasena,
         })
         .expect(200);
       const t = `Bearer ${(login.body as { accessToken: string }).accessToken}`;
@@ -272,14 +268,14 @@ sql('P2 identidad MySQL exclusivo (usuario, credencial, direccion)', () => {
       )) as unknown as [{ h: string }[]];
       const todo = JSON.stringify([login.body, perfil.body]);
       expect(todo).not.toContain(h.h);
-      expect(todo).not.toContain('demo-cliente-1');
+      expect(todo).not.toContain(credencialPrueba(1).contrasena);
       expect(todo).not.toMatch(/hash|scrypt/i);
     } finally {
       await app.close();
     }
   });
 
-  it('direcciones y perfil SQL: misma secuencia que dummy y persisten en otra instancia', async () => {
+  it('direcciones y perfil SQL: secuencia contractual y persisten en otra instancia', async () => {
     const pasos = async (app: INestApplication<App>) => {
       const t = bearer(app, 1);
       const r: unknown[] = [];
@@ -316,14 +312,12 @@ sql('P2 identidad MySQL exclusivo (usuario, credencial, direccion)', () => {
       r.push([lista.status, lista.body]);
       return r;
     };
-    const a = await abrir('dummy');
     const b = await abrir('mysql');
     let esperado: unknown[];
     try {
-      esperado = await pasos(a);
+      esperado = structuredClone(direccionesEsperadas);
       expect(await pasos(b)).toEqual(esperado);
     } finally {
-      await a.close();
       await b.close();
     }
     const c = await abrir('mysql'); // otra instancia, otro DataSource

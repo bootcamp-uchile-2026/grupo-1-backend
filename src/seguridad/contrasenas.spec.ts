@@ -1,4 +1,4 @@
-import { CREDENCIALES_DUMMY } from '../data/credenciales.dummy';
+import { CREDENCIALES_DUMMY } from '../../test/fixtures/historicos/credenciales.fixture';
 import { ServicioContrasenas } from './contrasenas';
 
 // Parametros bajos solo para que la suite sea rapida; el formato es el mismo.

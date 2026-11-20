@@ -18,9 +18,14 @@ import {
   reiniciarIdentidadSql,
 } from './utilidades/estado-identidad-sql';
 import { bearer } from './utilidades/autenticacion';
+import {
+  migracionesAplicadas,
+  revertirDesde,
+  verificarMigracionesCompletas,
+} from './utilidades/migraciones';
 import type { Connection } from 'mysql2/promise';
 
-const sql = process.env.STYLENOW_SQL_TEST === '1' ? describe : describe.skip;
+const sql = describe;
 const datos = (carritoId = 1) => ({
   carritoId,
   contacto: {
@@ -50,23 +55,30 @@ sql('P3 comercio transaccional exclusivo', () => {
   const carts = () => new TypeOrmCarritosRepository(source);
   const orders = () => new TypeOrmPedidosRepository(source);
   it('migra desde P2 y conserva las seis migraciones originales', async () => {
-    const migrations: unknown[] = await source.query(
-      'SELECT * FROM migrations',
-    );
-    expect(migrations).toHaveLength(8);
+    await verificarMigracionesCompletas(source);
     const original: unknown[] = await source.query(
       'SELECT * FROM usuario ORDER BY id',
     );
-    await source.undoLastMigration();
-    await source.undoLastMigration();
+    // Vuelve al estado P2: revierte P3 y todo lo aplicado despues.
+    const revertidas = await revertirDesde(
+      source,
+      'CrearComercio1795150400000',
+    );
+    expect(revertidas.slice(0, 2)).toEqual([
+      'CrearComercio1795150400000',
+      'SembrarComercio1795150401000',
+    ]);
+    expect((await migracionesAplicadas(source)).at(-1)).toBe(
+      'SembrarIdentidad1795050401000',
+    );
     await expect(carts().buscarPorId(1)).rejects.toThrow();
     expect(await source.query('SELECT * FROM usuario ORDER BY id')).toEqual(
       original,
     );
-    expect((await source.runMigrations()).map((m) => m.name)).toEqual([
-      'CrearComercio1795150400000',
-      'SembrarComercio1795150401000',
-    ]);
+    expect((await source.runMigrations()).map((m) => m.name)).toEqual(
+      revertidas,
+    );
+    await verificarMigracionesCompletas(source);
     await expect(
       source.query(
         'INSERT INTO favorito(usuario_id,producto_id) VALUES (99999,1)',

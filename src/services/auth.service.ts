@@ -26,11 +26,10 @@ export const normalizarCorreo = (correo: string): string =>
 
 /**
  * Registro e inicio de sesion de StyleNow.
- * El registro crea usuario y credencial (solo hash scrypt) en una unidad de
- * trabajo: en MySQL ambos se confirman o se revierten juntos. El carrito
- * (todavia dummy, P3) se crea despues de confirmar. El login verifica el
- * hash en tiempo constante y emite un JWT HS256. La contrasena en claro
- * nunca se guarda ni sale de este servicio.
+ * En MySQL, usuario, credencial y carrito se crean en la misma unidad de
+ * trabajo: se confirman o revierten juntos. El hash scrypt se calcula antes
+ * de abrir la transaccion. El login verifica el hash en tiempo constante
+ * y emite un JWT HS256; la contrasena en claro no se persiste ni se publica.
  */
 @Injectable()
 export class AuthService {

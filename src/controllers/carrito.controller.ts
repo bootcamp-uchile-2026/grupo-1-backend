@@ -15,6 +15,8 @@ import {
   ApiParam,
   ApiResponse,
   ApiTags,
+  ApiBearerAuth,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ActualizarCantidadDto } from '../dto/actualizar-cantidad.dto';
 import { AgregarItemCarritoDto } from '../dto/agregar-item-carrito.dto';
@@ -30,6 +32,11 @@ import { CarritoService } from '../services/carrito.service';
  * id: el carritoId que POST /pedidos usa para hacer el checkout.
  */
 @ApiTags('carrito')
+@ApiBearerAuth()
+@ApiUnauthorizedResponse({
+  type: ErrorResponseDto,
+  description: 'JWT ausente, invalido o expirado.',
+})
 @Controller('usuarios/:usuarioId/carrito')
 export class CarritoController {
   constructor(private readonly carritoService: CarritoService) {}

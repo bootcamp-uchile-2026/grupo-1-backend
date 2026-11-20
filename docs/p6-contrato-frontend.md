@@ -224,13 +224,14 @@ Cabeceras opcionales:
    aleatorio generado en el momento (≥ 32 bytes, no versionado) y
    `CORS_ORIGENES=http://localhost:5173`. Aplicar las migraciones con `npm run migration:run`
    solo contra esa base.
-3. **Frontend** en su propio repositorio, **sin modificarlo desde este encargo**: definir
+3. **Frontend** en su entorno de laboratorio: definir
    `VITE_API_BASE_URL=http://localhost:3000` en un `.env.local` del frontend (Vite lo lee y
    Git no debería versionarlo) o solo para la sesión, y ejecutar `npm run dev` (Vite en `:5173`):
    - PowerShell: `$env:VITE_API_BASE_URL='http://localhost:3000'; npm run dev`
    - bash: `VITE_API_BASE_URL=http://localhost:3000 npm run dev`
-4. **Cuenta sintética:** registrarla desde la UI con un correo `@example.test` y una contraseña
-   generada para la prueba. No reutilizar contraseñas reales.
+4. **Cuenta sintética:** crearla mediante `POST /auth/registro` con un correo `@example.test`
+   y una contraseña generada para la prueba. Si existe un formulario de registro, validar
+   también ese flujo. No reutilizar contraseñas reales.
 5. **Casos mínimos**, a verificar en DevTools → Network (preflight y cabeceras) y en MySQL:
 
 | # | Caso | Esperado |
@@ -256,5 +257,8 @@ Opcional: automatizar los casos 1–7 con Playwright contra el entorno local.
 - Rate limiting del login.
 - Despliegue, HTTPS, AWS y proxy inverso: los define quien despliega (`CORS_ORIGENES` y URL
   base deben coincidir con el dominio final).
-- Validar el módulo React JWT generado por Codex contra este contrato: queda para el equipo
-  frontend en su repositorio.
+- Validar el módulo React JWT independiente contra este contrato en el laboratorio de integración.
+  La existencia de la entrega no acredita el flujo React–NestJS–MySQL.
+
+Procedencia de la entrega React de referencia: preparada con asistencia de Codex. Se conserva
+esta información de procedencia sin modificar atribuciones legales, académicas ni el historial Git.

@@ -1,5 +1,7 @@
 # P3 — carrito, favoritos y confirmación de pedidos
 
+> **Alcance histórico.** Registro del incremento P3. Las referencias a dominios todavía en memoria y a funcionalidades ausentes describen esa etapa, no el backend consolidado P0–P5. Las pruebas citadas no se han repetido con SQL en esta revisión. El estado vigente y los límites de verificación están en [README](../README.md).
+
 Modo MySQL: carritos y líneas, favoritos, pedidos y detalle persisten mediante
 los puertos actuales. El guard JWT global de P2 sigue exigiendo autenticación
 y coincide el propietario de ruta con el token; POST /pedidos comprueba que

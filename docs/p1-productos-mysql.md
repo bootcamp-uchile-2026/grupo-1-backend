@@ -1,5 +1,7 @@
 # P1: productos, variantes e imágenes
 
+> **Alcance histórico.** Registro del incremento P1. Las referencias a dominios todavía en memoria y a funcionalidades ausentes describen esa etapa, no el backend consolidado P0–P5. Las pruebas citadas no se han repetido con SQL en esta revisión. El estado vigente y los límites de verificación están en [README](../README.md).
+
 Implementación de laboratorio en `lab/h3-integracion-20261115`. El esquema
 consolidado 3FN del 15/11/2026 es un candidato, no una aprobación universal del
 modelo comercial. Este incremento representa sin pérdida los datos y contratos

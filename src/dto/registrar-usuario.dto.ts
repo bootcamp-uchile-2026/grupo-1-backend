@@ -35,8 +35,8 @@ export class RegistrarUsuarioDto {
     type: String,
     title: 'Contrasena',
     description:
-      'Contrasena elegida por el cliente. En la fase dummy de Hito 2 se guarda en memoria ' +
-      'y no se aplica hashing. Nunca se devuelve.',
+      'Contrasena elegida por el cliente. Se almacena un hash scrypt con sal aleatoria. ' +
+      'La contrasena en claro nunca se devuelve.',
     example: 'StyleNow2026',
     required: true,
   })

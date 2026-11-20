@@ -58,8 +58,8 @@ function parametrosLegibles(p: ParametrosScrypt): boolean {
  * Hash y verificacion de contrasenas. Nunca devuelve ni registra la
  * contrasena; la comparacion es de tiempo constante.
  *
- * Se usa scrypt de node:crypto en lugar de Argon2id para no agregar una
- * dependencia nativa mientras la politica npm sigue pendiente de Fran.
+ * Se utiliza scrypt de node:crypto para evitar una dependencia nativa
+ * adicional y conservar parametros verificables en el formato almacenado.
  */
 export class ServicioContrasenas {
   private hashSinCuenta?: Promise<string>;

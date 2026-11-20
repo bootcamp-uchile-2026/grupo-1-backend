@@ -35,7 +35,7 @@ interface Asociacion {
   posicion: number;
   url: string;
 }
-const sql = process.env.STYLENOW_SQL_TEST === '1' ? describe : describe.skip;
+const sql = describe;
 sql('P5 imagenes persistentes MySQL exclusivo', () => {
   let source: DataSource,
     conn: Connection,

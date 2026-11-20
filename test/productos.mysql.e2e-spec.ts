@@ -1,3 +1,5 @@
+import { PRODUCTOS_DUMMY as PRODUCTOS_HISTORICOS } from './fixtures/historicos/productos.fixture';
+import { contratoHttp, normalizarContrato } from './utilidades/contratos-http';
 import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
@@ -9,25 +11,25 @@ import { configurarApp } from '../src/configurar-app';
 import { crearDataSourceMysql } from '../src/persistencia/mysql.datasource';
 import { Producto, Variante } from '../src/persistencia/productos.entidades';
 import { TypeOrmProductosRepository } from '../src/repositorios/typeorm/typeorm-productos.repository';
-import { DummyProductosRepository } from '../src/repositorios/dummy/dummy-productos.repository';
 import { ProductosRepository } from '../src/repositorios/productos.repository';
 import { UsuariosRepository } from '../src/repositorios/usuarios.repository';
-import { DummyUsuariosRepository } from '../src/repositorios/dummy/dummy-usuarios.repository';
 import { TypeOrmUsuariosRepository } from '../src/repositorios/typeorm/typeorm-usuarios.repository';
 import { bearer } from './utilidades/autenticacion';
+import {
+  cambiosPendientesDeEsquema,
+  revertirDesde,
+  verificarMigracionesCompletas,
+} from './utilidades/migraciones';
 import { SembrarProductos1794950401000 } from '../src/persistencia/migraciones/1794950401000-sembrar-productos';
 import { UnidadDeTrabajoTypeorm } from '../src/persistencia/unidad-de-trabajo';
 import { gestorActual } from '../src/persistencia/gestor-actual';
 
-const sql = process.env.STYLENOW_SQL_TEST === '1' ? describe : describe.skip;
+const sql = describe;
 
 sql('P1 productos MySQL exclusivo, posterior a PR0', () => {
   let source: DataSource;
   let repository: TypeOrmProductosRepository;
-  const dummy = new DummyProductosRepository();
-  const open = async (
-    mode: 'dummy' | 'mysql',
-  ): Promise<INestApplication<App>> => {
+  const open = async (mode: 'mysql'): Promise<INestApplication<App>> => {
     const module = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(ConfigService)
       .useValue(new ConfigService({ ...process.env, PERSISTENCIA: mode }))
@@ -65,17 +67,27 @@ sql('P1 productos MySQL exclusivo, posterior a PR0', () => {
     const publicaciones: unknown[] = await source.query(
       'SELECT * FROM post ORDER BY id',
     );
-    // M03/S03 (P2) se aplican despues de P1: revertir ambos para volver a PR0.
-    for (let i = 0; i < 4; i++) await source.undoLastMigration();
-    const tables: unknown[] = await source.query('SHOW TABLES');
-    expect(tables).toHaveLength(4);
-    await expect(repository.listar()).rejects.toThrow(); // Sin fallback si falta P1.
-    expect((await source.runMigrations()).map((m) => m.name)).toEqual([
+    // Vuelve a PR0: revierte P1 y todo lo aplicado despues.
+    const revertidas = await revertirDesde(
+      source,
+      'CrearProductos1794950400000',
+    );
+    expect(revertidas.slice(0, 2)).toEqual([
       'CrearProductos1794950400000',
       'SembrarProductos1794950401000',
-      'CrearIdentidad1795050400000',
-      'SembrarIdentidad1795050401000',
     ]);
+    const tables: Record<string, string>[] = await source.query('SHOW TABLES');
+    expect(tables.map((t) => Object.values(t)[0]).sort()).toEqual([
+      'categoria',
+      'coleccion',
+      'migrations',
+      'post',
+    ]);
+    await expect(repository.listar()).rejects.toThrow(); // Sin fallback si falta P1.
+    expect((await source.runMigrations()).map((m) => m.name)).toEqual(
+      revertidas,
+    );
+    await verificarMigracionesCompletas(source);
     expect(await source.query('SELECT * FROM categoria ORDER BY id')).toEqual(
       before,
     );
@@ -92,10 +104,10 @@ sql('P1 productos MySQL exclusivo, posterior a PR0', () => {
     } finally {
       await runner.release();
     }
-    expect(await repository.listar()).toEqual(await dummy.listar());
-    expect((await source.driver.createSchemaBuilder().log()).upQueries).toEqual(
-      [],
+    expect(await repository.listar()).toEqual(
+      structuredClone(PRODUCTOS_HISTORICOS),
     );
+    expect(await cambiosPendientesDeEsquema()).toEqual([]);
     const custom = source.createQueryRunner();
     await custom.startTransaction();
     try {
@@ -115,7 +127,7 @@ sql('P1 productos MySQL exclusivo, posterior a PR0', () => {
   });
 
   it('reconstruye los tres productos, siete variantes y ausencias con numeros HTTP', async () => {
-    const catalogo = await dummy.listar();
+    const catalogo = structuredClone(PRODUCTOS_HISTORICOS);
     for (const p of catalogo) {
       expect(await repository.buscarPorId(p.id)).toEqual(p);
       for (const v of p.variantes) {
@@ -148,14 +160,18 @@ sql('P1 productos MySQL exclusivo, posterior a PR0', () => {
         );
         const p = await repository.buscarPorId(1);
         expect(p?.imagenes).toEqual([]);
-        expect(p?.imagenUrl).toBe((await dummy.buscarPorId(1))?.imagenUrl);
+        expect(p?.imagenUrl).toBe(
+          PRODUCTOS_HISTORICOS.find((p) => p.id === 1)?.imagenUrl,
+        );
         expect(p?.colores).toEqual(['Blanco', 'Repetido', 'Repetido']);
         expect(p?.tallas).toEqual(['S', 'M', 'L']);
         expect(p?.variantes.map((v) => v.id)).toEqual([101, 102, 103, 999]);
         throw new Error('rollback P1');
       }),
     ).rejects.toThrow('rollback P1');
-    expect(await repository.listar()).toEqual(await dummy.listar());
+    expect(await repository.listar()).toEqual(
+      structuredClone(PRODUCTOS_HISTORICOS),
+    );
   });
 
   it.each([
@@ -166,7 +182,6 @@ sql('P1 productos MySQL exclusivo, posterior a PR0', () => {
     ["INSERT INTO producto_talla VALUES (999999,0,'x')", 1452],
     ["INSERT INTO producto_imagen VALUES (1,0,'x')", 1062],
     ['UPDATE variante SET posicion=0 WHERE id=102', 1062],
-    ['UPDATE variante SET id=101 WHERE id=102', 1062],
     ['DELETE FROM producto WHERE id=1', 1451],
     ['DELETE FROM categoria WHERE id=1', 1451],
     ['UPDATE producto SET precio=-1 WHERE id=1', 3819],
@@ -180,17 +195,42 @@ sql('P1 productos MySQL exclusivo, posterior a PR0', () => {
     });
   });
 
+  it('rechaza cambiar la PK de una variante a un id existente', async () => {
+    const error = await source
+      .query('UPDATE variante SET id=101 WHERE id=102')
+      .then(
+        () => {
+          throw new Error('El UPDATE de la PK debia ser rechazado');
+        },
+        (e: unknown) =>
+          e as { driverError?: { errno?: number; sqlMessage?: string } },
+      );
+    // La variante 102 tiene filas hijas (pedido_item desde P3, look_ocurrencia
+    // desde P4) y toda FK hacia variante es ON UPDATE RESTRICT: InnoDB rechaza cambiar
+    // la PK del padre (1451) antes de detectar la PK duplicada (1062), que
+    // solo se observa si la variante no tiene hijos. Ambos son rechazos por
+    // integridad; 1451 debe provenir de una FK que referencia variante.id.
+    expect([1062, 1451]).toContain(error.driverError?.errno);
+    if (error.driverError?.errno === 1451) {
+      expect(error.driverError.sqlMessage).toMatch(
+        /REFERENCES `variante` \(`id`/,
+      );
+    }
+  });
+
   it('conserva paridad HTTP de detalle, filtros y errores; usuarios ya es SQL (P2)', async () => {
-    const a = await open('dummy');
+    const a = await open('mysql');
     const b = await open('mysql');
     try {
       expect(a.get(ProductosRepository)).toBeInstanceOf(
-        DummyProductosRepository,
+        TypeOrmProductosRepository,
       );
       expect(b.get(ProductosRepository)).toBeInstanceOf(
         TypeOrmProductosRepository,
       );
-      expect(a.get(UsuariosRepository)).toBeInstanceOf(DummyUsuariosRepository);
+      expect(a.get(UsuariosRepository)).toBeInstanceOf(
+        TypeOrmUsuariosRepository,
+      );
       expect(b.get(UsuariosRepository)).toBeInstanceOf(
         TypeOrmUsuariosRepository,
       );
@@ -240,6 +280,9 @@ sql('P1 productos MySQL exclusivo, posterior a PR0', () => {
         const rb = await request(b.getHttpServer())
           .get(url)
           .set('X-Request-Id', 'p1-paridad');
+        const esperado = contratoHttp(url);
+        expect(ra.status).toBe(esperado.status);
+        expect(normalizarContrato(ra.body)).toEqual(esperado.body);
         expect(rb.status).toBe(ra.status);
         const normalize = (body: Record<string, unknown>) => {
           const copy = { ...body };

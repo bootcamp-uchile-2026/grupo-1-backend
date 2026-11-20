@@ -151,6 +151,16 @@ describe('ServicioTokens (JWT HS256)', () => {
       secreto: SECRETO,
       expiracionSegundos: 3600,
     });
+    expect(() =>
+      configuracionTokensDesdeEntorno({ JWT_SECRET: ' '.repeat(32) }),
+    ).toThrow('JWT_SECRET');
+    expect(
+      () =>
+        new ServicioTokens({
+          secreto: ' '.repeat(32),
+          expiracionSegundos: 3600,
+        }),
+    ).toThrow('secreto JWT');
     expect(() => tokens.firmar(0)).toThrow();
   });
 });

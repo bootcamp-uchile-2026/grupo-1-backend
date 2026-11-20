@@ -9,7 +9,6 @@ import type { PedidoDetalleResponseDto } from '../src/dto/pedido-detalle-respons
 import type { ProductoDetalleResponseDto } from '../src/dto/producto-detalle-response.dto';
 import type { UsuarioResponseDto } from '../src/dto/usuario-response.dto';
 import { PedidosRepository } from '../src/repositorios/pedidos.repository';
-import { CarritoService } from '../src/services/carrito.service';
 import { solicitudAutenticada } from './utilidades/autenticacion';
 
 describe('Aceptacion del cierre H2 sin cambios de contrato', () => {
@@ -165,7 +164,7 @@ describe('Aceptacion del cierre H2 sin cambios de contrato', () => {
         metodoPago: 'webpay',
       };
       if (compensar) {
-        if (process.env.PERSISTENCIA === 'mysql') {
+        {
           const repository = app.get(PedidosRepository);
           const original = repository.crear.bind(repository);
           jest
@@ -174,10 +173,7 @@ describe('Aceptacion del cierre H2 sin cambios de contrato', () => {
               await original(datos);
               throw new Error('Fallo sintetico');
             });
-        } else
-          jest
-            .spyOn(app.get(CarritoService), 'vaciarDespuesDeCheckout')
-            .mockRejectedValueOnce(new Error('Fallo sintetico'));
+        }
         await solicitudAutenticada(app, user.id)
           .post('/pedidos')
           .send(checkout)
@@ -234,9 +230,7 @@ describe('Aceptacion del cierre H2 sin cambios de contrato', () => {
         (unchangedStock.body as ProductoDetalleResponseDto).variantes,
       ).toEqual(
         product.variantes.map((v) =>
-          process.env.PERSISTENCIA === 'mysql' && v.id === variant.id
-            ? { ...v, stock: v.stock - 2 }
-            : v,
+          v.id === variant.id ? { ...v, stock: v.stock - 2 } : v,
         ),
       );
     },

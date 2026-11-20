@@ -21,7 +21,7 @@ export class ProductoDetalleResponseDto extends ProductoResponseDto {
     type: [String],
     title: 'Galeria de imagenes',
     description:
-      'Imagenes del carrusel de la ficha. La primera es la principal.',
+      'Galeria ordenada de la ficha, independiente de la portada imagenUrl.',
     example: [
       'https://cdn.stylenow.cl/productos/vestido-lino-1.jpg',
       'https://cdn.stylenow.cl/productos/vestido-lino-2.jpg',

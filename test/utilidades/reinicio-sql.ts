@@ -8,7 +8,7 @@ import {
 /**
  * Solo para la bateria H2 en modo hibrido del laboratorio desechable
  * (STYLENOW_REINICIO_SQL_POR_PRUEBA=1): cada prueba parte del estado semilla,
- * igual que el adaptador dummy en una app nueva. En cualquier otro caso no
+ * con preparacion explicita del snapshot de pruebas. En cualquier otro caso no
  * hace nada.
  */
 if (

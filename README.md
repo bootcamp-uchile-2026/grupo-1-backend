@@ -1,343 +1,203 @@
-# StyleNow Backend
-
-API REST del ecommerce de moda **StyleNow**, construida con NestJS y
-documentada con Swagger/OpenAPI. Corresponde al Hito 2 del Bootcamp Backend:
-el modo predeterminado conserva los repositorios dummy de Hito 2 (solo para
-pruebas). Con PERSISTENCIA=mysql (H3) se guardan en MySQL categorías,
-colecciones, publicaciones, productos, usuarios, credenciales y direcciones;
-carrito, favoritos, pedidos, looks, alertas y postventa siguen en memoria.
-No es persistencia total todavía. Las rutas de usuario exigen JWT (ver
-[H3-P2](docs/p2-identidad-mysql.md)).
-
-## Contenidos
-
-- [Requisitos previos](#requisitos-previos)
-- [Instalación](#instalación)
-- [Configuración](#configuración)
-- [Ejecución en desarrollo](#ejecución-en-desarrollo)
-- [Swagger](#swagger)
-- [Build y producción local](#build-y-producción-local)
-- [Tests y calidad](#tests-y-calidad)
-- [Arquitectura](#arquitectura)
-- [Funcionalidades](#funcionalidades)
-- [Persistencia en Hito 2](#persistencia-en-hito-2)
-- [Observabilidad y errores](#observabilidad-y-errores)
-- [Modelo Entidad–Relación](#modelo-entidadrelación)
-- [Estructura del proyecto](#estructura-del-proyecto)
-- [Flujo Git](#flujo-git)
-- [Docker y despliegue](#docker-y-despliegue)
-- [Seguridad](#seguridad)
-
-## Requisitos previos
-
-- **Node.js**, en una de estas líneas:
-  - Node.js 20: 20.19.0 o superior dentro de la línea 20.
-  - Node.js 22: 22.13.0 o superior dentro de la línea 22.
-  - Node.js 24.
-
-  Estos rangos salen de los `engines` de las dependencias actuales del
-  `package-lock.json` (por ejemplo, `eslint-visitor-keys` exige
-  `^20.19.0 || ^22.13.0 || >=24`). Las líneas impares (21, 23) no son
-  compatibles con todas las dependencias.
-
-  Versiones con las que se ejecutó realmente el proyecto: Node.js 22.23.2
-  (desarrollo y validación) y Node.js 24.13.0 con npm 11.6.2 (auditoría).
-  No se ejecutó con Node.js 20.
-- **npm** (incluido con Node.js).
-- **Git**.
-
-## Instalación
-
-```bash
-git clone <url-del-repositorio>
-cd <carpeta-del-repositorio>
-npm install
-```
-
-Para instalar exactamente las versiones de `package-lock.json` (por ejemplo,
-en CI) se puede usar `npm ci` en lugar de `npm install`.
-
-## Configuración
-
-La configuración se lee de variables de entorno con `@nestjs/config`. Para
-usar un archivo `.env`, copia la plantilla:
-
-```powershell
-# PowerShell
-Copy-Item .env.example .env
-```
-
-```bash
-# Linux / macOS / Git Bash
-cp .env.example .env
-```
-
-| Variable | Obligatoria | Default | Descripción |
-|---|---|---|---|
-| `PORT` | No | `3000` | Puerto HTTP de la API. |
-| `APP_NAME` | No | `StyleNow API` | Nombre mostrado en Swagger/OpenAPI. |
-| `APP_VERSION` | No | `1.0` | Versión mostrada en Swagger/OpenAPI. |
-| `SWAGGER_PATH` | No | `api` | Ruta relativa de Swagger. Los slashes de los extremos se ignoran. |
-| `CORS_ORIGENES` | Sí en producción para un frontend en otro origen | Vite local fuera de producción; ninguno con `NODE_ENV=production` | Orígenes exactos del frontend, separados por coma. Ver [Integración frontend](docs/p6-contrato-frontend.md). |
-
-Ninguna es obligatoria: si una variable falta o viene vacía, se usa su
-valor por defecto. Sin `.env` la API funciona igual, con los defaults.
-
-`SWAGGER_PATH` no puede coincidir con una ruta de la API. Swagger publica
-`/<SWAGGER_PATH>`, `/<SWAGGER_PATH>-json` y `/<SWAGGER_PATH>-yaml`; si
-alguna de esas rutas (o el prefijo `/<SWAGGER_PATH>/`) choca con un
-endpoint, por ejemplo `SWAGGER_PATH=productos`, la aplicación no arranca y
-muestra un error que indica las rutas en conflicto.
-
-## Ejecución en desarrollo
-
-```bash
-npm run start:dev
-```
-
-La API queda en `http://localhost:3000` (o en el puerto de `PORT`) y se
-recarga al guardar cambios.
-
-## Swagger
-
-Con la configuración por defecto, la documentación interactiva está en:
-
-```
-http://localhost:3000/api
-```
-
-La URL cambia según `PORT` y `SWAGGER_PATH`:
-`http://localhost:<PORT>/<SWAGGER_PATH>`.
-
-## Build y producción local
-
-```bash
-npm run build
-npm run start:prod
-```
-
-`npm run build` compila a `dist/` y `npm run start:prod` ejecuta
-`node dist/main`.
-
-## Tests y calidad
-
-```bash
-npm test -- --runInBand   # tests unitarios
-npm run test:e2e          # tests end-to-end (levantan la app en memoria)
-npm run build             # verificación de compilación
-```
-
-Lint:
-
-```bash
-npm run lint
-```
-
-`npm run lint` ejecuta ESLint **con `--fix`**, es decir, puede modificar
-archivos. Para revisar sin modificar nada:
-
-```bash
-npx eslint "{src,apps,libs,test}/**/*.ts"
-```
-
-## Arquitectura
-
-Todos los dominios siguen la misma cadena:
-
-```
-Controller → Service → Repository (clase abstracta) → DummyRepository
-```
-
-- **Controller:** rutas HTTP, pipes y documentación Swagger.
-- **Service:** reglas de negocio y orquestación; lanza errores de dominio.
-- **Repository:** contrato abstracto de acceso a datos, usado como token de
-  inyección. Devuelve datos, `null` o `boolean`; no decide códigos HTTP.
-- **DummyRepository:** implementación en memoria registrada en
-  `AppModule`.
-
-Flujo de una petición:
-
-```
-DTO de entrada → ValidationPipe → Controller → Service → Repository
-```
-
-El `ValidationPipe` global rechaza campos no declarados en el DTO y
-transforma los tipos.
-
-## Funcionalidades
-
-En el modo predeterminado, los endpoints de Swagger funcionan con datos dummy:
-
-- **Convención REST:** `POST /auth/registro` agrupa la creación de cuentas con las acciones de acceso (login y logout). Crea el usuario y su carrito, responde 201 con el perfil público y devuelve 409 si el correo ya existe. El perfil creado se consulta en `GET /usuarios/{usuarioId}`.
-- **Auth:** registro (crea la cuenta y su carrito vacío; correo repetido
-  responde 409), login (401 si el correo o la contraseña no coinciden) y
-  logout (confirmación). Desde H3-P2 el login además devuelve `accessToken`
-  (JWT HS256), `tipoToken` y `expiraEnSegundos`; las rutas `/usuarios/{id}/...`,
-  `POST /pedidos` y `POST /looks` exigen `Authorization: Bearer <token>` del
-  mismo usuario. Las contraseñas se guardan solo como hash scrypt.
-- **Productos:** listado con búsqueda, filtros (categoría, talla, color,
-  precio, novedad, oferta), orden y paginación; ficha de producto.
-- **Categorías:** listado, con filtro de destacadas.
-- **Usuarios:** perfil, actualización de datos y cambio de contraseña. El
-  cambio verifica la contraseña actual y guarda la nueva, que pasa a ser la
-  única válida para el login.
-- **Direcciones:** listar, crear, actualizar y eliminar.
-- **Carrito:** ver, agregar, cambiar cantidad y eliminar líneas, con
-  validación de stock.
-- **Pedidos:** checkout desde el carrito (`POST /pedidos`), listado y
-  detalle por usuario.
-- **Looks:** explorar, ver detalle, crear y guardar.
-- **Alertas:** de precio y de reposición; listar y eliminar.
-- **Cambios y devoluciones:** crear solicitudes sobre items de un pedido y
-  consultarlas.
-- **Favoritos:** consultar con GET /usuarios/{usuarioId}/favoritos el arreglo de detalles de sus productos guardados. Un usuario sin favoritos recibe una lista vacía. Agregar un producto a los favoritos del usuario (el mismo
-  producto dos veces responde 409).
-- **Colecciones:** listado de colecciones editoriales (solo lectura).
-- **Comunidad:** listado de publicaciones (`/posts`, solo lectura).
-
-Los usuarios semilla tienen credenciales de demostración en
-`src/data/credenciales.dummy.ts`; no son secretos reales.
-
-## Persistencia en Hito 2
-
-- Los datos viven en memoria, en repositorios dummy con estado que parten
-  de los fixtures de `src/data`.
-- Las escrituras (registro, cambio de contraseña, crear, actualizar,
-  eliminar, checkout, favoritos) se reflejan en las lecturas siguientes
-  mientras el proceso sigue activo.
-- Las contraseñas se guardan en memoria sin hashing, separadas del perfil,
-  y nunca aparecen en respuestas, logs ni mensajes de error.
-- Al reiniciar la aplicación se vuelve al estado inicial de los fixtures.
-- El checkout valida el stock, pero no lo descuenta del catálogo.
-- El modo H2 predeterminado no necesita SQL ni conexión a base de datos.
-  El modo SQL se describe al final. `JWT_SECRET` (≥ 32 bytes) es obligatorio
-  en ambos modos: sin él la API no arranca.
-
-## Observabilidad y errores
-
-- **Request ID:** toda respuesta incluye la cabecera `X-Request-Id`. Si el
-  cliente envía un id válido, se reutiliza; si no, el servidor genera uno.
-- **Logs HTTP:** cada petición produce un registro `http_request` con
-  `requestId`, método, ruta, código de estado y tiempo de ejecución
-  (`durationMs`).
-- **Errores:** un filtro global responde con un formato común
-  (`statusCode`, `message`, `error`, `requestId`, `timestamp`, `path`). Los
-  errores de dominio se traducen a 400, 401, 404 o 409, y los errores
-  inesperados responden 500 sin exponer detalles internos.
-
-## Modelo Entidad–Relación
-
-El modelo conceptual de datos del Hito 2 está en
-[docs/MODELO_ENTIDAD_RELACION.md](docs/MODELO_ENTIDAD_RELACION.md).
-
-## Estructura del proyecto
-
-```
-src/
-  controllers/          rutas HTTP y documentación Swagger
-  services/             reglas de negocio
-  repositorios/         contratos abstractos de acceso a datos
-  repositorios/dummy/   implementaciones en memoria
-  dto/                  contratos de entrada y salida
-  data/                 fixtures iniciales de la fase dummy
-  dominio/              errores de dominio
-  common/               request id, logs HTTP y filtro de errores
-  configurar-app.ts     configuración compartida por la app y los tests e2e
-  main.ts               arranque, variables de entorno y Swagger
-test/                   tests end-to-end
-docs/                   documentación (modelo entidad–relación)
-```
-
-## Flujo Git
-
-- `hito2-dev` es la rama de integración del Hito 2.
-- Cada cambio se trabaja en una rama creada desde `hito2-dev`:
-  - `feature/*` para funcionalidades,
-  - `fix/*` para correcciones,
-  - `docs/*` para documentación.
-- Los cambios se integran a `hito2-dev` mediante Pull Request, después de
-  revisión. No se hace push directo a las ramas de integración.
-
-## Docker y despliegue
-
-Para desarrollo, ejecutar `docker compose up --build -d` desde el repositorio.
-Compose lee el archivo local `.env` si existe. `PORT` controla el puerto de
-la API dentro del contenedor y `HOST_PORT` permite publicarlo en otro puerto.
-Sin configuración ambos usan 3000. Consultar `/productos` y `/api` en el
-puerto publicado. La imagen corre con `NODE_ENV=production`: para que un
-frontend en otro origen consuma la API, definir `CORS_ORIGENES` en `.env`.
-Dos proyectos locales pueden usar nombres de proyecto
-(`docker compose -p <nombre>`) y puertos de host distintos.
-
-Para consumir una imagen ya publicada, definir `BACKEND_IMAGE` en el entorno
-o en `.env` con la referencia versionada aprobada por el equipo, obtenerla
-con `docker compose pull` y ejecutar `docker compose up -d --no-build`.
-`APP_VERSION` identifica la versión de API del entorno. Para desarrollo
-se usa por defecto la versión 0.0.1 del manifiesto actual.
-
-## Seguridad
-
-- Nunca subas `.env` ni secretos al repositorio. `.env` está en
-  `.gitignore`.
-- `.env.example` solo contiene valores de ejemplo no sensibles.
-- CORS admite solo los orígenes de `CORS_ORIGENES`, sin credenciales
-  (la API usa JWT Bearer, no cookies). Un origen inválido o `*` detiene el
-  arranque.
-
-
-## H3: persistencia MySQL en modo híbrido
-
-> Actualización P1/P2: además de lo descrito abajo para PR0, productos
-> (P1) y usuarios, credenciales y direcciones (P2, migraciones
-> `1795050400000`/`1795050401000`) ya usan MySQL. El harness completo de P2
-> es `node test/persistencia/ejecutar-identidad-laboratorio.cjs`. Detalle,
-> autenticación JWT y cambios de contrato en `docs/p2-identidad-mysql.md`.
-
-El valor por defecto es PERSISTENCIA=dummy. No se abre conexión MySQL en
-ese modo y se conservan los tokens de repositorio y sus instancias dummy.
-PERSISTENCIA=mysql selecciona explícitamente los adaptadores SQL de
-categorías, colecciones y publicaciones; productos, cuentas, carrito,
-pedidos, favoritos, looks, alertas y postventa siguen en memoria.
-Si MySQL no inicia, el arranque falla; no hay fallback silencioso.
-
-Configurar DB_HOST, DB_PORT (3306 por defecto), DB_USERNAME, DB_PASSWORD y
-DB_DATABASE en un entorno propio; la validación comparte validarEntorno y
-no imprime sus valores. synchronize y migrationsRun permanecen en false.
-Las migraciones se ejecutan explícitamente, nunca al arrancar la API.
-Las dos migraciones originales del piloto crean únicamente categoria,
-coleccion y post, más la tabla técnica migrations; las semillas están
-versionadas en la segunda migración. No hay esquema completo H3 aquí.
-
-Para repetir las pruebas autorizadas en una base nueva y desechable:
-
-```powershell
-npm ci
-npm run test:mysql
-```
-
-El harness requiere Docker local, crea contenedor, usuario, base y volumen
-exclusivos y aleatorios de MySQL 8.4, publica solo en loopback y conserva
-las credenciales fuera del repositorio. No usa las variables DB del usuario
-para elegir su base. Ejecuta migraciones desde vacío y reversión dentro de
-esa base, repite seeds, comprueba SQL/contratos/transacciones y verifica
-persistencia tras reiniciar API y contenedor. Finalmente detiene su propio
-contenedor y conserva el volumen; no borra datos de otros proyectos.
-Los logs sanitizados se guardan en una carpeta temporal stylenow-pr0-evidencia-*
-o en EVIDENCIA_PILOTO_DIR si se configura fuera del código. Los secretos
-se conservan por separado, fuera de los logs y del contexto Docker.
-
-Las 42 E2E H2 siguen ejecutándose normalmente con npm run test:e2e.
-La suite SQL se omite si el harness no activa STYLENOW_SQL_TEST; esa omisión
-no es un PASS de MySQL. El harness ejecuta además las E2E H2 en modo híbrido.
-Las migraciones no agregan pedidos, pagos, reembolsos ni nuevas reglas de negocio.
-
-Para una base de laboratorio ya configurada y autorizada se dispone de
-migration:show, migration:run y migration:revert. No ejecutar revert contra
-una base compartida: elimina datos y tablas del piloto. El harness es la
-ruta recomendada para esta verificación desechable.
-
-El lock combinado se instala con npm ci en Windows y Linux. La herramienta
-tools/regenerar-lock.cjs reconstruye metadatos opcionales en un directorio
-limpio, fijando las versiones directas ya resueltas y manteniendo los rangos
-del proyecto. Su uso refresca transitivas y exige revisar el diff y repetir
-npm ci en ambos sistemas; no reemplaza npm ci en CI ni ejecuta audit fix.
+# StyleNow Backend — Hito 3
+
+API REST de StyleNow con NestJS, TypeORM, MySQL 8.4 y Swagger/OpenAPI.
+El Backend operativo requiere MySQL: todos los puertos usan TypeORM. No hay
+adaptadores de memoria ni selector operativo de persistencia.
+
+Este README refleja la configuración de SQL-03 sobre la base consolidada de
+calidad e integridad. La certificación final SQL-only requiere todavía SQL-04;
+el MER histórico no debe interpretarse como el esquema físico vigente.
+
+## Requisitos e instalación
+
+Entorno de esta revisión: Node.js 24.13.0 y npm 11.6.2 en Windows.
+Las unitarias no requieren MySQL. Las E2E utilizan Docker y MySQL desechable.
+
+    npm ci
+    Copy-Item .env.example .env
+
+El lock está versionado. No ejecutar herramientas de actualización automática
+de dependencias como parte de la instalación.
+
+## Variables de entorno
+
+| Variable                                       | Requisito y comportamiento                                                                                                                                                                   |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| PORT                                           | Puerto HTTP; 3000 por defecto. Debe ser un entero entre 1 y 65535.                                                                                                                           |
+| APP_NAME                                       | Título de Swagger; StyleNow API por defecto.                                                                                                                                                 |
+| APP_VERSION                                    | Versión publicada en Swagger; 1.0 por defecto. Compose utiliza 0.0.1 si no se configura. No representa por sí sola una versión estable publicada.                                            |
+| SWAGGER_PATH                                   | api por defecto; no puede colisionar con rutas de negocio.                                                                                                                                   |
+| PERSISTENCIA                                   | No es necesario. Solo se tolera mysql como marca heredada; dummy y otros valores se rechazan.                                                                                                |
+| JWT_SECRET                                     | Obligatorio; al menos 32 bytes y no solo espacios. Generar por entorno y no versionar.                                                                                                       |
+| JWT_EXPIRACION_SEGUNDOS                        | Entero de 60 a 86400; 3600 por defecto.                                                                                                                                                      |
+| DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE | Siempre obligatorios y no vacíos. No tienen valores predeterminados de conexión.                                                                                                             |
+| DB_PORT                                        | Obligatorio y explícito; entero de 1 a 65535. Sin puerto implícito.                                                                                                                          |
+| CORS_ORIGENES                                  | Orígenes exactos separados por comas. Fuera de producción, vacío habilita únicamente Vite local en 5173/4173 y sus equivalentes 127.0.0.1. En producción, vacío no admite orígenes cruzados. |
+| LOGISTICA_OPERADORES_IDS                       | IDs explícitos autorizados para operar envíos; vacío deniega esa capacidad. No reemplaza el JWT.                                                                                             |
+| IMAGENES_DIRECTORIO                            | uploads/productos por defecto; Compose utiliza /app/uploads/productos.                                                                                                                       |
+
+.env.example contiene valores públicos de desarrollo y deja los secretos vacíos.
+Copiarlo no configura SQL ni un JWT_SECRET válido. Para iniciar una
+sesión de desarrollo en PowerShell sin guardar el secreto en un archivo:
+
+    # Completar DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD y DB_DATABASE en .env
+    $env:JWT_SECRET = node -e "process.stdout.write(require('node:crypto').randomBytes(32).toString('hex'))"
+    npm run start:dev
+
+La API escucha en http://localhost:3000. Swagger está en /api y su JSON en
+/api-json. Las rutas de negocio no tienen prefijo global /api.
+
+## Arquitectura y persistencia
+
+La composición de módulos vive en AppModule. Los contratos de repositorio
+usan modelos internos; los servicios y mappers proyectan las respuestas HTTP.
+
+    Controller → Service → Puerto de repositorio → Adaptador TypeORM → MySQL
+
+Logística utiliza servicios transaccionales SQL y la gestión de imágenes tiene
+un repositorio específico para archivos, permisos y asociaciones de galería.
+
+En MySQL persisten categorías, colecciones, publicaciones,
+productos y variantes, usuarios, credenciales, direcciones, carrito, favoritos,
+pedidos, looks, alertas, posventa y logística. Los archivos de imágenes residen
+en el directorio persistente; MySQL almacena sus asociaciones y trazabilidad.
+
+El arranque SQL falla si la conexión no está disponible. No hay fallback a
+fixtures. synchronize y migrationsRun están desactivados. La preparación del
+esquema requiere ejecutar explícitamente las migraciones en una base autorizada.
+
+Las 14 migraciones históricas permanecen intactas. Las correcciones de entidades se incorporaron desde la base validada de Claude.
+SQL-03 no modifica migraciones ni datos de bases existentes.
+
+## Autenticación y autorización
+
+POST /auth/registro crea usuario, credencial y carrito. En SQL forman parte de
+la misma unidad de trabajo. Las contraseñas se derivan con scrypt y sal aleatoria;
+solo se almacena el hash. Los fixtures y hashes de demostración se limitan a test; las migraciones
+de identidad no crean contraseñas conocidas.
+
+POST /auth/login recibe correoElectronico y contrasena. Devuelve mensaje,
+usuario, accessToken, tipoToken Bearer y expiraEnSegundos. Las rutas privadas
+requieren Authorization: Bearer <accessToken>. NestJS valida el token y la
+propiedad de los recursos; un usuario ajeno en la ruta responde 404.
+
+POST /auth/logout confirma el cierre, pero no revoca JWTs. El cliente descarta
+su sesión; una copia del token conserva validez hasta expirar. No hay refresh
+token ni recuperación de contraseña implementados.
+
+Las capacidades administrativas son independientes: imágenes exige el permiso
+SQL productos.imagenes.gestionar y logística la lista operativa del entorno.
+Tener un JWT válido no concede esos permisos.
+
+## Funcionalidades y límites
+
+- Catálogo público: productos, variantes, filtros, categorías, colecciones y posts.
+- Perfil y direcciones del propietario autenticado.
+- Carrito: agregar, modificar y eliminar variantes; no reserva ni descuenta stock.
+- Checkout SQL: captura precios históricos del servidor, descuenta stock y vacía
+  el carrito dentro de una transacción. No ejecuta pagos reales.
+- Favoritos: consultar y agregar; el contrato actual no incluye DELETE.
+- Looks: explorar, crear y guardar. SQL registra creador; la lectura es pública.
+  No hay borradores, edición ni operación de publicación en comunidad.
+- Alertas: registrar precio/reposición, consultar y eliminar. No se envían avisos.
+- Posventa: recibir solicitudes e historial. No hay endpoint de aprobación,
+  ejecución de reembolsos ni nuevas reglas de elegibilidad.
+- Logística SQL: seguimiento, operaciones autorizadas y cancelación comercial.
+  La restitución se limita a los débitos registrados por el checkout, según P4.
+
+El envío comercial continúa con costo cero en el contrato actual. Método de
+pago y método de entrega todavía son textos libres; sus catálogos y límites
+comerciales requieren decisión. No hay rate limiting de login/registro.
+Sin configuración SQL y JWT válida el proceso termina antes de escuchar,
+también en desarrollo. La indisponibilidad de MySQL no activa otra persistencia.
+
+## Transacciones
+
+La unidad de trabajo usa transacciones TypeORM y rollback. Las operaciones
+anidadas participan de la transacción existente, sin savepoints independientes.
+Los conflictos MySQL 1213/1205 se traducen a error controlado sin repetir
+automáticamente el callback.
+
+AsyncLocalStorage presupone un DataSource lógico. Todo trabajo debe esperarse
+antes de salir del callback; tareas desacopladas pueden conservar un manager
+liberado. Un rollback SQL no revierte efectos externos ni garantiza atomicidad
+del DDL MySQL.
+
+## Imágenes
+
+POST /administracion/productos/:productoId/imagenes recibe un archivo imagen
+multipart. Valida contenido real JPEG, PNG o WebP estático, máximo 5 MiB y
+16 millones de píxeles; recodifica y usa nombres UUID generados por el servidor.
+
+GET /imagenes/productos/:archivo es público y sirve solo imágenes publicadas.
+La carga añade una URL a imagenes; imagenUrl de portada se conserva independiente.
+Las URLs relativas se resuelven contra el origen de la API. Las URLs remotas
+de fixtures son ejemplos y no acreditan disponibilidad de un CDN.
+
+La publicación coordina SQL y archivos con estados y reconciliación conservadora;
+no es una transacción distribuida. No hay borrado/reemplazo de imágenes publicadas.
+El volumen debe respaldarse junto con la base. Ver docs/p5-imagenes-productos.md.
+
+## CORS, errores y privacidad
+
+CORS utiliza orígenes exactos, sin cookies ni credenciales CORS. Admite
+Authorization, Content-Type, X-Request-Id e Idempotency-Key. No sustituye
+autenticación ni autorización.
+
+Los errores incluyen statusCode, message (texto o lista), error, requestId,
+timestamp y path. Los logs HTTP registran metadatos de entrada/salida sin
+cuerpos ni cabeceras. Los errores inesperados de petición no publican detalles
+internos. La sanitización de configuración se verifica mediante regresiones.
+
+## Pruebas y calidad
+
+    node node_modules/typescript/bin/tsc --noEmit --incremental false
+    npm run build
+    node node_modules/eslint/bin/eslint.js "src/**/*.ts" "test/**/*.ts"
+    node node_modules/prettier/bin/prettier.cjs --check "src/**/*.ts" "test/**/*.ts"
+    npm test -- --runInBand
+    node test/persistencia/ejecutar-sql01-laboratorio.cjs
+
+Las E2E necesitan un laboratorio SQL protegido. El runner crea base, usuario,
+contraseña, JWT, contenedor y volumen nuevos; verifica su propiedad y mantiene
+las credenciales separadas de la evidencia pública. El helper de tests puede
+generar un JWT efímero: esa facilidad no existe en la aplicación operativa.
+
+npm run lint conserva --fix en el manifiesto recibido: utilizar el comando
+explícito anterior para una revisión sin modificaciones.
+
+Las suites no se omiten para aprobar. PR0 a P5 y el runner integrado crean
+recursos nuevos y ejecutan migraciones exclusivamente en esos laboratorios.
+La configuración SQL y el guard son obligatorios; test:e2e directo sin ellos falla.
+
+tools/qa-calidad.cjs se conserva como antecedente de C1–C4; su configuración
+dummy ya no es operativa. No utilizarlo para acreditar los lotes SQL.
+
+## Docker y preparación del despliegue
+
+El Dockerfile tiene etapas de build/producción y ejecuta la API como node.
+Compose permite build local o BACKEND_IMAGE, puerto parametrizado y volumen
+imagenes_productos. No contiene un servicio MySQL: la conexión debe configurarse
+para el entorno autorizado.
+
+La imagen utiliza NODE_ENV=production. Configurar JWT_SECRET, todos los DB_*
+y CORS_ORIGENES antes de desplegar. No se modificaron Dockerfile, Compose,
+contenedores ni AWS en esta fase. Tags, imágenes publicadas, actualización
+del servidor y correspondencia de versiones requieren evidencia independiente.
+
+## Documentación y estado de integración
+
+- docs/MODELO_ENTIDAD_RELACION.md es el antecedente conceptual H2, no el MER físico H3.
+- docs/p1-productos-mysql.md a docs/p4-modulos-restantes-mysql.md son registros
+  históricos de cada incremento; no deben leerse como el estado completo actual.
+- docs/p5-imagenes-productos.md documenta imágenes y sus límites.
+- docs/p6-contrato-frontend.md describe los contratos actuales de integración.
+- docs/calidad-codex contiene resultados, decisiones pendientes y conflictos de integración.
+
+La prueba completa React–NestJS–MySQL sigue pendiente. La existencia del módulo
+React independiente o los adaptadores SQL no certifica ese flujo.
+La normalización y la correspondencia MER–ORM–migraciones–MySQL requieren
+validación conjunta con el trabajo de base de datos.
+
+La licencia y sus avisos se conservan. La diferencia entre LICENSE MIT y
+license UNLICENSED del manifiesto requiere decisión del equipo.

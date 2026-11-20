@@ -8,11 +8,7 @@ import {
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { opcionesMysql } from './mysql.datasource';
-import {
-  UnidadDeTrabajo,
-  UnidadDeTrabajoDummy,
-  UnidadDeTrabajoTypeorm,
-} from './unidad-de-trabajo';
+import { UnidadDeTrabajo, UnidadDeTrabajoTypeorm } from './unidad-de-trabajo';
 
 /** P4: todos los dominios comerciales implementados tienen persistencia SQL. */
 export const DOMINIOS_MYSQL_PILOTO = [
@@ -39,11 +35,10 @@ export const DOMINIOS_MYSQL_PILOTO = [
     {
       provide: DataSource,
       inject: [ConfigService],
-      useFactory: async (config: ConfigService): Promise<DataSource | null> => {
-        if (config.get<string>('PERSISTENCIA', 'dummy') !== 'mysql')
-          return null;
+      useFactory: async (config: ConfigService): Promise<DataSource> => {
         const source = new DataSource(
           opcionesMysql({
+            PERSISTENCIA: config.get<string>('PERSISTENCIA'),
             DB_HOST: config.get<string>('DB_HOST'),
             DB_PORT: config.get<string>('DB_PORT'),
             DB_USERNAME: config.get<string>('DB_USERNAME'),
@@ -53,8 +48,11 @@ export const DOMINIOS_MYSQL_PILOTO = [
         );
         try {
           await source.initialize();
+          if (!source.isInitialized)
+            throw new Error('Inicializacion incompleta');
         } catch {
-          if (source.isInitialized) await source.destroy();
+          if (source.isInitialized)
+            await source.destroy().catch(() => undefined);
           throw new Error(
             'No se pudo inicializar MySQL; revise la conexion configurada.',
           );
@@ -68,17 +66,18 @@ export const DOMINIOS_MYSQL_PILOTO = [
     {
       provide: UnidadDeTrabajo,
       inject: [DataSource],
-      useFactory: (source: DataSource | null): UnidadDeTrabajo =>
-        source
-          ? new UnidadDeTrabajoTypeorm(source)
-          : new UnidadDeTrabajoDummy(),
+      useFactory: (source: DataSource): UnidadDeTrabajo => {
+        if (!source || !source.isInitialized)
+          throw new Error('La unidad de trabajo requiere MySQL inicializado.');
+        return new UnidadDeTrabajoTypeorm(source);
+      },
     },
   ],
   exports: [DataSource, UnidadDeTrabajo],
 })
 export class PersistenciaModule implements OnApplicationShutdown {
-  constructor(@Inject(DataSource) private readonly source: DataSource | null) {}
+  constructor(@Inject(DataSource) private readonly source: DataSource) {}
   async onApplicationShutdown(): Promise<void> {
-    if (this.source?.isInitialized) await this.source.destroy();
+    if (this.source.isInitialized) await this.source.destroy();
   }
 }

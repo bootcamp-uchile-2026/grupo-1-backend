@@ -1,6 +1,8 @@
 # H3-P2 — Identidad, credenciales, direcciones y JWT en MySQL
 
-Fecha: 17-11-2026. Rama de laboratorio `lab/h3-integracion-20261115`, sin commit.
+> **Alcance histórico.** Registro del incremento P2. Las referencias a dominios todavía en memoria y a funcionalidades ausentes describen esa etapa, no el backend consolidado P0–P5. Las pruebas citadas no se han repetido con SQL en esta revisión. El estado vigente y los límites de verificación están en [README](../README.md).
+
+Fecha del registro original: 17-11-2026. Rama utilizada en P2: `lab/h3-integracion-20261115`. Esta referencia histórica no describe el estado Git actual.
 
 ## Alcance
 
@@ -20,7 +22,7 @@ Fecha: 17-11-2026. Rama de laboratorio `lab/h3-integracion-20261115`, sin commit
 | Tabla | Claves | Notas |
 |---|---|---|
 | `usuario` | PK `id` INT UNSIGNED AUTO_INCREMENT; `uq_usuario_email` | email `VARCHAR(320) utf8mb4_bin`, ya normalizado; textos `MEDIUMTEXT` (F5 pendiente) |
-| `credencial` | PK/FK `usuario_id` → usuario RESTRICT; `uq_credencial_correo` | `hash_contrasena` ASCII con `CHECK LIKE 'scrypt$%'`: el texto plano es imposible a nivel de base |
+| `credencial` | PK/FK `usuario_id` → usuario RESTRICT; `uq_credencial_correo` | `hash_contrasena` ASCII con `CHECK LIKE 'scrypt$%'`: restringe el prefijo, pero no verifica la estructura completa ni la validez criptográfica del hash; el servicio calcula scrypt |
 | `direccion` | PK `id`; FK `usuario_id` → usuario RESTRICT; `ix_direccion_usuario` | `CHECK principal IN (0,1)`; toda consulta filtra por usuario |
 
 S03 siembra solo los perfiles y direcciones sintéticos de H2 (usuarios 1–2, direcciones 1–3),
@@ -33,7 +35,7 @@ credenciales:** ninguna migración crea cuentas con contraseña conocida.
   configuraciones que recomienda OWASP), sal de 16 bytes, comparación de tiempo constante.
   Formato: `scrypt$N=..,r=..,p=..$sal$clave`. Se eligió en vez de Argon2id para **no añadir
   una dependencia nativa** mientras la política npm sigue pendiente; `package.json` y el lock
-  no cambian. Si Fran aprueba Argon2id, el formato con prefijo permite migrar al iniciar sesión.
+  no cambian en este incremento. Un cambio futuro de algoritmo requiere implementar una estrategia de migración; no existe migración automática a Argon2id.
 - **Login:** mismo 401 y mensaje si el correo no existe o la contraseña falla; ante un correo
   inexistente se gasta el mismo trabajo de scrypt.
 - **JWT:** HS256 con algoritmo fijo (rechaza `none`, otros `alg` o campos extra en la cabecera),
@@ -50,7 +52,7 @@ credenciales:** ninguna migración crea cuentas con contraseña conocida.
   carrito con id N». No se confía en ningún id del cliente.
 - **Registro:** usuario + credencial dentro de la `UnidadDeTrabajo` existente (un solo commit o
   rollback en MySQL); el hash se calcula fuera de la transacción. El carrito, que sigue en
-  memoria hasta P3, se crea después del commit.
+  memoria en el estado histórico P2, se describía después del commit. Desde P3, usuario, credencial y carrito se crean dentro de la misma unidad de trabajo SQL.
 
 ## Cambios de contrato (documentados y probados)
 

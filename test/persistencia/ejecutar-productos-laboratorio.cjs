@@ -6,6 +6,7 @@ const cp = require('node:child_process');
 const crypto = require('node:crypto');
 const net = require('node:net');
 const assert = require('node:assert/strict');
+const { esquemaRegistrado } = require('./esquema-registrado.cjs');
 
 const repo = path.resolve(__dirname, '../..');
 const id = crypto.randomBytes(6).toString('hex');
@@ -15,6 +16,8 @@ const database = 'stylenow_pr0_' + id + '_test';
 const username = 'lab_' + id;
 const password = crypto.randomBytes(24).toString('hex');
 const rootPassword = crypto.randomBytes(24).toString('hex');
+// Secreto JWT propio del laboratorio: aleatorio, 32 bytes, el mismo para todos sus procesos.
+const jwtSecret = crypto.randomBytes(32).toString('hex');
 const root = process.env.EVIDENCIA_PILOTO_DIR
   ? path.resolve(process.env.EVIDENCIA_PILOTO_DIR)
   : fs.mkdtempSync(path.join(os.tmpdir(), 'stylenow-pr0-evidencia-'));
@@ -25,7 +28,7 @@ const privateDir = process.env.PRIVADO_PILOTO_DIR
   : fs.mkdtempSync(path.join(os.tmpdir(), 'stylenow-pr0-privado-'));
 assert(privateDir !== repo && !privateDir.startsWith(repo + path.sep), 'Credenciales fuera del repositorio fuente');
 fs.mkdirSync(privateDir, { recursive: true });
-const sanitize = value => String(value).replaceAll(password, '[REDACTED]').replaceAll(rootPassword, '[REDACTED]');
+const sanitize = value => String(value).replaceAll(password, '[REDACTED]').replaceAll(rootPassword, '[REDACTED]').replaceAll(jwtSecret, '[REDACTED]');
 const results = { id, container: name, volume, database, mode: 'hibrido P1: categorias, colecciones, publicaciones y productos SQL', checks: [] };
 let started = false;
 const processes = new Set();
@@ -134,13 +137,13 @@ async function persistentHttp(config, label) {
     const bindings = JSON.parse(run('puerto-mysql', 'docker', ['inspect', '--format', '{{json .NetworkSettings.Ports}}', name]));
     const port = bindings['3306/tcp'][0].HostPort;
     const config = { ...process.env, PERSISTENCIA: 'mysql', DB_HOST: '127.0.0.1', DB_PORT: port, DB_USERNAME: username, DB_PASSWORD: password, DB_DATABASE: database,
-      MYSQL_LAB_DATABASE: database, MYSQL_LAB_GUARD: 'exclusive-disposable-pr0', STYLENOW_SQL_TEST: '1' };
+      MYSQL_LAB_DATABASE: database, MYSQL_LAB_GUARD: 'exclusive-disposable-pr0', STYLENOW_SQL_TEST: '1', JWT_SECRET: jwtSecret };
     fs.writeFileSync(path.join(privateDir, 'conexion-' + id + '.json'), JSON.stringify({ DB_HOST: config.DB_HOST, DB_PORT: port, DB_USERNAME: username, DB_PASSWORD: password, DB_DATABASE: database }), { mode: 0o600 });
     results.host = '127.0.0.1'; results.port = port;
     await ready(config);
     run('sql-e2e', process.execPath, ['node_modules/jest/bin/jest.js', '--config', 'test/jest-e2e.json', '--runInBand', '--testTimeout=30000', '--testPathPatterns', 'piloto.mysql'], config);
     run('productos-sql-e2e', process.execPath, ['node_modules/jest/bin/jest.js', '--config', 'test/jest-e2e.json', '--runInBand', '--testTimeout=30000', '--testPathPatterns', 'productos.mysql'], config);
-    run('h2-e2e-hibrido', process.execPath, ['node_modules/jest/bin/jest.js', '--config', 'test/jest-e2e.json', '--runInBand', '--testPathIgnorePatterns', '(piloto|productos).mysql'], { ...config, STYLENOW_SQL_TEST: '0' });
+    run('h2-e2e-hibrido', process.execPath, ['node_modules/jest/bin/jest.js', '--config', 'test/jest-e2e.json', '--runInBand', '--testTimeout=60000', '--testPathIgnorePatterns', '.mysql.e2e-spec'], { ...config, STYLENOW_SQL_TEST: '0', STYLENOW_REINICIO_SQL_POR_PRUEBA: '1' });
     const seedConnection = await require('mysql2/promise').createConnection({ host: config.DB_HOST, port: Number(port), user: username, password, database });
     try {
       await seedConnection.query("INSERT INTO producto (id,categoria_id,nombre,precio,imagen_url,novedad,oferta,descripcion,calificacion,guia_tallas) SELECT 9001,categoria_id,'Persistencia producto P1',precio,imagen_url,novedad,oferta,descripcion,calificacion,guia_tallas FROM producto WHERE id=1");
@@ -154,20 +157,23 @@ async function persistentHttp(config, label) {
     const mysql = require('mysql2/promise'); const connection = await mysql.createConnection({ host: config.DB_HOST, port: Number(port), user: username, password, database });
     try {
       const [tables] = await connection.query('SHOW TABLES');
-      assert.deepEqual(tables.map(r => Object.values(r)[0]).sort(), ['categoria', 'coleccion', 'migrations', 'post', 'producto', 'producto_color', 'producto_imagen', 'producto_talla', 'variante']);
+      const registrado = await esquemaRegistrado(repo, config);
+      assert.deepEqual(tables.map(r => Object.values(r)[0]).sort(), [...registrado.tablas, 'migrations'].sort());
+      const [aplicadas] = await connection.query('SELECT name FROM migrations ORDER BY id');
+      assert.deepEqual(aplicadas.map(r => r.name), registrado.migraciones);
       const [counts] = await connection.query('SELECT (SELECT COUNT(*) FROM categoria) AS categorias, (SELECT COUNT(*) FROM coleccion) AS colecciones, (SELECT COUNT(*) FROM post) AS publicaciones');
       assert.deepEqual(counts[0], { categorias: 5, colecciones: 4, publicaciones: 4 });
       const [constraints] = await connection.query('SELECT TABLE_NAME, CONSTRAINT_NAME, CONSTRAINT_TYPE FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_SCHEMA=? ORDER BY TABLE_NAME,CONSTRAINT_NAME', [database]);
       results.sql = { tables, counts, constraints };
     } finally { await connection.end(); }
     run('cli-migration-show', process.execPath, ['node_modules/typeorm/cli.js', 'migration:show', '-d', 'dist/persistencia/data-source.cli.js'], config);
-    const dummy = await startApi(config, 'dummy', 'api-dummy-real');
+    const contrato = await startApi(config, 'mysql', 'api-contrato-1');
     const hybrid = await startApi(config, 'mysql', 'api-mysql-real');
     try {
-      const a = await (await fetch(`http://127.0.0.1:${dummy.port}/api-json`)).json();
+      const a = await (await fetch(`http://127.0.0.1:${contrato.port}/api-json`)).json();
       const b = await (await fetch(`http://127.0.0.1:${hybrid.port}/api-json`)).json();
       assert.deepEqual(b, a); results.openapi = { equal: true, paths: Object.keys(a.paths).length };
-    } finally { await stopApi(dummy.child); await stopApi(hybrid.child); }
+    } finally { await stopApi(contrato.child); await stopApi(hybrid.child); }
     own(); run('detener-para-prueba-fallo', 'docker', ['stop', name]); started = false;
     const bad = cp.spawnSync(process.execPath, ['dist/main.js'], { cwd: repo, env: { ...config, PORT: String(await freePort()) }, encoding: 'utf8', timeout: 15000, windowsHide: true });
     fs.writeFileSync(path.join(root, 'sin-fallback.log'), sanitize((bad.stdout || '') + (bad.stderr || '')));

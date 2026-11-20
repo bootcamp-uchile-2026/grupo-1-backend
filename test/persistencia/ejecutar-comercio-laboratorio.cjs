@@ -6,6 +6,7 @@ const cp = require('node:child_process');
 const crypto = require('node:crypto');
 const net = require('node:net');
 const assert = require('node:assert/strict');
+const { esquemaRegistrado } = require('./esquema-registrado.cjs');
 
 const repo = path.resolve(__dirname, '../..');
 const id = crypto.randomBytes(6).toString('hex');
@@ -173,7 +174,7 @@ async function persistentHttp(config, label) {
     results.host = '127.0.0.1'; results.port = port;
     await ready(config);
     run('comercio-sql-e2e', process.execPath, ['node_modules/jest/bin/jest.js','--config','test/jest-e2e.json','--runInBand','--testTimeout=60000','--testPathPatterns','comercio.mysql'], config);
-    run('h2-e2e-hibrido', process.execPath, ['node_modules/jest/bin/jest.js','--config','test/jest-e2e.json','--runInBand','--testTimeout=60000','--testPathIgnorePatterns','(piloto|productos|identidad|comercio).mysql'], {...config,STYLENOW_SQL_TEST:'0',STYLENOW_REINICIO_SQL_POR_PRUEBA:'1'});
+    run('h2-e2e-hibrido', process.execPath, ['node_modules/jest/bin/jest.js','--config','test/jest-e2e.json','--runInBand','--testTimeout=60000','--testPathIgnorePatterns', '.mysql.e2e-spec'], {...config,STYLENOW_SQL_TEST:'0',STYLENOW_REINICIO_SQL_POR_PRUEBA:'1'});
     const seedConnection = await require('mysql2/promise').createConnection({ host: config.DB_HOST, port: Number(port), user: username, password, database });
     try {
       await seedConnection.query("INSERT INTO categoria SELECT 9001,'Persistencia','persistencia','https://example.invalid',0,99");
@@ -190,7 +191,10 @@ async function persistentHttp(config, label) {
     const mysql = require('mysql2/promise'); const connection = await mysql.createConnection({ host: config.DB_HOST, port: Number(port), user: username, password, database });
     try {
       const [tables] = await connection.query('SHOW TABLES');
-      assert.deepEqual(tables.map(r => Object.values(r)[0]).sort(), ['carrito','carrito_item','categoria','coleccion','credencial','direccion','favorito','migrations','pedido','pedido_item','post','producto','producto_color','producto_imagen','producto_talla','usuario','variante']);
+      const registrado = await esquemaRegistrado(repo, config);
+      assert.deepEqual(tables.map(r => Object.values(r)[0]).sort(), [...registrado.tablas, 'migrations'].sort());
+      const [aplicadas] = await connection.query('SELECT name FROM migrations ORDER BY id');
+      assert.deepEqual(aplicadas.map(r => r.name), registrado.migraciones);
       const [counts] = await connection.query('SELECT (SELECT COUNT(*) FROM categoria) AS categorias, (SELECT COUNT(*) FROM coleccion) AS colecciones, (SELECT COUNT(*) FROM post) AS publicaciones');
       assert.deepEqual(counts[0], { categorias: 5, colecciones: 4, publicaciones: 4 });
       const [[sinTextoPlano]] = await connection.query('SELECT COUNT(*) AS n FROM credencial WHERE hash_contrasena NOT LIKE ?', ['scrypt$%']);
@@ -199,13 +203,13 @@ async function persistentHttp(config, label) {
       results.sql = { tables, counts, constraints };
     } finally { await connection.end(); }
     run('cli-migration-show', process.execPath, ['node_modules/typeorm/cli.js', 'migration:show', '-d', 'dist/persistencia/data-source.cli.js'], config);
-    const dummy = await startApi(config, 'dummy', 'api-dummy-real');
+    const contrato = await startApi(config, 'mysql', 'api-contrato-1');
     const hybrid = await startApi(config, 'mysql', 'api-mysql-real');
     try {
-      const a = await (await fetch(`http://127.0.0.1:${dummy.port}/api-json`)).json();
+      const a = await (await fetch(`http://127.0.0.1:${contrato.port}/api-json`)).json();
       const b = await (await fetch(`http://127.0.0.1:${hybrid.port}/api-json`)).json();
       assert.deepEqual(b, a); results.openapi = { equal: true, paths: Object.keys(a.paths).length };
-    } finally { await stopApi(dummy.child); await stopApi(hybrid.child); }
+    } finally { await stopApi(contrato.child); await stopApi(hybrid.child); }
     own(); run('detener-para-prueba-fallo', 'docker', ['stop', name]); started = false;
     const bad = cp.spawnSync(process.execPath, ['dist/main.js'], { cwd: repo, env: { ...config, PORT: String(await freePort()) }, encoding: 'utf8', timeout: 15000, windowsHide: true });
     fs.writeFileSync(path.join(root, 'sin-fallback.log'), sanitize((bad.stdout || '') + (bad.stderr || '')));

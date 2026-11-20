@@ -1,13 +1,27 @@
-import { DummyPedidosRepository } from '../src/repositorios/dummy/dummy-pedidos.repository';
-import { DummyFavoritosRepository } from '../src/repositorios/dummy/dummy-favoritos.repository';
-import { DummyCarritosRepository } from '../src/repositorios/dummy/dummy-carritos.repository';
-import { DummyDireccionesRepository } from '../src/repositorios/dummy/dummy-direcciones.repository';
-import { DummyCredencialesRepository } from '../src/repositorios/dummy/dummy-credenciales.repository';
-import { DummyPostsRepository } from '../src/repositorios/dummy/dummy-posts.repository';
-import { DummyColeccionesRepository } from '../src/repositorios/dummy/dummy-colecciones.repository';
-import { DummyCategoriasRepository } from '../src/repositorios/dummy/dummy-categorias.repository';
-import { DummyProductosRepository } from '../src/repositorios/dummy/dummy-productos.repository';
-import { DummyUsuariosRepository } from '../src/repositorios/dummy/dummy-usuarios.repository';
+import { ALERTAS_DUMMY } from './fixtures/historicos/alertas.fixture';
+import { LOOKS_DUMMY } from './fixtures/historicos/looks.fixture';
+import { CAMBIOS_DEVOLUCIONES_DUMMY } from './fixtures/historicos/cambios-devoluciones.fixture';
+import { CambiosDevolucionesRepository } from '../src/repositorios/cambios-devoluciones.repository';
+import { AlertasRepository } from '../src/repositorios/alertas.repository';
+import { LooksRepository } from '../src/repositorios/looks.repository';
+import { PedidosRepository } from '../src/repositorios/pedidos.repository';
+import { TypeOrmFavoritosRepository } from '../src/repositorios/typeorm/typeorm-favoritos.repository';
+import { FavoritosRepository } from '../src/repositorios/favoritos.repository';
+import { CarritosRepository } from '../src/repositorios/carritos.repository';
+import { TypeOrmDireccionesRepository } from '../src/repositorios/typeorm/typeorm-direcciones.repository';
+import { DireccionesRepository } from '../src/repositorios/direcciones.repository';
+import { TypeOrmCredencialesRepository } from '../src/repositorios/typeorm/typeorm-credenciales.repository';
+import { CredencialesRepository } from '../src/repositorios/credenciales.repository';
+import { TypeOrmPostsRepository } from '../src/repositorios/typeorm/typeorm-posts.repository';
+import { PostsRepository } from '../src/repositorios/posts.repository';
+import { TypeOrmColeccionesRepository } from '../src/repositorios/typeorm/typeorm-colecciones.repository';
+import { ColeccionesRepository } from '../src/repositorios/colecciones.repository';
+import { TypeOrmCategoriasRepository } from '../src/repositorios/typeorm/typeorm-categorias.repository';
+import { CategoriasRepository } from '../src/repositorios/categorias.repository';
+import { TypeOrmProductosRepository } from '../src/repositorios/typeorm/typeorm-productos.repository';
+import { ProductosRepository } from '../src/repositorios/productos.repository';
+import { TypeOrmUsuariosRepository } from '../src/repositorios/typeorm/typeorm-usuarios.repository';
+import { UsuariosRepository } from '../src/repositorios/usuarios.repository';
 import type { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
@@ -24,16 +38,18 @@ import { TypeOrmPedidosRepository } from '../src/repositorios/typeorm/typeorm-pe
 import { TypeOrmLooksRepository } from '../src/repositorios/typeorm/typeorm-looks.repository';
 import { TypeOrmAlertasRepository } from '../src/repositorios/typeorm/typeorm-alertas.repository';
 import { TypeOrmCambiosDevolucionesRepository } from '../src/repositorios/typeorm/typeorm-cambios-devoluciones.repository';
-import { DummyLooksRepository } from '../src/repositorios/dummy/dummy-looks.repository';
-import { DummyAlertasRepository } from '../src/repositorios/dummy/dummy-alertas.repository';
-import { DummyCambiosDevolucionesRepository } from '../src/repositorios/dummy/dummy-cambios-devoluciones.repository';
 import {
   laboratorioDesechable,
   conectarLaboratorio,
   reiniciarIdentidadSql,
 } from './utilidades/estado-identidad-sql';
 import { bearer } from './utilidades/autenticacion';
-const sql = process.env.STYLENOW_SQL_TEST === '1' ? describe : describe.skip;
+import {
+  migracionesAplicadas,
+  revertirDesde,
+  verificarMigracionesCompletas,
+} from './utilidades/migraciones';
+const sql = describe;
 const body = (carritoId = 1) => ({
   carritoId,
   contacto: { nombre: 'Lab', email: 'lab@example.invalid', telefono: '000' },
@@ -78,26 +94,36 @@ sql('P4 restante SQL exclusivo', () => {
     if (source?.isInitialized) await source.destroy();
   });
   it('migraciones desde vacio, entidades y semillas sin envios ficticios', async () => {
-    const rows = await source.query<unknown[]>('SELECT * FROM migrations');
-    expect(rows).toHaveLength(13);
+    await verificarMigracionesCompletas(source);
     const original = await source.query<unknown[]>(
       'SELECT * FROM pedido ORDER BY id',
     );
-    for (let i = 0; i < 5; i++) await source.undoLastMigration();
-    expect(
-      await source.query<unknown[]>('SELECT * FROM migrations'),
-    ).toHaveLength(8);
+    // Vuelve al estado P3: revierte P4 y todo lo aplicado despues.
+    const revertidas = await revertirDesde(source, 'CrearAlertas1795250400000');
+    expect(revertidas.slice(0, 5)).toEqual([
+      'CrearAlertas1795250400000',
+      'CrearLooks1795250401000',
+      'CrearLogistica1795250402000',
+      'CrearPostventa1795250403000',
+      'SembrarP41795250404000',
+    ]);
+    expect((await migracionesAplicadas(source)).at(-1)).toBe(
+      'SembrarComercio1795150401000',
+    );
     expect(await source.query('SELECT * FROM pedido ORDER BY id')).toEqual(
       original,
     );
-    expect(await source.runMigrations()).toHaveLength(5);
+    expect((await source.runMigrations()).map((m) => m.name)).toEqual(
+      revertidas,
+    );
+    await verificarMigracionesCompletas(source);
     expect(await source.query('SELECT * FROM envio')).toEqual([]);
     expect(await source.query('SELECT * FROM inventario_pedido')).toEqual([]);
   });
   it('alertas equivalentes y aisladas, duplicados permitidos por H2', async () => {
     const r = new TypeOrmAlertasRepository(source);
     expect(await r.listarPorUsuario(1)).toEqual(
-      await new DummyAlertasRepository().listarPorUsuario(1),
+      ALERTAS_DUMMY.filter((a) => a.usuarioId === 1).map((a) => a.alerta),
     );
     const a = await r.crear(1, {
       tipo: 'reposicion',
@@ -115,9 +141,10 @@ sql('P4 restante SQL exclusivo', () => {
   });
   it('looks conservan orden, repeticiones, total y creador; guardar idempotente', async () => {
     const r = new TypeOrmLooksRepository(source);
-    expect(await r.listarPagina(0, 10)).toEqual(
-      await new DummyLooksRepository().listarPagina(0, 10),
-    );
+    expect(await r.listarPagina(0, 10)).toEqual({
+      looks: LOOKS_DUMMY.slice(0, 10),
+      total: LOOKS_DUMMY.length,
+    });
     const l = await r.crear(
       {
         nombre: 'Duplicados',
@@ -252,7 +279,7 @@ sql('P4 restante SQL exclusivo', () => {
   it('postventa conserva semillas, idempotencia, FK, historial y pertenencia', async () => {
     const r = new TypeOrmCambiosDevolucionesRepository(source);
     expect(await r.listarPorPedido(1001)).toEqual(
-      await new DummyCambiosDevolucionesRepository().listarPorPedido(1001),
+      CAMBIOS_DEVOLUCIONES_DUMMY.filter((c) => c.pedidoId === 1001),
     );
     const d = {
       pedidoId: 1001,
@@ -304,55 +331,41 @@ sql('P4 restante SQL exclusivo', () => {
       .expect(201);
   });
 
-  it('ninguna lectura de negocio SQL usa los trece adaptadores dummy', async () => {
-    const prototypes = [
-      DummyUsuariosRepository.prototype,
-      DummyProductosRepository.prototype,
-      DummyCategoriasRepository.prototype,
-      DummyColeccionesRepository.prototype,
-      DummyPostsRepository.prototype,
-      DummyCredencialesRepository.prototype,
-      DummyDireccionesRepository.prototype,
-      DummyCarritosRepository.prototype,
-      DummyFavoritosRepository.prototype,
-      DummyPedidosRepository.prototype,
-      DummyLooksRepository.prototype,
-      DummyAlertasRepository.prototype,
-      DummyCambiosDevolucionesRepository.prototype,
-    ];
-    const spies: jest.SpyInstance[] = [];
-    try {
-      for (const prototype of prototypes)
-        for (const key of Object.getOwnPropertyNames(prototype)) {
-          if (key === 'constructor') continue;
-          const record = prototype as unknown as Record<string, () => unknown>;
-          if (typeof record[key] === 'function')
-            spies.push(
-              jest.spyOn(record, key).mockImplementation(() => {
-                throw new Error('Dummy invocado en MySQL');
-              }),
-            );
-        }
-      const api = request(app.getHttpServer());
-      for (const url of [
-        '/productos',
-        '/categorias',
-        '/colecciones',
-        '/posts',
-        '/looks',
-        '/usuarios/1',
-        '/usuarios/1/carrito',
-        '/usuarios/1/favoritos',
-        '/usuarios/1/pedidos',
-        '/usuarios/1/alertas',
-        '/usuarios/1/direcciones',
-        '/usuarios/1/pedidos/1001/cambios-devoluciones',
-      ])
-        await api.get(url).set('Authorization', bearer(app, 1)).expect(200);
-      for (const spy of spies) expect(spy).not.toHaveBeenCalled();
-    } finally {
-      spies.forEach((spy) => spy.mockRestore());
-    }
+  it('los trece puertos usan TypeORM y sus lecturas HTTP consultan SQL', async () => {
+    const puertos = [
+      [UsuariosRepository, TypeOrmUsuariosRepository],
+      [ProductosRepository, TypeOrmProductosRepository],
+      [CategoriasRepository, TypeOrmCategoriasRepository],
+      [ColeccionesRepository, TypeOrmColeccionesRepository],
+      [PostsRepository, TypeOrmPostsRepository],
+      [CredencialesRepository, TypeOrmCredencialesRepository],
+      [DireccionesRepository, TypeOrmDireccionesRepository],
+      [CarritosRepository, TypeOrmCarritosRepository],
+      [FavoritosRepository, TypeOrmFavoritosRepository],
+      [PedidosRepository, TypeOrmPedidosRepository],
+      [LooksRepository, TypeOrmLooksRepository],
+      [AlertasRepository, TypeOrmAlertasRepository],
+      [CambiosDevolucionesRepository, TypeOrmCambiosDevolucionesRepository],
+    ] as const;
+    expect(app.get(DataSource).isInitialized).toBe(true);
+    for (const [puerto, tipo] of puertos)
+      expect(app.get(puerto)).toBeInstanceOf(tipo);
+    const api = request(app.getHttpServer());
+    for (const url of [
+      '/productos',
+      '/categorias',
+      '/colecciones',
+      '/posts',
+      '/looks',
+      '/usuarios/1',
+      '/usuarios/1/carrito',
+      '/usuarios/1/favoritos',
+      '/usuarios/1/pedidos',
+      '/usuarios/1/alertas',
+      '/usuarios/1/direcciones',
+      '/usuarios/1/pedidos/1001/cambios-devoluciones',
+    ])
+      await api.get(url).set('Authorization', bearer(app, 1)).expect(200);
   });
   it('personal explicitamente autorizado puede despachar; cliente no cancela SHIPPED', async () => {
     const p = await pedido(),

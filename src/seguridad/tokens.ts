@@ -42,7 +42,7 @@ export function configuracionTokensDesdeEntorno(entorno: {
   JWT_EXPIRACION_SEGUNDOS?: string;
 }): ConfiguracionTokens {
   const secreto = entorno.JWT_SECRET ?? '';
-  if (Buffer.byteLength(secreto, 'utf8') < 32) {
+  if (!secreto.trim() || Buffer.byteLength(secreto, 'utf8') < 32) {
     throw new Error(
       'JWT_SECRET es obligatorio y debe tener al menos 32 bytes.',
     );
@@ -72,7 +72,7 @@ export class ServicioTokens {
 
   constructor(private readonly configuracion: ConfiguracionTokens) {
     this.clave = Buffer.from(configuracion.secreto, 'utf8');
-    if (this.clave.length < 32) {
+    if (!configuracion.secreto.trim() || this.clave.length < 32) {
       throw new Error('El secreto JWT debe tener al menos 32 bytes.');
     }
     this.ahora = configuracion.ahora ?? (() => Math.floor(Date.now() / 1000));
