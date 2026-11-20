@@ -15,9 +15,21 @@ describe('Restricciones publicadas en OpenAPI', () => {
       );
       const schemas = document.components?.schemas;
       expect(schemas).toMatchObject({
-        LoginDto: { properties: { correoElectronico: { format: 'email' } } },
+        LoginDto: {
+          properties: {
+            correoElectronico: { format: 'email', maxLength: 320 },
+          },
+        },
         AgregarItemCarritoDto: { properties: { cantidad: { minimum: 1 } } },
-        RegistrarUsuarioDto: { properties: { nombre: { minLength: 1 } } },
+        RegistrarUsuarioDto: {
+          properties: {
+            nombre: { minLength: 1 },
+            correoElectronico: { format: 'email', maxLength: 320 },
+          },
+        },
+        ProductoDetalleResponseDto: {
+          properties: { calificacion: { minimum: 0, maximum: 5 } },
+        },
         ActualizarDireccionDto: { properties: { calle: { minLength: 1 } } },
       });
     } finally {

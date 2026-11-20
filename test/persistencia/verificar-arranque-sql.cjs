@@ -73,7 +73,8 @@ async function check(label, modify, expectedField, success = false) {
     closed = false,
     exit = null,
     listened = false,
-    ready = false;
+    ready = false,
+    versionSwagger = null;
   child.stdout.on('data', (b) => (output += b));
   child.stderr.on('data', (b) => (output += b));
   const done = new Promise((resolve) =>
@@ -91,13 +92,25 @@ async function check(label, modify, expectedField, success = false) {
           signal: AbortSignal.timeout(200),
         });
         listened = true;
-        if (r.status === 200) ready = true;
+        if (r.status === 200) {
+          const document = await r.json();
+          versionSwagger = document.info?.version;
+          ready = true;
+        }
       } catch {}
       if (ready || (!success && listened)) break;
       await pause(100);
     }
     if (success) {
       assert(ready, label + ': no inicio');
+      const expectedVersion =
+        env.APP_VERSION?.trim() ||
+        require(path.join(repo, 'package.json')).version;
+      assert.equal(
+        versionSwagger,
+        expectedVersion,
+        label + ': version Swagger distinta',
+      );
     } else {
       assert(closed, label + ': no termino fail-fast');
       assert.equal(exit, 1, label + ': salida inesperada');
@@ -112,6 +125,18 @@ async function check(label, modify, expectedField, success = false) {
         label + ': error distinto de la causa esperada',
       );
     }
+    if (success) {
+      for (
+        let i = 0;
+        i < 20 && !output.includes('(version ' + versionSwagger + ')');
+        i++
+      )
+        await pause(25);
+      assert(
+        output.includes('(version ' + versionSwagger + ')'),
+        label + ': version de arranque distinta de Swagger',
+      );
+    }
     for (const secret of secrets.filter(
       (v) => typeof v === 'string' && v.trim(),
     ))
@@ -122,6 +147,7 @@ async function check(label, modify, expectedField, success = false) {
       listened,
       exit: success ? 'detenido_por_prueba' : exit,
       expectedField: expectedField || null,
+      versionSwagger,
     });
   } finally {
     if (!closed) child.kill();

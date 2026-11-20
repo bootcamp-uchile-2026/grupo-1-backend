@@ -4475,8 +4475,10 @@
             "calificacion": {
               "type": "number",
               "title": "Calificacion",
-              "description": "Calificacion promedio mostrada con estrellas en la ficha. Va de 0 a 5.",
-              "example": 4.5
+              "description": "Valor de calificacion del catalogo, entre 0 y 5. No se calcula desde resenas.",
+              "example": 4.5,
+              "minimum": 0,
+              "maximum": 5
             },
             "colores": {
               "title": "Colores",
@@ -4780,7 +4782,8 @@
               "format": "email",
               "title": "Correo electronico",
               "description": "Correo electronico del cliente. Se usa como identificador unico de la cuenta.",
-              "example": "cliente@stylenow.cl"
+              "example": "cliente@stylenow.cl",
+              "maxLength": 320
             },
             "contrasena": {
               "type": "string",
@@ -4824,7 +4827,8 @@
               "format": "email",
               "title": "Correo electronico",
               "description": "Correo electronico registrado previamente en POST /auth/registro.",
-              "example": "cliente@stylenow.cl"
+              "example": "cliente@stylenow.cl",
+              "maxLength": 320
             },
             "contrasena": {
               "type": "string",

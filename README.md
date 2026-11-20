@@ -4,9 +4,10 @@ API REST de StyleNow con NestJS, TypeORM, MySQL 8.4 y Swagger/OpenAPI.
 El Backend operativo requiere MySQL: todos los puertos usan TypeORM. No hay
 adaptadores de memoria ni selector operativo de persistencia.
 
-Este README refleja la configuración de SQL-03 sobre la base consolidada de
-calidad e integridad. La certificación final SQL-only requiere todavía SQL-04;
-el MER histórico no debe interpretarse como el esquema físico vigente.
+Versión de entrega: **0.3.0**. La base SQL-04 superó 309 pruebas, 19
+comprobaciones de arranque y seis laboratorios MySQL 8.4.13. Las correcciones
+posteriores tienen su propia regresión: ver docs/ENTREGA_H3.md. Esto no declara
+Hito 3 cerrado ni sustituye los pendientes de normalización y entrega.
 
 ## Requisitos e instalación
 
@@ -25,7 +26,7 @@ de dependencias como parte de la instalación.
 | ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | PORT                                           | Puerto HTTP; 3000 por defecto. Debe ser un entero entre 1 y 65535.                                                                                                                           |
 | APP_NAME                                       | Título de Swagger; StyleNow API por defecto.                                                                                                                                                 |
-| APP_VERSION                                    | Versión publicada en Swagger; 1.0 por defecto. Compose utiliza 0.0.1 si no se configura. No representa por sí sola una versión estable publicada.                                            |
+| APP_VERSION                                    | Versión publicada en Swagger y arranque; 0.3.0 por defecto, igual que paquete, lock y Compose. Un override de despliegue debe identificar el artefacto real.                                 |
 | SWAGGER_PATH                                   | api por defecto; no puede colisionar con rutas de negocio.                                                                                                                                   |
 | PERSISTENCIA                                   | No es necesario. Solo se tolera mysql como marca heredada; dummy y otros valores se rechazan.                                                                                                |
 | JWT_SECRET                                     | Obligatorio; al menos 32 bytes y no solo espacios. Generar por entorno y no versionar.                                                                                                       |
@@ -67,7 +68,8 @@ fixtures. synchronize y migrationsRun están desactivados. La preparación del
 esquema requiere ejecutar explícitamente las migraciones en una base autorizada.
 
 Las 14 migraciones históricas permanecen intactas. Las correcciones de entidades se incorporaron desde la base validada de Claude.
-SQL-03 no modifica migraciones ni datos de bases existentes.
+Este cierre conserva esas migraciones, M-P7-01 y cuatro snapshots byte a byte.
+No aplica cambios a bases compartidas.
 
 ## Autenticación y autorización
 
@@ -88,6 +90,23 @@ token ni recuperación de contraseña implementados.
 Las capacidades administrativas son independientes: imágenes exige el permiso
 SQL productos.imagenes.gestionar y logística la lista operativa del entorno.
 Tener un JWT válido no concede esos permisos.
+
+## Decisiones REST y de compatibilidad
+
+**Excepción REST /auth/\*.** Registro, login y logout son acciones de autenticación.
+POST /auth/registro coordina usuario, credencial y carrito en una transacción;
+responde 201 con el perfil público o 409 por correo repetido. Login emite una
+credencial temporal; logout confirma que el cliente debe descartarla, sin revocarla.
+El recurso de perfil se consulta y modifica en /usuarios/{usuarioId}. Se preservan
+estas rutas para Frontend/Mobile; no se convierte el registro en POST /usuarios.
+
+Se conservan posts, carrito/items y search como nombres del contrato existente.
+También se mantienen las rutas de alertas precio/reposicion y la creación global
+de pedidos. La homogeneización REST y de idioma es deuda explícita; agregar aliases
+requiere revisión de clientes y no forma parte de este cierre.
+
+Las carpetas se organizan por responsabilidad técnica y los módulos Nest por
+dominio. La suite test/ se conserva como regresión; no se copia a la imagen final.
 
 ## Funcionalidades y límites
 
@@ -148,6 +167,9 @@ Los errores incluyen statusCode, message (texto o lista), error, requestId,
 timestamp y path. Los logs HTTP registran metadatos de entrada/salida sin
 cuerpos ni cabeceras. Los errores inesperados de petición no publican detalles
 internos. La sanitización de configuración se verifica mediante regresiones.
+La omisión del body es intencional: contacto, dirección, teléfono y credenciales
+son datos sensibles. RequestId permite correlacionar entrada, salida y error
+sin registrar cuerpos, cookies, query ni Authorization.
 
 ## Pruebas y calidad
 
@@ -170,8 +192,9 @@ Las suites no se omiten para aprobar. PR0 a P5 y el runner integrado crean
 recursos nuevos y ejecutan migraciones exclusivamente en esos laboratorios.
 La configuración SQL y el guard son obligatorios; test:e2e directo sin ellos falla.
 
-tools/qa-calidad.cjs se conserva como antecedente de C1–C4; su configuración
-dummy ya no es operativa. No utilizarlo para acreditar los lotes SQL.
+El runner histórico de C1–C4 no acredita los lotes SQL y queda fuera del
+paquete funcional. Sus archivos y evidencias anteriores se preservan en el
+worktree sin incorporarlos a los commits de entrega.
 
 ## Docker y preparación del despliegue
 
@@ -181,18 +204,23 @@ imagenes_productos. No contiene un servicio MySQL: la conexión debe configurars
 para el entorno autorizado.
 
 La imagen utiliza NODE_ENV=production. Configurar JWT_SECRET, todos los DB_*
-y CORS_ORIGENES antes de desplegar. No se modificaron Dockerfile, Compose,
-contenedores ni AWS en esta fase. Tags, imágenes publicadas, actualización
-del servidor y correspondencia de versiones requieren evidencia independiente.
+y CORS_ORIGENES antes de desplegar. Este cierre alinea Compose a 0.3.0 y utiliza únicamente imágenes y laboratorios
+locales nuevos. Tags, imágenes publicadas, actualización del servidor y
+correspondencia con una versión desplegada requieren evidencia independiente.
+No se modifican AWS ni bases compartidas.
 
 ## Documentación y estado de integración
 
-- docs/MODELO_ENTIDAD_RELACION.md es el antecedente conceptual H2, no el MER físico H3.
+- [MER físico H3 vigente](docs/MER_FISICO_H3.md): 29 tablas de dominio y todas sus FK.
+  Se genera desde el contrato contrastado con MySQL; no afirma 3FN completa.
+- docs/MODELO_ENTIDAD_RELACION.md se conserva como antecedente conceptual H2.
+- docs/ENTREGA_H3.md registra versión, evidencia, demo y pendientes.
 - docs/p1-productos-mysql.md a docs/p4-modulos-restantes-mysql.md son registros
   históricos de cada incremento; no deben leerse como el estado completo actual.
 - docs/p5-imagenes-productos.md documenta imágenes y sus límites.
 - docs/p6-contrato-frontend.md describe los contratos actuales de integración.
-- docs/calidad-codex contiene resultados, decisiones pendientes y conflictos de integración.
+- docs/calidad-codex/DECISIONES-SEGURIDAD.md conserva decisiones históricas
+  identificadas como reemplazadas. Los resultados actuales están en docs/ENTREGA_H3.md.
 
 La prueba completa React–NestJS–MySQL sigue pendiente. La existencia del módulo
 React independiente o los adaptadores SQL no certifica ese flujo.

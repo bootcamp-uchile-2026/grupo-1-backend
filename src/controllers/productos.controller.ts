@@ -1,3 +1,5 @@
+import type { ProductoDetalle } from '../dominio/modelos';
+import { ProductoExistentePipe } from '../common/producto-existente.pipe';
 import { Publico } from '../seguridad/publico.decorator';
 import { IdPositivoPipe } from '../common/id-positivo.pipe';
 import { Controller, Get, Param, Query } from '@nestjs/common';
@@ -79,9 +81,11 @@ export class ProductosController {
     description: 'No existe un producto con ese id.',
   })
   @Get(':id')
-  async obtenerProductoPorId(
-    @Param('id', IdPositivoPipe) id: number,
-  ): Promise<ProductoDetalleResponseDto> {
-    return this.productosService.obtenerProductoPorId(id);
+  obtenerProductoPorId(
+    // La interfaz evita que ValidationPipe trate el id de ruta como un DTO de body.
+    @Param('id', IdPositivoPipe, ProductoExistentePipe)
+    producto: ProductoDetalle,
+  ): ProductoDetalleResponseDto {
+    return producto;
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "stylenow-backend",
-  "version": "0.0.1",
+  "version": "0.3.0",
   "description": "API de catalogo, cuentas y pedidos de StyleNow",
   "author": "",
   "private": true,

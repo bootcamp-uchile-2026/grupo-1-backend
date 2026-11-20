@@ -1,3 +1,4 @@
+import { VERSION_APLICACION } from './version';
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
@@ -77,7 +78,7 @@ async function bootstrap(): Promise<void> {
   const entorno = app.get(ConfigService);
   const puerto = leerVariable(entorno, 'PORT', '3000');
   const nombre = leerVariable(entorno, 'APP_NAME', 'StyleNow API');
-  const version = leerVariable(entorno, 'APP_VERSION', '1.0');
+  const version = leerVariable(entorno, 'APP_VERSION', VERSION_APLICACION);
   const rutaSwagger = normalizarRutaSwagger(
     leerVariable(entorno, 'SWAGGER_PATH', 'api'),
   );
@@ -151,7 +152,9 @@ async function bootstrap(): Promise<void> {
   SwaggerModule.setup(rutaSwagger, app, document);
 
   await app.listen(puerto);
-  new Logger('Bootstrap').log('Backend escuchando en puerto ' + puerto);
+  new Logger('Bootstrap').log(
+    'Backend escuchando en puerto ' + puerto + ' (version ' + version + ')',
+  );
 }
 bootstrap().catch((error: unknown) => {
   const logger = new Logger('Bootstrap');

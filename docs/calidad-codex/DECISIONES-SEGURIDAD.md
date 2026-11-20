@@ -1,3 +1,10 @@
+# Alcance histórico: decisiones C1–C4
+
+Este registro describe una base anterior a SQL-02/03/04. El backend vigente
+rechaza dummy y requiere MySQL antes de escuchar HTTP. Las propuestas de
+conservar dummy que siguen a continuación no se implementan en el cierre
+SQL-only. Ver README y docs/ENTREGA_H3.md para el estado vigente.
+
 # Decisiones de seguridad pendientes
 
 ## Configuración de producción

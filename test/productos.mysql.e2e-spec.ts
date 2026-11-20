@@ -332,4 +332,57 @@ sql('P1 productos MySQL exclusivo, posterior a PR0', () => {
     ).rejects.toThrow('rollback grande');
     expect(await repository.buscarPorId(max)).toBeNull();
   });
+
+  it('el pipe consulta el producto SQL modificado y el controller no duplica la lectura', async () => {
+    const original = await repository.buscarPorId(1);
+    if (!original) throw new Error('Producto de laboratorio ausente');
+    const app = await open('mysql');
+    const port = app.get(ProductosRepository);
+    const spy = jest.spyOn(port, 'buscarPorId');
+    try {
+      await source.query('UPDATE producto SET nombre = ? WHERE id = 1', [
+        'Nombre visible desde SQL pipe',
+      ]);
+      const response = await request(app.getHttpServer())
+        .get('/productos/1')
+        .expect(200);
+      expect((response.body as { nombre: string }).nombre).toBe(
+        'Nombre visible desde SQL pipe',
+      );
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith(1);
+    } finally {
+      spy.mockRestore();
+      await source.query('UPDATE producto SET nombre = ? WHERE id = 1', [
+        original.nombre,
+      ]);
+      await app.close();
+    }
+  });
+
+  it('el pipe conserva 404 para un producto ausente en MySQL', async () => {
+    const app = await open('mysql');
+    const spy = jest.spyOn(app.get(ProductosRepository), 'buscarPorId');
+    try {
+      await request(app.getHttpServer())
+        .get('/productos/9007199254740991')
+        .expect(404);
+      expect(spy).toHaveBeenCalledTimes(1);
+    } finally {
+      spy.mockRestore();
+      await app.close();
+    }
+  });
+
+  it('el identificador invalido responde 400 antes de consultar el repositorio SQL', async () => {
+    const app = await open('mysql');
+    const spy = jest.spyOn(app.get(ProductosRepository), 'buscarPorId');
+    try {
+      await request(app.getHttpServer()).get('/productos/01').expect(400);
+      expect(spy).not.toHaveBeenCalled();
+    } finally {
+      spy.mockRestore();
+      await app.close();
+    }
+  });
 });

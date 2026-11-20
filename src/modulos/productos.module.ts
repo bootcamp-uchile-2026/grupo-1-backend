@@ -1,3 +1,4 @@
+import { ProductoExistentePipe } from '../common/producto-existente.pipe';
 import { DataSource } from 'typeorm';
 import { Module } from '@nestjs/common';
 import { ProductosController } from '../controllers/productos.controller';
@@ -10,6 +11,7 @@ import { TypeOrmProductosRepository } from '../repositorios/typeorm/typeorm-prod
   controllers: [ProductosController],
   providers: [
     ProductosService,
+    ProductoExistentePipe,
     {
       provide: ProductosRepository,
       inject: [DataSource],

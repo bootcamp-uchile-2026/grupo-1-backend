@@ -138,7 +138,7 @@ async function startApi(config, mode, label) {
       PERSISTENCIA: mode,
       PORT: String(port),
       APP_NAME: 'StyleNow PR0 QA',
-      APP_VERSION: '0.0.1',
+      APP_VERSION: require(path.join(repo, 'package.json')).version,
       SWAGGER_PATH: 'api',
     },
     windowsHide: true,
