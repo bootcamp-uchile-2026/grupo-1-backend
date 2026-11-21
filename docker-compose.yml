@@ -10,7 +10,7 @@ services:
       - "${HOST_PORT:-${PORT:-3000}}:${PORT:-3000}"
     environment:
       PORT: ${PORT:-3000}
-      APP_VERSION: ${APP_VERSION:-0.0.1}
+      APP_VERSION: ${APP_VERSION:-0.3.0}
       IMAGENES_DIRECTORIO: /app/uploads/productos
     volumes:
       - imagenes_productos:/app/uploads

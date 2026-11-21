@@ -19,6 +19,8 @@ import {
   ApiOperation,
   ApiParam,
   ApiTags,
+  ApiBearerAuth,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AlertaResponseDto } from '../dto/alerta-response.dto';
 import { CrearAlertaPrecioDto } from '../dto/crear-alerta-precio.dto';
@@ -46,6 +48,11 @@ import { AlertasService } from '../services/alertas.service';
   description:
     'No existe el usuario, la alerta no existe o no es suya, o el producto o la ' +
     'variante indicados no existen en el catalogo.',
+})
+@ApiBearerAuth()
+@ApiUnauthorizedResponse({
+  type: ErrorResponseDto,
+  description: 'JWT ausente, invalido o expirado.',
 })
 @Controller('usuarios/:usuarioId/alertas')
 export class AlertasController {

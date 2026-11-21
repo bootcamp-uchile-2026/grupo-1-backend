@@ -1,13 +1,9 @@
-import {
-  proveerRepositorio,
-  proveerDummy,
-} from '../persistencia/proveer-repositorio';
+import { DataSource } from 'typeorm';
 import { TypeOrmLooksRepository } from '../repositorios/typeorm/typeorm-looks.repository';
 import { Module } from '@nestjs/common';
 import { LooksController } from '../controllers/looks.controller';
 import { LooksService } from '../services/looks.service';
 import { LooksRepository } from '../repositorios/looks.repository';
-import { DummyLooksRepository } from '../repositorios/dummy/dummy-looks.repository';
 import { UsuariosModule } from './usuarios.module';
 import { ProductosModule } from './productos.module';
 
@@ -16,12 +12,11 @@ import { ProductosModule } from './productos.module';
   controllers: [LooksController],
   providers: [
     LooksService,
-    proveerDummy(DummyLooksRepository),
-    proveerRepositorio(
-      LooksRepository,
-      DummyLooksRepository,
-      TypeOrmLooksRepository,
-    ),
+    {
+      provide: LooksRepository,
+      inject: [DataSource],
+      useFactory: (source: DataSource) => new TypeOrmLooksRepository(source),
+    },
   ],
   exports: [LooksService, LooksRepository],
 })

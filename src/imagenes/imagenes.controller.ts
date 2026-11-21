@@ -108,7 +108,7 @@ export class AdministrarImagenesController {
   @ApiResponse({
     status: 503,
     type: ErrorResponseDto,
-    description: 'Dummy o procesador ocupado',
+    description: 'Procesador de imagenes ocupado',
   })
   @Post('productos/:productoId/imagenes')
   @UseInterceptors(

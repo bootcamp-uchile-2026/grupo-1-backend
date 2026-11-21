@@ -7,11 +7,11 @@ hasta la prueba real React → NestJS → MySQL de la sección 9.
 
 ## 1. URL base
 
-| Entorno | URL base | Nota |
-|---|---|---|
-| Local (`npm run start:dev`) | `http://localhost:3000` | `PORT` |
-| Docker compose | `http://localhost:${HOST_PORT:-3000}` | La imagen usa `NODE_ENV=production` |
-| Otros | Definida por quien despliega | No hay prefijo global (`/api` es solo Swagger) |
+| Entorno                     | URL base                              | Nota                                           |
+| --------------------------- | ------------------------------------- | ---------------------------------------------- |
+| Local (`npm run start:dev`) | `http://localhost:3000`               | `PORT`                                         |
+| Docker compose              | `http://localhost:${HOST_PORT:-3000}` | La imagen usa `NODE_ENV=production`            |
+| Otros                       | Definida por quien despliega          | No hay prefijo global (`/api` es solo Swagger) |
 
 Las rutas van directamente bajo la raíz: `GET {BASE}/productos`, `POST {BASE}/auth/login`.
 El módulo React JWT del frontend lee la URL base desde la variable de build de Vite
@@ -27,7 +27,11 @@ usar `fetch` con el `credentials` por defecto (`same-origin`) o `omit`; **no** `
 ### Registro — `POST /auth/registro` (público)
 
 ```json
-{ "nombre": "Ana Prueba", "correoElectronico": "ana@example.test", "contrasena": "..." }
+{
+  "nombre": "Ana Prueba",
+  "correoElectronico": "ana@example.test",
+  "contrasena": "..."
+}
 ```
 
 - **201:** `{ "id": 3, "nombre": "Ana Prueba", "correoElectronico": "ana@example.test" }`.
@@ -47,7 +51,11 @@ usar `fetch` con el `credentials` por defecto (`same-origin`) o `omit`; **no** `
 ```json
 {
   "mensaje": "Inicio de sesion correcto",
-  "usuario": { "id": 3, "nombre": "Ana Prueba", "correoElectronico": "ana@example.test" },
+  "usuario": {
+    "id": 3,
+    "nombre": "Ana Prueba",
+    "correoElectronico": "ana@example.test"
+  },
   "accessToken": "<JWT>",
   "tipoToken": "Bearer",
   "expiraEnSegundos": 3600
@@ -75,6 +83,7 @@ Lo exigen todas las rutas `/usuarios/{usuarioId}/...`, `POST /pedidos`, `POST /l
 `/operaciones/...` y `/administracion/...`.
 
 Recomendaciones para el módulo React:
+
 - Guardar el token en memoria (contexto o estado). Si se persiste, preferir `sessionStorage` a
   `localStorage` y asumir el riesgo de XSS.
 - Nunca guardar el token en cookies, URL ni logs.
@@ -92,16 +101,16 @@ Todo error tiene este formato:
 `message` puede ser un **arreglo** (errores de validación de DTO). Mostrar o registrar el
 `requestId`, que también llega en la cabecera `X-Request-Id`.
 
-| Código | Cuándo ocurre | Qué debe hacer React |
-|---|---|---|
-| **400** | Body o query inválidos; **campos no declarados** (se rechazan, no se ignoran); id de ruta no canónico (`01`, `abc`, `0`, mayor que 2^53−1); `limite` > 50; `precioMin` > `precioMax` | Validar en el formulario; no reintentar sin corregir |
-| **401** | Sin cabecera: `"Se requiere un token de acceso"`. Token mal formado, manipulado o expirado: `"Token de acceso invalido o expirado"`. Login con credenciales incorrectas | Cerrar la sesión local y pedir login |
-| **403** | **Solo** en operaciones administrativas: carga y reconciliación de imágenes (`/administracion/...`, permiso `productos.imagenes.gestionar`) y operaciones de envío (`/operaciones/...`, `LOGISTICA_OPERADORES_IDS`). JWT válido sin permiso | Mostrar «sin permiso»; no reintentar |
-| **404** | El recurso no existe, **o pertenece a otro usuario**. Si `{usuarioId}` de la ruta no es el del token, responde 404 «No existe el usuario con id N», no 403 | No asumir que el recurso existe; revisar el id usado |
-| **409** | Correo repetido, favorito repetido, transición logística inválida, `Idempotency-Key` reutilizada con otro cuerpo, carrito ya en checkout | Mostrar el conflicto |
-| **413** | Body JSON demasiado grande, o imagen de más de 5 MiB (solo administración) | — |
-| **503** | Operaciones que exigen MySQL (logística, imágenes) cuando el servidor corre en modo dummy | Error de entorno, no del usuario |
-| **500** | Error no controlado. Mensaje genérico, sin detalles internos | Reportar con el `requestId` |
+| Código  | Cuándo ocurre                                                                                                                                                                                                                               | Qué debe hacer React                                 |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| **400** | Body o query inválidos; **campos no declarados** (se rechazan, no se ignoran); id de ruta no canónico (`01`, `abc`, `0`, mayor que 2^53−1); `limite` > 50; `precioMin` > `precioMax`                                                        | Validar en el formulario; no reintentar sin corregir |
+| **401** | Sin cabecera: `"Se requiere un token de acceso"`. Token mal formado, manipulado o expirado: `"Token de acceso invalido o expirado"`. Login con credenciales incorrectas                                                                     | Cerrar la sesión local y pedir login                 |
+| **403** | **Solo** en operaciones administrativas: carga y reconciliación de imágenes (`/administracion/...`, permiso `productos.imagenes.gestionar`) y operaciones de envío (`/operaciones/...`, `LOGISTICA_OPERADORES_IDS`). JWT válido sin permiso | Mostrar «sin permiso»; no reintentar                 |
+| **404** | El recurso no existe, **o pertenece a otro usuario**. Si `{usuarioId}` de la ruta no es el del token, responde 404 «No existe el usuario con id N», no 403                                                                                  | No asumir que el recurso existe; revisar el id usado |
+| **409** | Correo repetido, favorito repetido, transición logística inválida, `Idempotency-Key` reutilizada con otro cuerpo, carrito ya en checkout                                                                                                    | Mostrar el conflicto                                 |
+| **413** | Body JSON demasiado grande, o imagen de más de 5 MiB (solo administración)                                                                                                                                                                  | —                                                    |
+| **503** | Indisponibilidad explícita de un servicio; el backend requiere MySQL y no admite modo dummy                                                                                                                                                 | Error de entorno, no del usuario                     |
+| **500** | Error no controlado. Mensaje genérico, sin detalles internos                                                                                                                                                                                | Reportar con el `requestId`                          |
 
 ## 4. Identificación de usuario
 
@@ -109,8 +118,7 @@ Todo error tiene este formato:
   (o el `id` del registro, una vez iniciada la sesión).
 - Construir las rutas como `/usuarios/${usuario.id}/...`. No tomar el id de un formulario, de
   la URL del navegador ni de otro usuario.
-- El backend **no confía** en ese id: lo compara con el `sub` del token. Uno distinto responde
-  404. Ningún body acepta `usuarioId`: los campos no declarados responden 400.
+- El backend **no confía** en ese id: lo compara con el `sub` del token. Uno distinto responde 404. Ningún body acepta `usuarioId`: los campos no declarados responden 400.
 - `POST /pedidos` no lleva usuario en la ruta. El dueño sale del token y el `carritoId` debe ser
   el `id` de `GET /usuarios/{id}/carrito` del mismo usuario; si no, responde 404.
 - Los ids de ruta deben ser enteros positivos canónicos (sin ceros a la izquierda, sin signos
@@ -129,16 +137,16 @@ mocks actuales del frontend deben mapearse a `imagenUrl` y `nombre`.
 
 ### `GET /productos`
 
-| Query | Tipo | Regla |
-|---|---|---|
-| `search` | texto | Busca en nombre y descripción; no distingue mayúsculas ni tildes |
-| `categoria` | slug | De `GET /categorias` |
-| `talla`, `color` | texto | Coinciden en una **misma variante con stock** |
-| `precioMin`, `precioMax` | entero ≥ 0 | CLP; si min > max, responde 400 |
-| `novedad`, `oferta` | `true`/`false` | Otro valor responde 400 |
-| `orden` | `relevancia` (por defecto), `precio_asc`, `precio_desc`, `nombre_asc` | Otro valor responde 400 |
-| `pagina` | entero ≥ 1 | Por defecto 1 |
-| `limite` | entero 1–50 | Por defecto 12; 51 o más responde 400 |
+| Query                    | Tipo                                                                  | Regla                                                            |
+| ------------------------ | --------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `search`                 | texto                                                                 | Busca en nombre y descripción; no distingue mayúsculas ni tildes |
+| `categoria`              | slug                                                                  | De `GET /categorias`                                             |
+| `talla`, `color`         | texto                                                                 | Coinciden en una **misma variante con stock**                    |
+| `precioMin`, `precioMax` | entero ≥ 0                                                            | CLP; si min > max, responde 400                                  |
+| `novedad`, `oferta`      | `true`/`false`                                                        | Otro valor responde 400                                          |
+| `orden`                  | `relevancia` (por defecto), `precio_asc`, `precio_desc`, `nombre_asc` | Otro valor responde 400                                          |
+| `pagina`                 | entero ≥ 1                                                            | Por defecto 1                                                    |
+| `limite`                 | entero 1–50                                                           | Por defecto 12; 51 o más responde 400                            |
 
 Cualquier query no declarada responde 400. Respuesta:
 `{ productos: ProductoResumen[], pagina, limite, total }`, con
@@ -184,8 +192,8 @@ no requieren CORS.
 
 ## 8. CORS (P6-01)
 
-| Variable | Valor |
-|---|---|
+| Variable        | Valor                                                                                |
+| --------------- | ------------------------------------------------------------------------------------ |
 | `CORS_ORIGENES` | Orígenes exactos separados por coma: `https://app.stylenow.cl,http://localhost:5173` |
 
 - **No definida:** fuera de producción se admiten `http://localhost:5173`,
@@ -203,6 +211,7 @@ no requieren CORS.
   600 s.
 
 Cabeceras opcionales:
+
 - `X-Request-Id` (≤ 64 caracteres `[A-Za-z0-9._-]`; si no es válido, el servidor genera
   otro) para correlacionar.
 - `Idempotency-Key` en `POST /pedidos` (recomendado: un UUID por intento de checkout,
@@ -224,26 +233,27 @@ Cabeceras opcionales:
    aleatorio generado en el momento (≥ 32 bytes, no versionado) y
    `CORS_ORIGENES=http://localhost:5173`. Aplicar las migraciones con `npm run migration:run`
    solo contra esa base.
-3. **Frontend** en su propio repositorio, **sin modificarlo desde este encargo**: definir
+3. **Frontend** en su entorno de laboratorio: definir
    `VITE_API_BASE_URL=http://localhost:3000` en un `.env.local` del frontend (Vite lo lee y
    Git no debería versionarlo) o solo para la sesión, y ejecutar `npm run dev` (Vite en `:5173`):
    - PowerShell: `$env:VITE_API_BASE_URL='http://localhost:3000'; npm run dev`
    - bash: `VITE_API_BASE_URL=http://localhost:3000 npm run dev`
-4. **Cuenta sintética:** registrarla desde la UI con un correo `@example.test` y una contraseña
-   generada para la prueba. No reutilizar contraseñas reales.
+4. **Cuenta sintética:** crearla mediante `POST /auth/registro` con un correo `@example.test`
+   y una contraseña generada para la prueba. Si existe un formulario de registro, validar
+   también ese flujo. No reutilizar contraseñas reales.
 5. **Casos mínimos**, a verificar en DevTools → Network (preflight y cabeceras) y en MySQL:
 
-| # | Caso | Esperado |
-|---|---|---|
-| 1 | Home y catálogo | `GET /categorias`, `/productos` y `/productos/1` 200, con ACAO = `http://localhost:5173` |
-| 2 | Imágenes | Las relativas cargan desde `{BASE}`; las de ejemplo muestran la imagen de reemplazo |
-| 3 | Registro, login | 201, luego 200 con `accessToken`; nada guardado en cookies |
-| 4 | Perfil y direcciones | Preflight 204 y GET/POST/PATCH/DELETE 2xx con Bearer |
-| 5 | Carrito → checkout | Agregar `varianteId` y `POST /pedidos` con `Idempotency-Key` → 201; el pedido aparece en MySQL |
-| 6 | Sesión inválida | Token alterado o expirado → 401 y la UI vuelve a login |
-| 7 | Acceso cruzado | Con la sesión del usuario A, `/usuarios/{B}` → 404 |
-| 8 | Persistencia | Reiniciar backend y contenedor; el login y los pedidos siguen ahí |
-| 9 | Origen no autorizado | Servir el frontend en otro puerto no listado; el navegador bloquea por CORS |
+| #   | Caso                 | Esperado                                                                                       |
+| --- | -------------------- | ---------------------------------------------------------------------------------------------- |
+| 1   | Home y catálogo      | `GET /categorias`, `/productos` y `/productos/1` 200, con ACAO = `http://localhost:5173`       |
+| 2   | Imágenes             | Las relativas cargan desde `{BASE}`; las de ejemplo muestran la imagen de reemplazo            |
+| 3   | Registro, login      | 201, luego 200 con `accessToken`; nada guardado en cookies                                     |
+| 4   | Perfil y direcciones | Preflight 204 y GET/POST/PATCH/DELETE 2xx con Bearer                                           |
+| 5   | Carrito → checkout   | Agregar `varianteId` y `POST /pedidos` con `Idempotency-Key` → 201; el pedido aparece en MySQL |
+| 6   | Sesión inválida      | Token alterado o expirado → 401 y la UI vuelve a login                                         |
+| 7   | Acceso cruzado       | Con la sesión del usuario A, `/usuarios/{B}` → 404                                             |
+| 8   | Persistencia         | Reiniciar backend y contenedor; el login y los pedidos siguen ahí                              |
+| 9   | Origen no autorizado | Servir el frontend en otro puerto no listado; el navegador bloquea por CORS                    |
 
 6. **Evidencia:** HAR o capturas sin el token (redactarlo), `X-Request-Id` de cada caso y
    consultas SQL de conteo. Detener el contenedor al terminar.
@@ -256,5 +266,8 @@ Opcional: automatizar los casos 1–7 con Playwright contra el entorno local.
 - Rate limiting del login.
 - Despliegue, HTTPS, AWS y proxy inverso: los define quien despliega (`CORS_ORIGENES` y URL
   base deben coincidir con el dominio final).
-- Validar el módulo React JWT generado por Codex contra este contrato: queda para el equipo
-  frontend en su repositorio.
+- Validar el módulo React JWT independiente contra este contrato en el laboratorio de integración.
+  La existencia de la entrega no acredita el flujo React–NestJS–MySQL.
+
+Procedencia de la entrega React de referencia: preparada con asistencia de Codex. Se conserva
+esta información de procedencia sin modificar atribuciones legales, académicas ni el historial Git.

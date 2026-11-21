@@ -21,7 +21,7 @@ export class ProductoDetalleResponseDto extends ProductoResponseDto {
     type: [String],
     title: 'Galeria de imagenes',
     description:
-      'Imagenes del carrusel de la ficha. La primera es la principal.',
+      'Galeria ordenada de la ficha, independiente de la portada imagenUrl.',
     example: [
       'https://cdn.stylenow.cl/productos/vestido-lino-1.jpg',
       'https://cdn.stylenow.cl/productos/vestido-lino-2.jpg',
@@ -33,8 +33,10 @@ export class ProductoDetalleResponseDto extends ProductoResponseDto {
   @ApiProperty({
     type: Number,
     title: 'Calificacion',
+    minimum: 0,
+    maximum: 5,
     description:
-      'Calificacion promedio mostrada con estrellas en la ficha. Va de 0 a 5.',
+      'Valor de calificacion del catalogo, entre 0 y 5. No se calcula desde resenas.',
     example: 4.5,
     required: true,
   })

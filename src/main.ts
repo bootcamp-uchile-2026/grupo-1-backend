@@ -1,3 +1,4 @@
+import { VERSION_APLICACION } from './version';
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
@@ -67,7 +68,7 @@ function validarRutaSwagger(ruta: string, rutasNegocio: string[]): void {
  * Punto de entrada de StyleNow.
  * Levanta la aplicacion y publica la documentacion Swagger. Puerto, nombre,
  * version y ruta de Swagger se leen del entorno (ver .env.example); sin
- * variables, la API escucha en el puerto 3000 y Swagger queda en /api.
+ * PORT explicito se usa 3000 y Swagger queda en /api; SQL y JWT son obligatorios.
  * Swagger declara el esquema bearer (JWT HS256 emitido por POST /auth/login).
  */
 async function bootstrap(): Promise<void> {
@@ -77,7 +78,7 @@ async function bootstrap(): Promise<void> {
   const entorno = app.get(ConfigService);
   const puerto = leerVariable(entorno, 'PORT', '3000');
   const nombre = leerVariable(entorno, 'APP_NAME', 'StyleNow API');
-  const version = leerVariable(entorno, 'APP_VERSION', '1.0');
+  const version = leerVariable(entorno, 'APP_VERSION', VERSION_APLICACION);
   const rutaSwagger = normalizarRutaSwagger(
     leerVariable(entorno, 'SWAGGER_PATH', 'api'),
   );
@@ -86,11 +87,10 @@ async function bootstrap(): Promise<void> {
     .setTitle(nombre)
     .setDescription(
       'API REST del ecommerce StyleNow (Hito 3). ' +
-        'Persistencia: con PERSISTENCIA=mysql todos los dominios se guardan en MySQL 8.4 ' +
+        'Persistencia: todos los dominios se guardan en MySQL 8.4 ' +
         'mediante TypeORM y migraciones versionadas (catalogo, categorias, colecciones y ' +
         'publicaciones; usuarios, credenciales y direcciones; carrito, favoritos y pedidos; ' +
         'looks, alertas, postventa y logistica; imagenes de producto). ' +
-        'PERSISTENCIA=dummy usa datos en memoria y existe solo para pruebas; ' +
         'no hay fallback de MySQL a memoria. ' +
         'Autenticacion: POST /auth/login devuelve accessToken (JWT HS256) con tipoToken ' +
         'Bearer y expiraEnSegundos. Las rutas /usuarios/{usuarioId}/..., POST /pedidos, ' +
@@ -152,7 +152,9 @@ async function bootstrap(): Promise<void> {
   SwaggerModule.setup(rutaSwagger, app, document);
 
   await app.listen(puerto);
-  new Logger('Bootstrap').log('Backend escuchando en puerto ' + puerto);
+  new Logger('Bootstrap').log(
+    'Backend escuchando en puerto ' + puerto + ' (version ' + version + ')',
+  );
 }
 bootstrap().catch((error: unknown) => {
   const logger = new Logger('Bootstrap');

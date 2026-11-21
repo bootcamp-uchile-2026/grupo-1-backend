@@ -4,11 +4,6 @@ import { ConflictoDominioError } from '../dominio/errores-dominio';
 export abstract class UnidadDeTrabajo {
   abstract ejecutar<T>(trabajo: () => Promise<T>): Promise<T>;
 }
-export class UnidadDeTrabajoDummy extends UnidadDeTrabajo {
-  ejecutar<T>(trabajo: () => Promise<T>): Promise<T> {
-    return trabajo();
-  }
-}
 export class UnidadDeTrabajoTypeorm extends UnidadDeTrabajo {
   constructor(private readonly source: DataSource) {
     super();

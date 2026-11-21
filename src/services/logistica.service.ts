@@ -1,9 +1,4 @@
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  ServiceUnavailableException,
-} from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { gestorActual } from '../persistencia/gestor-actual';
@@ -49,14 +44,10 @@ export interface Envio {
 @Injectable()
 export class LogisticaService {
   constructor(
-    @Inject(DataSource) private readonly source: DataSource | null,
+    @Inject(DataSource) private readonly source: DataSource,
     private readonly config: ConfigService,
   ) {}
   private db() {
-    if (!this.source)
-      throw new ServiceUnavailableException(
-        'Logistica requiere persistencia MySQL',
-      );
     return this.source;
   }
   private get m() {

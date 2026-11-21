@@ -23,7 +23,7 @@ import { UsuariosService } from './usuarios.service';
  */
 @Injectable()
 export class CarritoService {
-  /** Colas independientes: las escrituras y el checkout no se pisan. */
+  /** Coordinacion local de escrituras; los bloqueos SQL arbitran la concurrencia. */
   private readonly operaciones = new Map<number, Promise<void>>();
 
   constructor(
@@ -124,33 +124,6 @@ export class CarritoService {
         this.operaciones.delete(carritoId);
       }
     }
-  }
-
-  /**
-   * Uso interno de PedidosService: carrito completo, con precios del
-   * catalogo vigente, a partir de su id.
-   */
-  async obtenerParaCheckout(carritoId: number): Promise<CarritoResponseDto> {
-    const carrito = await this.buscarPorId(carritoId);
-    return this.aRespuesta(carrito);
-  }
-
-  /** Uso interno de PedidosService: vacia el carrito tras crear el pedido. */
-  async vaciarDespuesDeCheckout(carritoId: number): Promise<void> {
-    const vaciado = await this.carritos.vaciar(carritoId);
-    if (!vaciado) throw new Error('No se pudo vaciar el carrito del checkout');
-  }
-
-  /** Compensa incluso un vaciado que fallo despues de modificar el carrito. */
-  async restaurarDespuesDeCheckout(carrito: CarritoResponseDto): Promise<void> {
-    const restaurado = await this.carritos.restaurarItems(
-      carrito.id,
-      carrito.items.map(({ varianteId, cantidad }) => ({
-        varianteId,
-        cantidad,
-      })),
-    );
-    if (!restaurado) throw new Error('No se pudo restaurar el carrito');
   }
 
   /**

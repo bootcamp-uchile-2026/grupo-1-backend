@@ -70,7 +70,7 @@ export function leerOrigenesCors(
   for (const origen of origenes) {
     if (!origenValido(origen)) {
       throw new Error(
-        `CORS_ORIGENES contiene un origen invalido: "${origen}". Usa origenes exactos ` +
+        'CORS_ORIGENES contiene un origen invalido. Usa origenes exactos ' +
           'separados por comas, como https://app.example.cl (sin *, ruta ni barra final).',
       );
     }

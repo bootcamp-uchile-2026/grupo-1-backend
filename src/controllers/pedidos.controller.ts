@@ -12,6 +12,8 @@ import {
   ApiHeader,
   ApiParam,
   ApiTags,
+  ApiBearerAuth,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { CrearPedidoDto } from '../dto/crear-pedido.dto';
 import { PedidoDetalleResponseDto } from '../dto/pedido-detalle-response.dto';
@@ -25,6 +27,11 @@ import { PedidosService } from '../services/pedidos.service';
  * pedidoItemId que se envia al solicitar un cambio o una devolucion.
  */
 @ApiTags('pedidos')
+@ApiBearerAuth()
+@ApiUnauthorizedResponse({
+  type: ErrorResponseDto,
+  description: 'JWT ausente, invalido o expirado.',
+})
 @Controller()
 export class PedidosController {
   constructor(private readonly pedidosService: PedidosService) {}

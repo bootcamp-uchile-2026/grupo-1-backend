@@ -1,0 +1,1386 @@
+{
+  "migrations": [
+    "CrearCategoriasEditorial1794650400000",
+    "SembrarCategoriasEditorial1794650401000",
+    "CrearProductos1794950400000",
+    "SembrarProductos1794950401000",
+    "CrearIdentidad1795050400000",
+    "SembrarIdentidad1795050401000",
+    "CrearComercio1795150400000",
+    "SembrarComercio1795150401000",
+    "CrearAlertas1795250400000",
+    "CrearLooks1795250401000",
+    "CrearLogistica1795250402000",
+    "CrearPostventa1795250403000",
+    "SembrarP41795250404000",
+    "CrearCargasImagenes1795350400000",
+    "IntegridadComercio1795450400000"
+  ],
+  "tables": {
+    "categoria": {
+      "migracion": "1794650400000-crear-categorias-editorial",
+      "columnas": [
+        {
+          "nombre": "id",
+          "tipo": "int unsigned",
+          "autoIncremento": true
+        },
+        {
+          "nombre": "nombre",
+          "tipo": "varchar(80)"
+        },
+        {
+          "nombre": "slug",
+          "tipo": "varchar(80)"
+        },
+        {
+          "nombre": "imagen_url",
+          "tipo": "varchar(500)"
+        },
+        {
+          "nombre": "destacada",
+          "tipo": "tinyint"
+        },
+        {
+          "nombre": "orden",
+          "tipo": "smallint unsigned"
+        }
+      ],
+      "clavePrimaria": ["id"],
+      "indices": [
+        {
+          "nombre": "uq_categoria_slug",
+          "columnas": ["slug"],
+          "unico": true
+        },
+        {
+          "nombre": "ix_categoria_destacada_orden",
+          "columnas": ["destacada", "orden"],
+          "unico": false
+        }
+      ],
+      "foraneas": [],
+      "checksConNombre": [],
+      "totalChecks": 0
+    },
+    "coleccion": {
+      "migracion": "1794650400000-crear-categorias-editorial",
+      "columnas": [
+        {
+          "nombre": "id",
+          "tipo": "int unsigned",
+          "autoIncremento": true
+        },
+        {
+          "nombre": "nombre",
+          "tipo": "varchar(150)"
+        },
+        {
+          "nombre": "descripcion",
+          "tipo": "text"
+        },
+        {
+          "nombre": "imagen_url",
+          "tipo": "varchar(500)"
+        }
+      ],
+      "clavePrimaria": ["id"],
+      "indices": [],
+      "foraneas": [],
+      "checksConNombre": [],
+      "totalChecks": 0
+    },
+    "post": {
+      "migracion": "1794650400000-crear-categorias-editorial",
+      "columnas": [
+        {
+          "nombre": "id",
+          "tipo": "int unsigned",
+          "autoIncremento": true
+        },
+        {
+          "nombre": "titulo",
+          "tipo": "varchar(150)"
+        },
+        {
+          "nombre": "contenido",
+          "tipo": "text"
+        },
+        {
+          "nombre": "imagen_url",
+          "tipo": "varchar(500)"
+        }
+      ],
+      "clavePrimaria": ["id"],
+      "indices": [],
+      "foraneas": [],
+      "checksConNombre": [],
+      "totalChecks": 0
+    },
+    "producto": {
+      "migracion": "1794950400000-crear-productos",
+      "columnas": [
+        {
+          "nombre": "id",
+          "tipo": "bigint unsigned"
+        },
+        {
+          "nombre": "categoria_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "nombre",
+          "tipo": "longtext"
+        },
+        {
+          "nombre": "precio",
+          "tipo": "decimal(20,0)"
+        },
+        {
+          "nombre": "imagen_url",
+          "tipo": "longtext"
+        },
+        {
+          "nombre": "novedad",
+          "tipo": "tinyint"
+        },
+        {
+          "nombre": "oferta",
+          "tipo": "tinyint"
+        },
+        {
+          "nombre": "descripcion",
+          "tipo": "longtext"
+        },
+        {
+          "nombre": "calificacion",
+          "tipo": "double"
+        },
+        {
+          "nombre": "guia_tallas",
+          "tipo": "longtext"
+        }
+      ],
+      "clavePrimaria": ["id"],
+      "indices": [
+        {
+          "nombre": "ix_producto_categoria",
+          "columnas": ["categoria_id"],
+          "unico": false
+        }
+      ],
+      "foraneas": [
+        {
+          "nombre": "fk_producto_categoria",
+          "columnas": ["categoria_id"],
+          "tablaReferida": "categoria",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [
+        "ck_producto_0",
+        "ck_producto_1",
+        "ck_producto_2",
+        "ck_producto_3",
+        "ck_producto_4"
+      ],
+      "totalChecks": 5
+    },
+    "variante": {
+      "migracion": "1795250400000-crearalertas",
+      "columnas": [
+        {
+          "nombre": "id",
+          "tipo": "bigint unsigned"
+        },
+        {
+          "nombre": "producto_id",
+          "tipo": "bigint unsigned"
+        },
+        {
+          "nombre": "color",
+          "tipo": "longtext"
+        },
+        {
+          "nombre": "talla",
+          "tipo": "longtext"
+        },
+        {
+          "nombre": "stock",
+          "tipo": "bigint unsigned"
+        },
+        {
+          "nombre": "posicion",
+          "tipo": "int unsigned"
+        }
+      ],
+      "clavePrimaria": ["id"],
+      "indices": [
+        {
+          "nombre": "uq_variante_posicion",
+          "columnas": ["producto_id", "posicion"],
+          "unico": true
+        },
+        {
+          "nombre": "uq_p4_variante_producto",
+          "columnas": ["id", "producto_id"],
+          "unico": true
+        }
+      ],
+      "foraneas": [
+        {
+          "nombre": "fk_variante_producto",
+          "columnas": ["producto_id"],
+          "tablaReferida": "producto",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": ["ck_variante_0", "ck_variante_1"],
+      "totalChecks": 2
+    },
+    "producto_imagen": {
+      "migracion": "1794950400000-crear-productos",
+      "columnas": [
+        {
+          "nombre": "producto_id",
+          "tipo": "bigint unsigned"
+        },
+        {
+          "nombre": "posicion",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "url",
+          "tipo": "longtext"
+        }
+      ],
+      "clavePrimaria": ["producto_id", "posicion"],
+      "indices": [],
+      "foraneas": [
+        {
+          "nombre": "fk_producto_imagen_producto",
+          "columnas": ["producto_id"],
+          "tablaReferida": "producto",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 0
+    },
+    "producto_color": {
+      "migracion": "1794950400000-crear-productos",
+      "columnas": [
+        {
+          "nombre": "producto_id",
+          "tipo": "bigint unsigned"
+        },
+        {
+          "nombre": "posicion",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "color",
+          "tipo": "longtext"
+        }
+      ],
+      "clavePrimaria": ["producto_id", "posicion"],
+      "indices": [],
+      "foraneas": [
+        {
+          "nombre": "fk_producto_color_producto",
+          "columnas": ["producto_id"],
+          "tablaReferida": "producto",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 0
+    },
+    "producto_talla": {
+      "migracion": "1794950400000-crear-productos",
+      "columnas": [
+        {
+          "nombre": "producto_id",
+          "tipo": "bigint unsigned"
+        },
+        {
+          "nombre": "posicion",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "talla",
+          "tipo": "longtext"
+        }
+      ],
+      "clavePrimaria": ["producto_id", "posicion"],
+      "indices": [],
+      "foraneas": [
+        {
+          "nombre": "fk_producto_talla_producto",
+          "columnas": ["producto_id"],
+          "tablaReferida": "producto",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 0
+    },
+    "usuario": {
+      "migracion": "1795050400000-crear-identidad",
+      "columnas": [
+        {
+          "nombre": "id",
+          "tipo": "int unsigned",
+          "autoIncremento": true
+        },
+        {
+          "nombre": "nombre",
+          "tipo": "mediumtext"
+        },
+        {
+          "nombre": "apellido",
+          "tipo": "mediumtext"
+        },
+        {
+          "nombre": "email",
+          "tipo": "varchar(320)",
+          "cotejamiento": "utf8mb4_bin"
+        },
+        {
+          "nombre": "telefono",
+          "tipo": "mediumtext",
+          "nulo": true
+        }
+      ],
+      "clavePrimaria": ["id"],
+      "indices": [
+        {
+          "nombre": "uq_usuario_email",
+          "columnas": ["email"],
+          "unico": true
+        }
+      ],
+      "foraneas": [],
+      "checksConNombre": [],
+      "totalChecks": 0
+    },
+    "credencial": {
+      "migracion": "1795050400000-crear-identidad",
+      "columnas": [
+        {
+          "nombre": "usuario_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "correo",
+          "tipo": "varchar(320)",
+          "cotejamiento": "utf8mb4_bin"
+        },
+        {
+          "nombre": "hash_contrasena",
+          "tipo": "varchar(255)",
+          "cotejamiento": "ascii_bin"
+        },
+        {
+          "nombre": "actualizada_en",
+          "tipo": "datetime(3)"
+        }
+      ],
+      "clavePrimaria": ["usuario_id"],
+      "indices": [
+        {
+          "nombre": "uq_credencial_correo",
+          "columnas": ["correo"],
+          "unico": true
+        }
+      ],
+      "foraneas": [
+        {
+          "nombre": "fk_credencial_usuario",
+          "columnas": ["usuario_id"],
+          "tablaReferida": "usuario",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": ["ck_credencial_hash"],
+      "totalChecks": 1
+    },
+    "direccion": {
+      "migracion": "1795050400000-crear-identidad",
+      "columnas": [
+        {
+          "nombre": "id",
+          "tipo": "int unsigned",
+          "autoIncremento": true
+        },
+        {
+          "nombre": "usuario_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "nombre",
+          "tipo": "mediumtext"
+        },
+        {
+          "nombre": "calle",
+          "tipo": "mediumtext"
+        },
+        {
+          "nombre": "numero",
+          "tipo": "mediumtext"
+        },
+        {
+          "nombre": "departamento",
+          "tipo": "mediumtext",
+          "nulo": true
+        },
+        {
+          "nombre": "comuna",
+          "tipo": "mediumtext"
+        },
+        {
+          "nombre": "region",
+          "tipo": "mediumtext"
+        },
+        {
+          "nombre": "principal",
+          "tipo": "tinyint"
+        }
+      ],
+      "clavePrimaria": ["id"],
+      "indices": [
+        {
+          "nombre": "ix_direccion_usuario",
+          "columnas": ["usuario_id"],
+          "unico": false
+        }
+      ],
+      "foraneas": [
+        {
+          "nombre": "fk_direccion_usuario",
+          "columnas": ["usuario_id"],
+          "tablaReferida": "usuario",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": ["ck_direccion_principal"],
+      "totalChecks": 1
+    },
+    "permiso_usuario": {
+      "migracion": "1795350400000-crear-cargas-imagenes",
+      "columnas": [
+        {
+          "nombre": "usuario_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "permiso",
+          "tipo": "varchar(80)",
+          "cotejamiento": "ascii_bin"
+        }
+      ],
+      "clavePrimaria": ["usuario_id", "permiso"],
+      "indices": [],
+      "foraneas": [
+        {
+          "columnas": ["usuario_id"],
+          "tablaReferida": "usuario",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 0
+    },
+    "carrito": {
+      "migracion": "1795150400000-crear-comercio",
+      "columnas": [
+        {
+          "nombre": "id",
+          "tipo": "int unsigned",
+          "autoIncremento": true
+        },
+        {
+          "nombre": "usuario_id",
+          "tipo": "int unsigned"
+        }
+      ],
+      "clavePrimaria": ["id"],
+      "indices": [
+        {
+          "nombre": "uq_carrito_usuario",
+          "columnas": ["usuario_id"],
+          "unico": true
+        }
+      ],
+      "foraneas": [
+        {
+          "columnas": ["usuario_id"],
+          "tablaReferida": "usuario",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 0
+    },
+    "carrito_item": {
+      "migracion": "1795150400000-crear-comercio",
+      "columnas": [
+        {
+          "nombre": "carrito_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "variante_id",
+          "tipo": "bigint unsigned"
+        },
+        {
+          "nombre": "cantidad",
+          "tipo": "bigint unsigned"
+        },
+        {
+          "nombre": "posicion",
+          "tipo": "int unsigned"
+        }
+      ],
+      "clavePrimaria": ["carrito_id", "variante_id"],
+      "indices": [
+        {
+          "nombre": "uq_carrito_posicion",
+          "columnas": ["carrito_id", "posicion"],
+          "unico": true
+        }
+      ],
+      "foraneas": [
+        {
+          "columnas": ["carrito_id"],
+          "tablaReferida": "carrito",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["variante_id"],
+          "tablaReferida": "variante",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 1
+    },
+    "favorito": {
+      "migracion": "1795150400000-crear-comercio",
+      "columnas": [
+        {
+          "nombre": "orden",
+          "tipo": "int unsigned",
+          "autoIncremento": true
+        },
+        {
+          "nombre": "usuario_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "producto_id",
+          "tipo": "bigint unsigned"
+        }
+      ],
+      "clavePrimaria": ["usuario_id", "producto_id"],
+      "indices": [
+        {
+          "nombre": "orden",
+          "columnas": ["orden"],
+          "unico": true
+        }
+      ],
+      "foraneas": [
+        {
+          "columnas": ["usuario_id"],
+          "tablaReferida": "usuario",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["producto_id"],
+          "tablaReferida": "producto",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 0
+    },
+    "pedido": {
+      "migracion": "1795150400000-crear-comercio",
+      "columnas": [
+        {
+          "nombre": "id",
+          "tipo": "int unsigned",
+          "autoIncremento": true
+        },
+        {
+          "nombre": "usuario_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "numero_pedido",
+          "tipo": "varchar(80)"
+        },
+        {
+          "nombre": "estado",
+          "tipo": "varchar(30)"
+        },
+        {
+          "nombre": "fecha",
+          "tipo": "datetime(3)"
+        },
+        {
+          "nombre": "costo_envio",
+          "tipo": "decimal(20,0)"
+        },
+        {
+          "nombre": "metodo_pago",
+          "tipo": "longtext"
+        },
+        {
+          "nombre": "checkout",
+          "tipo": "json",
+          "nulo": true
+        },
+        {
+          "nombre": "clave_idempotencia",
+          "tipo": "varchar(128)",
+          "nulo": true,
+          "cotejamiento": "ascii_bin"
+        },
+        {
+          "nombre": "huella",
+          "tipo": "varchar(64)",
+          "nulo": true
+        }
+      ],
+      "clavePrimaria": ["id"],
+      "indices": [
+        {
+          "nombre": "uq_pedido_numero",
+          "columnas": ["numero_pedido"],
+          "unico": true
+        },
+        {
+          "nombre": "uq_pedido_idempotencia",
+          "columnas": ["usuario_id", "clave_idempotencia"],
+          "unico": true
+        }
+      ],
+      "foraneas": [
+        {
+          "columnas": ["usuario_id"],
+          "tablaReferida": "usuario",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": ["ck_pedido_estado"],
+      "totalChecks": 2
+    },
+    "pedido_item": {
+      "migracion": "1795450400000-integridad-comercio",
+      "columnas": [
+        {
+          "nombre": "id",
+          "tipo": "int unsigned",
+          "autoIncremento": true
+        },
+        {
+          "nombre": "pedido_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "producto_id",
+          "tipo": "bigint unsigned"
+        },
+        {
+          "nombre": "variante_id",
+          "tipo": "bigint unsigned"
+        },
+        {
+          "nombre": "posicion",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "nombre",
+          "tipo": "longtext"
+        },
+        {
+          "nombre": "cantidad",
+          "tipo": "bigint unsigned"
+        },
+        {
+          "nombre": "precio_unitario",
+          "tipo": "decimal(20,0)"
+        }
+      ],
+      "clavePrimaria": ["id"],
+      "indices": [
+        {
+          "nombre": "uq_pedido_posicion",
+          "columnas": ["pedido_id", "posicion"],
+          "unico": true
+        },
+        {
+          "nombre": "uq_p4_item_pedido",
+          "columnas": ["id", "pedido_id"],
+          "unico": true
+        }
+      ],
+      "foraneas": [
+        {
+          "columnas": ["pedido_id"],
+          "tablaReferida": "pedido",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["producto_id"],
+          "tablaReferida": "producto",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["variante_id"],
+          "tablaReferida": "variante",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "nombre": "fk_pedido_item_variante_producto",
+          "columnas": ["variante_id", "producto_id"],
+          "tablaReferida": "variante",
+          "columnasReferidas": ["id", "producto_id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 2
+    },
+    "alerta": {
+      "migracion": "1795250400000-crearalertas",
+      "columnas": [
+        {
+          "nombre": "id",
+          "tipo": "int unsigned",
+          "autoIncremento": true
+        },
+        {
+          "nombre": "usuario_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "tipo",
+          "tipo": "varchar(20)"
+        },
+        {
+          "nombre": "producto_id",
+          "tipo": "bigint unsigned"
+        },
+        {
+          "nombre": "variante_id",
+          "tipo": "bigint unsigned",
+          "nulo": true
+        },
+        {
+          "nombre": "precio_objetivo",
+          "tipo": "double",
+          "nulo": true
+        },
+        {
+          "nombre": "estado",
+          "tipo": "varchar(20)"
+        }
+      ],
+      "clavePrimaria": ["id"],
+      "indices": [],
+      "foraneas": [
+        {
+          "columnas": ["usuario_id"],
+          "tablaReferida": "usuario",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["producto_id"],
+          "tablaReferida": "producto",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["variante_id"],
+          "tablaReferida": "variante",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["variante_id", "producto_id"],
+          "tablaReferida": "variante",
+          "columnasReferidas": ["id", "producto_id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 4
+    },
+    "look_conjunto": {
+      "migracion": "1795250401000-crearlooks",
+      "columnas": [
+        {
+          "nombre": "id",
+          "tipo": "int unsigned",
+          "autoIncremento": true
+        },
+        {
+          "nombre": "creador_usuario_id",
+          "tipo": "int unsigned",
+          "nulo": true
+        },
+        {
+          "nombre": "nombre",
+          "tipo": "longtext"
+        },
+        {
+          "nombre": "precio_total",
+          "tipo": "decimal(20,0)"
+        }
+      ],
+      "clavePrimaria": ["id"],
+      "indices": [],
+      "foraneas": [
+        {
+          "columnas": ["creador_usuario_id"],
+          "tablaReferida": "usuario",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 1
+    },
+    "look_ocurrencia": {
+      "migracion": "1795250401000-crearlooks",
+      "columnas": [
+        {
+          "nombre": "look_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "posicion",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "variante_id",
+          "tipo": "bigint unsigned"
+        }
+      ],
+      "clavePrimaria": ["look_id", "posicion"],
+      "indices": [],
+      "foraneas": [
+        {
+          "columnas": ["look_id"],
+          "tablaReferida": "look_conjunto",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["variante_id"],
+          "tablaReferida": "variante",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 0
+    },
+    "look_guardado": {
+      "migracion": "1795250401000-crearlooks",
+      "columnas": [
+        {
+          "nombre": "usuario_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "look_id",
+          "tipo": "int unsigned"
+        }
+      ],
+      "clavePrimaria": ["usuario_id", "look_id"],
+      "indices": [],
+      "foraneas": [
+        {
+          "columnas": ["usuario_id"],
+          "tablaReferida": "usuario",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["look_id"],
+          "tablaReferida": "look_conjunto",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 0
+    },
+    "envio": {
+      "migracion": "1795250402000-crearlogistica",
+      "columnas": [
+        {
+          "nombre": "id",
+          "tipo": "int unsigned",
+          "autoIncremento": true
+        },
+        {
+          "nombre": "pedido_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "estado",
+          "tipo": "varchar(20)"
+        },
+        {
+          "nombre": "despachado_en",
+          "tipo": "datetime(3)",
+          "nulo": true
+        }
+      ],
+      "clavePrimaria": ["id"],
+      "indices": [
+        {
+          "nombre": "pedido_id",
+          "columnas": ["pedido_id"],
+          "unico": true
+        }
+      ],
+      "foraneas": [
+        {
+          "columnas": ["pedido_id"],
+          "tablaReferida": "pedido",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 2
+    },
+    "envio_evento": {
+      "migracion": "1795250402000-crearlogistica",
+      "columnas": [
+        {
+          "nombre": "id",
+          "tipo": "int unsigned",
+          "autoIncremento": true
+        },
+        {
+          "nombre": "envio_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "anterior",
+          "tipo": "varchar(20)",
+          "nulo": true
+        },
+        {
+          "nombre": "nuevo",
+          "tipo": "varchar(20)"
+        },
+        {
+          "nombre": "actor_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "fecha",
+          "tipo": "datetime(3)"
+        },
+        {
+          "nombre": "motivo",
+          "tipo": "text",
+          "nulo": true
+        }
+      ],
+      "clavePrimaria": ["id"],
+      "indices": [],
+      "foraneas": [
+        {
+          "columnas": ["envio_id"],
+          "tablaReferida": "envio",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["actor_id"],
+          "tablaReferida": "usuario",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": ["ck_envio_evento_anterior", "ck_envio_evento_nuevo"],
+      "totalChecks": 2
+    },
+    "pedido_cancelacion": {
+      "migracion": "1795250402000-crearlogistica",
+      "columnas": [
+        {
+          "nombre": "pedido_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "actor_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "fecha",
+          "tipo": "datetime(3)"
+        },
+        {
+          "nombre": "motivo",
+          "tipo": "text",
+          "nulo": true
+        },
+        {
+          "nombre": "restituido",
+          "tipo": "tinyint"
+        }
+      ],
+      "clavePrimaria": ["pedido_id"],
+      "indices": [],
+      "foraneas": [
+        {
+          "columnas": ["pedido_id"],
+          "tablaReferida": "pedido",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["actor_id"],
+          "tablaReferida": "usuario",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 1
+    },
+    "inventario_pedido": {
+      "migracion": "1795250402000-crearlogistica",
+      "columnas": [
+        {
+          "nombre": "pedido_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "variante_id",
+          "tipo": "bigint unsigned"
+        },
+        {
+          "nombre": "cantidad",
+          "tipo": "bigint unsigned"
+        },
+        {
+          "nombre": "restituido",
+          "tipo": "tinyint"
+        }
+      ],
+      "clavePrimaria": ["pedido_id", "variante_id"],
+      "indices": [],
+      "foraneas": [
+        {
+          "columnas": ["pedido_id"],
+          "tablaReferida": "pedido",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["variante_id"],
+          "tablaReferida": "variante",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 2
+    },
+    "solicitud_postventa": {
+      "migracion": "1795250403000-crearpostventa",
+      "columnas": [
+        {
+          "nombre": "id",
+          "tipo": "int unsigned",
+          "autoIncremento": true
+        },
+        {
+          "nombre": "pedido_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "pedido_item_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "tipo",
+          "tipo": "varchar(20)"
+        },
+        {
+          "nombre": "estado",
+          "tipo": "varchar(20)"
+        },
+        {
+          "nombre": "motivo",
+          "tipo": "longtext"
+        },
+        {
+          "nombre": "nueva_variante_id",
+          "tipo": "bigint unsigned",
+          "nulo": true
+        },
+        {
+          "nombre": "metodo_entrega",
+          "tipo": "longtext"
+        },
+        {
+          "nombre": "fecha_solicitud",
+          "tipo": "datetime(3)"
+        }
+      ],
+      "clavePrimaria": ["id"],
+      "indices": [],
+      "foraneas": [
+        {
+          "columnas": ["pedido_id"],
+          "tablaReferida": "pedido",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["pedido_item_id"],
+          "tablaReferida": "pedido_item",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["pedido_item_id", "pedido_id"],
+          "tablaReferida": "pedido_item",
+          "columnasReferidas": ["id", "pedido_id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["nueva_variante_id"],
+          "tablaReferida": "variante",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 3
+    },
+    "postventa_evento": {
+      "migracion": "1795250403000-crearpostventa",
+      "columnas": [
+        {
+          "nombre": "id",
+          "tipo": "int unsigned",
+          "autoIncremento": true
+        },
+        {
+          "nombre": "solicitud_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "estado",
+          "tipo": "varchar(20)"
+        },
+        {
+          "nombre": "actor_id",
+          "tipo": "int unsigned",
+          "nulo": true
+        },
+        {
+          "nombre": "fecha",
+          "tipo": "datetime(3)"
+        },
+        {
+          "nombre": "resolucion",
+          "tipo": "text",
+          "nulo": true
+        }
+      ],
+      "clavePrimaria": ["id"],
+      "indices": [],
+      "foraneas": [
+        {
+          "columnas": ["solicitud_id"],
+          "tablaReferida": "solicitud_postventa",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["actor_id"],
+          "tablaReferida": "usuario",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": ["ck_postventa_evento_estado"],
+      "totalChecks": 1
+    },
+    "postventa_idempotencia": {
+      "migracion": "1795250403000-crearpostventa",
+      "columnas": [
+        {
+          "nombre": "usuario_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "clave",
+          "tipo": "varchar(128)",
+          "cotejamiento": "ascii_bin"
+        },
+        {
+          "nombre": "solicitud_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "huella",
+          "tipo": "char(64)"
+        }
+      ],
+      "clavePrimaria": ["usuario_id", "clave"],
+      "indices": [],
+      "foraneas": [
+        {
+          "columnas": ["usuario_id"],
+          "tablaReferida": "usuario",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["solicitud_id"],
+          "tablaReferida": "solicitud_postventa",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 0
+    },
+    "carga_imagen": {
+      "migracion": "1795350400000-crear-cargas-imagenes",
+      "columnas": [
+        {
+          "nombre": "archivo",
+          "tipo": "varchar(50)",
+          "cotejamiento": "ascii_bin"
+        },
+        {
+          "nombre": "producto_id",
+          "tipo": "bigint unsigned"
+        },
+        {
+          "nombre": "actor_id",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "estado",
+          "tipo": "varchar(20)"
+        },
+        {
+          "nombre": "sha256",
+          "tipo": "char(64)",
+          "cotejamiento": "ascii_general_ci"
+        },
+        {
+          "nombre": "bytes",
+          "tipo": "int unsigned"
+        },
+        {
+          "nombre": "creada_en",
+          "tipo": "datetime(3)"
+        }
+      ],
+      "clavePrimaria": ["archivo"],
+      "indices": [
+        {
+          "nombre": "ix_carga_estado_fecha",
+          "columnas": ["estado", "creada_en"],
+          "unico": false
+        }
+      ],
+      "foraneas": [
+        {
+          "columnas": ["producto_id"],
+          "tablaReferida": "producto",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        },
+        {
+          "columnas": ["actor_id"],
+          "tablaReferida": "usuario",
+          "columnasReferidas": ["id"],
+          "alBorrar": "RESTRICT",
+          "alActualizar": "RESTRICT"
+        }
+      ],
+      "checksConNombre": [],
+      "totalChecks": 2
+    }
+  }
+}

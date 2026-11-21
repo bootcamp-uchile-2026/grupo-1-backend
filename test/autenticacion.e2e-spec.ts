@@ -1,3 +1,4 @@
+import { credencialPrueba } from './utilidades/credenciales-prueba';
 import { INestApplication, Logger } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { createHmac } from 'node:crypto';
@@ -20,7 +21,7 @@ interface CuerpoError {
 const b64 = (o: unknown) =>
   Buffer.from(JSON.stringify(o)).toString('base64url');
 
-describe('P2 autenticacion, JWT y propiedad (modo dummy)', () => {
+describe('P2 autenticacion, JWT y propiedad (MySQL aislado)', () => {
   let app: INestApplication<App>;
   let logs: string[];
 
@@ -127,7 +128,10 @@ describe('P2 autenticacion, JWT y propiedad (modo dummy)', () => {
   it('credenciales invalidas responden 401 con mensaje unico', async () => {
     for (const datos of [
       { correoElectronico: 'cliente@stylenow.cl', contrasena: 'incorrecta' },
-      { correoElectronico: 'nadie@example.org', contrasena: 'demo-cliente-1' },
+      {
+        correoElectronico: 'nadie@example.org',
+        contrasena: credencialPrueba(1).contrasena,
+      },
     ]) {
       const r = await api().post('/auth/login').send(datos).expect(401);
       expect((r.body as CuerpoError).message).toBe(
@@ -139,7 +143,7 @@ describe('P2 autenticacion, JWT y propiedad (modo dummy)', () => {
       .post('/auth/login')
       .send({
         correoElectronico: 'cliente@stylenow.cl',
-        contrasena: 'demo-cliente-1',
+        contrasena: credencialPrueba(1).contrasena,
       })
       .expect(200);
     expect((ok.body as CuerpoLogin).usuario.id).toBe(1);
@@ -255,7 +259,7 @@ describe('P2 autenticacion, JWT y propiedad (modo dummy)', () => {
       .patch('/usuarios/1/contrasena')
       .set('Authorization', bearer(app, 1))
       .send({
-        contrasenaActual: 'demo-cliente-1',
+        contrasenaActual: credencialPrueba(1).contrasena,
         contrasenaNueva: 'Nueva-P2-clave',
       })
       .expect((r) => expect([200, 204]).toContain(r.status));
@@ -266,7 +270,7 @@ describe('P2 autenticacion, JWT y propiedad (modo dummy)', () => {
       .post('/auth/login')
       .send({
         correoElectronico: 'cliente@stylenow.cl',
-        contrasena: 'demo-cliente-1',
+        contrasena: credencialPrueba(1).contrasena,
       })
       .expect(401);
     const login = await api()
@@ -285,7 +289,7 @@ describe('P2 autenticacion, JWT y propiedad (modo dummy)', () => {
       logs.join('\n');
     for (const secreto of [
       'Nueva-P2-clave',
-      'demo-cliente-1',
+      credencialPrueba(1).contrasena,
       'scrypt$',
       'hashContrasena',
       guardada?.hashContrasena ?? '#',

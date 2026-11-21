@@ -1,8 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  ServiceUnavailableException,
-} from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { Producto, ProductoImagen } from '../persistencia/productos.entidades';
 import {
@@ -19,12 +15,8 @@ export const urlImagen = (archivo: string) => '/imagenes/productos/' + archivo;
 
 @Injectable()
 export class ImagenesRepository {
-  constructor(@Inject(DataSource) private readonly source: DataSource | null) {}
+  constructor(@Inject(DataSource) private readonly source: DataSource) {}
   private db() {
-    if (!this.source)
-      throw new ServiceUnavailableException(
-        'Carga persistente de imagenes requiere MySQL',
-      );
     return this.source;
   }
   async autorizado(usuarioId: number) {

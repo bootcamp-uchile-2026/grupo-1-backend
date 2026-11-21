@@ -1,5 +1,6 @@
+import { LONGITUD_MAXIMA_CORREO } from '../dominio/limites-identidad';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 /**
  * DTO de ENTRADA.
@@ -8,6 +9,7 @@ import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 export class LoginDto {
   @ApiProperty({
     format: 'email',
+    maxLength: LONGITUD_MAXIMA_CORREO,
     type: String,
     title: 'Correo electronico',
     description:
@@ -16,6 +18,7 @@ export class LoginDto {
     required: true,
   })
   @IsEmail()
+  @MaxLength(LONGITUD_MAXIMA_CORREO)
   correoElectronico!: string;
 
   @ApiProperty({

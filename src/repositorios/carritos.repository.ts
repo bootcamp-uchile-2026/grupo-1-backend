@@ -20,9 +20,10 @@ export interface CarritoPersistido {
  * variantes: esas reglas son de CarritoService.
  */
 export abstract class CarritosRepository {
-  ejecutarBloqueado<T>(_id: number, trabajo: () => Promise<T>): Promise<T> {
-    return trabajo();
-  }
+  abstract ejecutarBloqueado<T>(
+    id: number,
+    trabajo: () => Promise<T>,
+  ): Promise<T>;
   abstract buscarPorUsuario(
     usuarioId: number,
   ): Promise<CarritoPersistido | null>;

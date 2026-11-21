@@ -1,5 +1,5 @@
-import { DIRECCIONES_DUMMY } from '../data/direcciones.dummy';
-import { USUARIOS_DUMMY } from '../data/usuarios.dummy';
+import { DIRECCIONES_DUMMY } from '../../test/fixtures/historicos/direcciones.fixture';
+import { USUARIOS_DUMMY } from '../../test/fixtures/historicos/usuarios.fixture';
 import {
   DIRECCIONES_SEMILLA_P2,
   USUARIOS_SEMILLA_P2,

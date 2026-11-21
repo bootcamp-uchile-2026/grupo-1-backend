@@ -1,6 +1,6 @@
 import { enteroSeguro } from './productos.entidades';
 import { PRODUCTOS_SEMILLA_P1 } from './migraciones/productos-semilla-p1';
-import { PRODUCTOS_DUMMY } from '../data/productos.dummy';
+import { PRODUCTOS_DUMMY } from '../../test/fixtures/historicos/productos.fixture';
 
 describe('Representacion SQL de productos', () => {
   it('conserva el snapshot H2 completo sin importar fixtures en la migracion', () => {

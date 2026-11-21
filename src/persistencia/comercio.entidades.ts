@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Generated,
+  Index,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import type { SnapshotCheckout } from '../dominio/modelos';
 import { enteroSeguro } from './productos.entidades';
 @Entity('carrito')
@@ -28,9 +35,16 @@ export class CarritoItemFila {
   cantidad!: number;
   @Column({ name: 'posicion', type: 'int', unsigned: true }) posicion!: number;
 }
+/**
+ * Favorito de un usuario. La PK es (usuario_id, producto_id); `orden` es
+ * AUTO_INCREMENT UNIQUE y solo fija el orden de listado.
+ */
 @Entity('favorito')
 export class FavoritoFila {
-  @PrimaryGeneratedColumn({ type: 'int', unsigned: true }) orden!: number;
+  @Index('orden', { unique: true })
+  @Column({ type: 'int', unsigned: true, insert: false, update: false })
+  @Generated('increment')
+  orden!: number;
   @PrimaryColumn({ name: 'usuario_id', type: 'int', unsigned: true })
   usuarioId!: number;
   @PrimaryColumn({

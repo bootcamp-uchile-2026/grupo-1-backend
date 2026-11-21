@@ -69,3 +69,31 @@ describe('opcionesCors', () => {
     ]);
   });
 });
+
+describe('Privacidad de la configuracion CORS', () => {
+  it.each(['credenciales', 'ruta', 'query', 'fragmento'])(
+    'rechaza el origen con %s sin incluir contenido sensible en error o stack',
+    (caso) => {
+      const marcador = 'sensitive-test-marker';
+      const origenes: Record<string, string> = {
+        credenciales: 'https://usuario:' + marcador + '@example.invalid',
+        ruta: 'https://example.invalid/' + marcador,
+        query: 'https://example.invalid?token=' + marcador,
+        fragmento: 'https://example.invalid#' + marcador,
+      };
+      let captured: Error | undefined;
+      try {
+        leerOrigenesCors(origenes[caso], 'production');
+      } catch (error) {
+        if (error instanceof Error) captured = error;
+      }
+      expect(captured).toBeInstanceOf(Error);
+      expect(captured?.message).toContain(
+        'CORS_ORIGENES contiene un origen invalido',
+      );
+      expect(captured?.message).not.toContain(marcador);
+      expect(captured?.stack).not.toContain(marcador);
+      expect(captured?.message).not.toContain(origenes[caso]);
+    },
+  );
+});

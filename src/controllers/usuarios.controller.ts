@@ -17,6 +17,8 @@ import {
   ApiOperation,
   ApiParam,
   ApiTags,
+  ApiBearerAuth,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ActualizarUsuarioDto } from '../dto/actualizar-usuario.dto';
 import { CambiarContrasenaDto } from '../dto/cambiar-contrasena.dto';
@@ -41,6 +43,11 @@ import { UsuariosService } from '../services/usuarios.service';
 @ApiNotFoundResponse({
   type: ErrorResponseDto,
   description: 'No existe un usuario con ese id.',
+})
+@ApiBearerAuth()
+@ApiUnauthorizedResponse({
+  type: ErrorResponseDto,
+  description: 'JWT ausente, invalido o expirado.',
 })
 @Controller('usuarios/:usuarioId')
 export class UsuariosController {

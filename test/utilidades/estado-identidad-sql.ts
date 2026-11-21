@@ -3,26 +3,21 @@ import type { QueryRunner } from 'typeorm';
 import { PEDIDOS_SEMILLA_P3 } from '../../src/persistencia/migraciones/comercio-semilla-p3';
 import { PRODUCTOS_SEMILLA_P1 } from '../../src/persistencia/migraciones/productos-semilla-p1';
 import { createConnection, type Connection } from 'mysql2/promise';
-import { CREDENCIALES_DUMMY } from '../../src/data/credenciales.dummy';
+import { credencialesHistoricas } from './credenciales-prueba';
+import {
+  laboratorioDesechable,
+  exigirLaboratorio,
+} from './guardia-laboratorio';
+export { laboratorioDesechable } from './guardia-laboratorio';
 import {
   DIRECCIONES_SEMILLA_P2,
   USUARIOS_SEMILLA_P2,
 } from '../../src/persistencia/migraciones/identidad-semilla-p2';
 
-/** El laboratorio exclusivo y desechable es la unica base admitida. */
-export function laboratorioDesechable(): boolean {
-  return (
-    process.env.MYSQL_LAB_GUARD === 'exclusive-disposable-pr0' &&
-    process.env.DB_HOST === '127.0.0.1' &&
-    /^stylenow_pr0_[a-f0-9]{12}_test$/.test(process.env.DB_DATABASE ?? '') &&
-    process.env.DB_DATABASE === process.env.MYSQL_LAB_DATABASE
-  );
-}
-
 /**
  * Devuelve usuario/credencial/direccion al estado semilla mas las
- * credenciales de prueba (hashes de los fixtures dummy), como hace el
- * adaptador dummy al crear una app nueva. Solo en el laboratorio.
+ * credenciales aleatorias propias de la suite, reproduciendo el contrato del
+ * snapshot historico solo dentro del laboratorio.
  */
 export async function reiniciarIdentidadSql(
   conexion: Connection,
@@ -94,7 +89,7 @@ export async function reiniciarIdentidadSql(
         ],
       );
     }
-    for (const c of CREDENCIALES_DUMMY) {
+    for (const c of await credencialesHistoricas()) {
       await conexion.query(
         'INSERT INTO credencial (usuario_id,correo,hash_contrasena) VALUES (?,?,?)',
         [c.usuarioId, c.correo, c.hashContrasena],
@@ -150,12 +145,13 @@ export async function reiniciarIdentidadSql(
     await conexion.rollback();
     throw error;
   }
-  // AUTO_INCREMENT como el dummy: siguiente usuario 3, siguiente direccion 4.
+  // IDs de la regresion historica: preparacion explicita, exclusiva del laboratorio.
   await conexion.query('ALTER TABLE usuario AUTO_INCREMENT = 3');
   await conexion.query('ALTER TABLE direccion AUTO_INCREMENT = 4');
 }
 
 export async function conectarLaboratorio(): Promise<Connection> {
+  exigirLaboratorio();
   return createConnection({
     timezone: 'Z',
     host: process.env.DB_HOST,

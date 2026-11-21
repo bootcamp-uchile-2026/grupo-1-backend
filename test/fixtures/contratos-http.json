@@ -1,0 +1,5655 @@
+{
+  "cases": {
+    "/productos": {
+      "status": 200,
+      "body": {
+        "productos": [
+          {
+            "id": 1,
+            "nombre": "Vestido de lino blanco",
+            "precio": 39990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/vestido-lino-blanco.jpg",
+            "categoria": "mujer",
+            "novedad": true,
+            "oferta": false
+          },
+          {
+            "id": 2,
+            "nombre": "Camisa oxford celeste",
+            "precio": 29990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/camisa-oxford-celeste.jpg",
+            "categoria": "hombre",
+            "novedad": false,
+            "oferta": false
+          },
+          {
+            "id": 3,
+            "nombre": "Bolso tote de lona",
+            "precio": 24990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/bolso-tote-lona.jpg",
+            "categoria": "accesorios",
+            "novedad": false,
+            "oferta": true
+          }
+        ],
+        "pagina": 1,
+        "limite": 12,
+        "total": 3
+      }
+    },
+    "/productos/1": {
+      "status": 200,
+      "body": {
+        "id": 1,
+        "nombre": "Vestido de lino blanco",
+        "precio": 39990,
+        "imagenUrl": "https://cdn.stylenow.cl/productos/vestido-lino-blanco.jpg",
+        "categoria": "mujer",
+        "novedad": true,
+        "oferta": false,
+        "descripcion": "Vestido midi de lino blanco, ligero y pensado para temporada primavera-verano.",
+        "imagenes": [
+          "https://cdn.stylenow.cl/productos/vestido-lino-blanco-1.jpg",
+          "https://cdn.stylenow.cl/productos/vestido-lino-blanco-2.jpg"
+        ],
+        "calificacion": 4.6,
+        "colores": ["Blanco"],
+        "tallas": ["S", "M", "L"],
+        "guiaTallas": "https://www.stylenow.cl/ayuda/guia-de-tallas",
+        "variantes": [
+          {
+            "id": 101,
+            "color": "Blanco",
+            "talla": "S",
+            "stock": 4
+          },
+          {
+            "id": 102,
+            "color": "Blanco",
+            "talla": "M",
+            "stock": 3
+          },
+          {
+            "id": 103,
+            "color": "Blanco",
+            "talla": "L",
+            "stock": 2
+          }
+        ]
+      }
+    },
+    "/productos/2": {
+      "status": 200,
+      "body": {
+        "id": 2,
+        "nombre": "Camisa oxford celeste",
+        "precio": 29990,
+        "imagenUrl": "https://cdn.stylenow.cl/productos/camisa-oxford-celeste.jpg",
+        "categoria": "hombre",
+        "novedad": false,
+        "oferta": false,
+        "descripcion": "Camisa oxford de algodon, corte regular, para oficina o fin de semana.",
+        "imagenes": [
+          "https://cdn.stylenow.cl/productos/camisa-oxford-celeste-1.jpg",
+          "https://cdn.stylenow.cl/productos/camisa-oxford-celeste-2.jpg"
+        ],
+        "calificacion": 4.4,
+        "colores": ["Celeste"],
+        "tallas": ["M", "L"],
+        "guiaTallas": "https://www.stylenow.cl/ayuda/guia-de-tallas",
+        "variantes": [
+          {
+            "id": 201,
+            "color": "Celeste",
+            "talla": "M",
+            "stock": 6
+          },
+          {
+            "id": 202,
+            "color": "Celeste",
+            "talla": "L",
+            "stock": 5
+          }
+        ]
+      }
+    },
+    "/productos/3": {
+      "status": 200,
+      "body": {
+        "id": 3,
+        "nombre": "Bolso tote de lona",
+        "precio": 24990,
+        "imagenUrl": "https://cdn.stylenow.cl/productos/bolso-tote-lona.jpg",
+        "categoria": "accesorios",
+        "novedad": false,
+        "oferta": true,
+        "descripcion": "Bolso tote de lona resistente con asas largas y bolsillo interior.",
+        "imagenes": [
+          "https://cdn.stylenow.cl/productos/bolso-tote-lona-1.jpg",
+          "https://cdn.stylenow.cl/productos/bolso-tote-lona-2.jpg"
+        ],
+        "calificacion": 4.2,
+        "colores": ["Beige", "Negro"],
+        "tallas": ["Unica"],
+        "guiaTallas": "https://www.stylenow.cl/ayuda/guia-de-tallas",
+        "variantes": [
+          {
+            "id": 301,
+            "color": "Beige",
+            "talla": "Unica",
+            "stock": 8
+          },
+          {
+            "id": 302,
+            "color": "Negro",
+            "talla": "Unica",
+            "stock": 0
+          }
+        ]
+      }
+    },
+    "/productos/999": {
+      "status": 404,
+      "body": {
+        "statusCode": 404,
+        "message": "No existe el producto con id 999",
+        "error": "Not Found",
+        "requestId": 0,
+        "timestamp": 0,
+        "path": "/productos/999"
+      }
+    },
+    "/productos/01": {
+      "status": 400,
+      "body": {
+        "statusCode": 400,
+        "message": "El identificador debe ser un entero positivo",
+        "error": "Bad Request",
+        "requestId": 0,
+        "timestamp": 0,
+        "path": "/productos/01"
+      }
+    },
+    "/productos?search=%20ALGOD%C3%93N%20": {
+      "status": 200,
+      "body": {
+        "productos": [
+          {
+            "id": 2,
+            "nombre": "Camisa oxford celeste",
+            "precio": 29990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/camisa-oxford-celeste.jpg",
+            "categoria": "hombre",
+            "novedad": false,
+            "oferta": false
+          }
+        ],
+        "pagina": 1,
+        "limite": 12,
+        "total": 1
+      }
+    },
+    "/productos?categoria=%20MUJER%20": {
+      "status": 200,
+      "body": {
+        "productos": [
+          {
+            "id": 1,
+            "nombre": "Vestido de lino blanco",
+            "precio": 39990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/vestido-lino-blanco.jpg",
+            "categoria": "mujer",
+            "novedad": true,
+            "oferta": false
+          }
+        ],
+        "pagina": 1,
+        "limite": 12,
+        "total": 1
+      }
+    },
+    "/productos?categoria=calzado": {
+      "status": 200,
+      "body": {
+        "productos": [],
+        "pagina": 1,
+        "limite": 12,
+        "total": 0
+      }
+    },
+    "/productos?color=Negro": {
+      "status": 200,
+      "body": {
+        "productos": [],
+        "pagina": 1,
+        "limite": 12,
+        "total": 0
+      }
+    },
+    "/productos?color=beige&talla=unica": {
+      "status": 200,
+      "body": {
+        "productos": [
+          {
+            "id": 3,
+            "nombre": "Bolso tote de lona",
+            "precio": 24990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/bolso-tote-lona.jpg",
+            "categoria": "accesorios",
+            "novedad": false,
+            "oferta": true
+          }
+        ],
+        "pagina": 1,
+        "limite": 12,
+        "total": 1
+      }
+    },
+    "/productos?color=Blanco&talla=M": {
+      "status": 200,
+      "body": {
+        "productos": [
+          {
+            "id": 1,
+            "nombre": "Vestido de lino blanco",
+            "precio": 39990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/vestido-lino-blanco.jpg",
+            "categoria": "mujer",
+            "novedad": true,
+            "oferta": false
+          }
+        ],
+        "pagina": 1,
+        "limite": 12,
+        "total": 1
+      }
+    },
+    "/productos?color=Celeste&talla=S": {
+      "status": 200,
+      "body": {
+        "productos": [],
+        "pagina": 1,
+        "limite": 12,
+        "total": 0
+      }
+    },
+    "/productos?novedad=false&oferta=true": {
+      "status": 200,
+      "body": {
+        "productos": [
+          {
+            "id": 3,
+            "nombre": "Bolso tote de lona",
+            "precio": 24990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/bolso-tote-lona.jpg",
+            "categoria": "accesorios",
+            "novedad": false,
+            "oferta": true
+          }
+        ],
+        "pagina": 1,
+        "limite": 12,
+        "total": 1
+      }
+    },
+    "/productos?novedad=true&oferta=false": {
+      "status": 200,
+      "body": {
+        "productos": [
+          {
+            "id": 1,
+            "nombre": "Vestido de lino blanco",
+            "precio": 39990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/vestido-lino-blanco.jpg",
+            "categoria": "mujer",
+            "novedad": true,
+            "oferta": false
+          }
+        ],
+        "pagina": 1,
+        "limite": 12,
+        "total": 1
+      }
+    },
+    "/productos?precioMin=29990&precioMax=39990": {
+      "status": 200,
+      "body": {
+        "productos": [
+          {
+            "id": 1,
+            "nombre": "Vestido de lino blanco",
+            "precio": 39990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/vestido-lino-blanco.jpg",
+            "categoria": "mujer",
+            "novedad": true,
+            "oferta": false
+          },
+          {
+            "id": 2,
+            "nombre": "Camisa oxford celeste",
+            "precio": 29990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/camisa-oxford-celeste.jpg",
+            "categoria": "hombre",
+            "novedad": false,
+            "oferta": false
+          }
+        ],
+        "pagina": 1,
+        "limite": 12,
+        "total": 2
+      }
+    },
+    "/productos?precioMin=40000&precioMax=1": {
+      "status": 400,
+      "body": {
+        "statusCode": 400,
+        "message": "precioMin no puede ser mayor que precioMax",
+        "error": "Bad Request",
+        "requestId": 0,
+        "timestamp": 0,
+        "path": "/productos"
+      }
+    },
+    "/productos?pagina=2&limite=1": {
+      "status": 200,
+      "body": {
+        "productos": [
+          {
+            "id": 2,
+            "nombre": "Camisa oxford celeste",
+            "precio": 29990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/camisa-oxford-celeste.jpg",
+            "categoria": "hombre",
+            "novedad": false,
+            "oferta": false
+          }
+        ],
+        "pagina": 2,
+        "limite": 1,
+        "total": 3
+      }
+    },
+    "/productos?pagina=99": {
+      "status": 200,
+      "body": {
+        "productos": [],
+        "pagina": 99,
+        "limite": 12,
+        "total": 3
+      }
+    },
+    "/productos?orden=precio_asc": {
+      "status": 200,
+      "body": {
+        "productos": [
+          {
+            "id": 3,
+            "nombre": "Bolso tote de lona",
+            "precio": 24990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/bolso-tote-lona.jpg",
+            "categoria": "accesorios",
+            "novedad": false,
+            "oferta": true
+          },
+          {
+            "id": 2,
+            "nombre": "Camisa oxford celeste",
+            "precio": 29990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/camisa-oxford-celeste.jpg",
+            "categoria": "hombre",
+            "novedad": false,
+            "oferta": false
+          },
+          {
+            "id": 1,
+            "nombre": "Vestido de lino blanco",
+            "precio": 39990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/vestido-lino-blanco.jpg",
+            "categoria": "mujer",
+            "novedad": true,
+            "oferta": false
+          }
+        ],
+        "pagina": 1,
+        "limite": 12,
+        "total": 3
+      }
+    },
+    "/productos?orden=precio_desc": {
+      "status": 200,
+      "body": {
+        "productos": [
+          {
+            "id": 1,
+            "nombre": "Vestido de lino blanco",
+            "precio": 39990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/vestido-lino-blanco.jpg",
+            "categoria": "mujer",
+            "novedad": true,
+            "oferta": false
+          },
+          {
+            "id": 2,
+            "nombre": "Camisa oxford celeste",
+            "precio": 29990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/camisa-oxford-celeste.jpg",
+            "categoria": "hombre",
+            "novedad": false,
+            "oferta": false
+          },
+          {
+            "id": 3,
+            "nombre": "Bolso tote de lona",
+            "precio": 24990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/bolso-tote-lona.jpg",
+            "categoria": "accesorios",
+            "novedad": false,
+            "oferta": true
+          }
+        ],
+        "pagina": 1,
+        "limite": 12,
+        "total": 3
+      }
+    },
+    "/productos?orden=nombre_asc": {
+      "status": 200,
+      "body": {
+        "productos": [
+          {
+            "id": 3,
+            "nombre": "Bolso tote de lona",
+            "precio": 24990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/bolso-tote-lona.jpg",
+            "categoria": "accesorios",
+            "novedad": false,
+            "oferta": true
+          },
+          {
+            "id": 2,
+            "nombre": "Camisa oxford celeste",
+            "precio": 29990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/camisa-oxford-celeste.jpg",
+            "categoria": "hombre",
+            "novedad": false,
+            "oferta": false
+          },
+          {
+            "id": 1,
+            "nombre": "Vestido de lino blanco",
+            "precio": 39990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/vestido-lino-blanco.jpg",
+            "categoria": "mujer",
+            "novedad": true,
+            "oferta": false
+          }
+        ],
+        "pagina": 1,
+        "limite": 12,
+        "total": 3
+      }
+    },
+    "/productos?orden=relevancia": {
+      "status": 200,
+      "body": {
+        "productos": [
+          {
+            "id": 1,
+            "nombre": "Vestido de lino blanco",
+            "precio": 39990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/vestido-lino-blanco.jpg",
+            "categoria": "mujer",
+            "novedad": true,
+            "oferta": false
+          },
+          {
+            "id": 2,
+            "nombre": "Camisa oxford celeste",
+            "precio": 29990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/camisa-oxford-celeste.jpg",
+            "categoria": "hombre",
+            "novedad": false,
+            "oferta": false
+          },
+          {
+            "id": 3,
+            "nombre": "Bolso tote de lona",
+            "precio": 24990,
+            "imagenUrl": "https://cdn.stylenow.cl/productos/bolso-tote-lona.jpg",
+            "categoria": "accesorios",
+            "novedad": false,
+            "oferta": true
+          }
+        ],
+        "pagina": 1,
+        "limite": 12,
+        "total": 3
+      }
+    },
+    "/productos?orden=invalid": {
+      "status": 400,
+      "body": {
+        "statusCode": 400,
+        "message": [
+          "orden must be one of the following values: relevancia, precio_asc, precio_desc, nombre_asc"
+        ],
+        "error": "Bad Request",
+        "requestId": 0,
+        "timestamp": 0,
+        "path": "/productos"
+      }
+    },
+    "/productos?oferta=invalid": {
+      "status": 400,
+      "body": {
+        "statusCode": 400,
+        "message": ["oferta must be a boolean value"],
+        "error": "Bad Request",
+        "requestId": 0,
+        "timestamp": 0,
+        "path": "/productos"
+      }
+    },
+    "/productos?limite=51": {
+      "status": 400,
+      "body": {
+        "statusCode": 400,
+        "message": ["limite must not be greater than 50"],
+        "error": "Bad Request",
+        "requestId": 0,
+        "timestamp": 0,
+        "path": "/productos"
+      }
+    },
+    "/categorias": {
+      "status": 200,
+      "body": [
+        {
+          "id": 1,
+          "nombre": "Mujer",
+          "slug": "mujer",
+          "imagenUrl": "https://cdn.stylenow.cl/categorias/mujer.jpg",
+          "destacada": true
+        },
+        {
+          "id": 2,
+          "nombre": "Hombre",
+          "slug": "hombre",
+          "imagenUrl": "https://cdn.stylenow.cl/categorias/hombre.jpg",
+          "destacada": true
+        },
+        {
+          "id": 3,
+          "nombre": "Accesorios",
+          "slug": "accesorios",
+          "imagenUrl": "https://cdn.stylenow.cl/categorias/accesorios.jpg",
+          "destacada": true
+        },
+        {
+          "id": 4,
+          "nombre": "Calzado",
+          "slug": "calzado",
+          "imagenUrl": "https://cdn.stylenow.cl/categorias/calzado.jpg",
+          "destacada": false
+        }
+      ]
+    },
+    "/categorias?destacada=true": {
+      "status": 200,
+      "body": [
+        {
+          "id": 1,
+          "nombre": "Mujer",
+          "slug": "mujer",
+          "imagenUrl": "https://cdn.stylenow.cl/categorias/mujer.jpg",
+          "destacada": true
+        },
+        {
+          "id": 2,
+          "nombre": "Hombre",
+          "slug": "hombre",
+          "imagenUrl": "https://cdn.stylenow.cl/categorias/hombre.jpg",
+          "destacada": true
+        },
+        {
+          "id": 3,
+          "nombre": "Accesorios",
+          "slug": "accesorios",
+          "imagenUrl": "https://cdn.stylenow.cl/categorias/accesorios.jpg",
+          "destacada": true
+        }
+      ]
+    },
+    "/categorias?destacada=false": {
+      "status": 200,
+      "body": [
+        {
+          "id": 4,
+          "nombre": "Calzado",
+          "slug": "calzado",
+          "imagenUrl": "https://cdn.stylenow.cl/categorias/calzado.jpg",
+          "destacada": false
+        }
+      ]
+    },
+    "/colecciones": {
+      "status": 200,
+      "body": [
+        {
+          "id": 1,
+          "nombre": "Look urbano",
+          "descripcion": "Prendas comodas en tonos neutros para el dia a dia.",
+          "imagenUrl": "https://cdn.stylenow.cl/colecciones/look-urbano.jpg"
+        },
+        {
+          "id": 2,
+          "nombre": "Primavera en lino",
+          "descripcion": "Telas livianas y colores claros para los dias de sol.",
+          "imagenUrl": "https://cdn.stylenow.cl/colecciones/primavera-lino.jpg"
+        },
+        {
+          "id": 3,
+          "nombre": "Oficina relajada",
+          "descripcion": "Camisas y basicos que van de la reunion al after office.",
+          "imagenUrl": "https://cdn.stylenow.cl/colecciones/oficina-relajada.jpg"
+        }
+      ]
+    },
+    "/posts": {
+      "status": 200,
+      "body": [
+        {
+          "id": 1,
+          "titulo": "Como combinar tus basicos de temporada",
+          "contenido": "Tres combinaciones simples para renovar tu closet sin comprar de mas.",
+          "imagenUrl": "https://cdn.stylenow.cl/comunidad/basicos-temporada.jpg"
+        },
+        {
+          "id": 2,
+          "titulo": "Guia rapida para cuidar el lino",
+          "contenido": "Lavado en frio, secado a la sombra y plancha tibia para que dure mas.",
+          "imagenUrl": "https://cdn.stylenow.cl/comunidad/cuidado-lino.jpg"
+        },
+        {
+          "id": 3,
+          "titulo": "Accesorios que cambian un look",
+          "contenido": "Un bolso o un cinturon pueden transformar la misma tenida en otra.",
+          "imagenUrl": "https://cdn.stylenow.cl/comunidad/accesorios.jpg"
+        }
+      ]
+    },
+    "/usuarios/1": {
+      "status": 200,
+      "body": {
+        "id": 1,
+        "nombre": "Fernanda",
+        "apellido": "Rojas",
+        "email": "cliente@stylenow.cl",
+        "telefono": "+56912345678"
+      }
+    },
+    "/usuarios/2": {
+      "status": 200,
+      "body": {
+        "id": 2,
+        "nombre": "Matias",
+        "apellido": "Soto",
+        "email": "matias.soto@stylenow.cl"
+      }
+    },
+    "/usuarios/1/direcciones": {
+      "status": 200,
+      "body": [
+        {
+          "id": 1,
+          "nombre": "Casa",
+          "calle": "Av. Providencia",
+          "numero": "1234",
+          "departamento": "Depto 502",
+          "comuna": "Providencia",
+          "region": "Region Metropolitana",
+          "principal": true
+        },
+        {
+          "id": 2,
+          "nombre": "Oficina",
+          "calle": "Av. Apoquindo",
+          "numero": "4501",
+          "comuna": "Las Condes",
+          "region": "Region Metropolitana",
+          "principal": false
+        }
+      ]
+    },
+    "/usuarios/2/direcciones": {
+      "status": 200,
+      "body": [
+        {
+          "id": 3,
+          "nombre": "Casa",
+          "calle": "Av. Alemania",
+          "numero": "850",
+          "comuna": "Temuco",
+          "region": "Region de La Araucania",
+          "principal": true
+        }
+      ]
+    },
+    "/usuarios/1/direcciones/3": {
+      "status": 404,
+      "body": {
+        "statusCode": 404,
+        "message": "Cannot GET /usuarios/1/direcciones/3",
+        "error": "Not Found",
+        "requestId": 0,
+        "timestamp": 0,
+        "path": "/usuarios/1/direcciones/3"
+      }
+    },
+    "/usuarios/99999": {
+      "status": 404,
+      "body": {
+        "statusCode": 404,
+        "message": "No existe el usuario con id 99999",
+        "error": "Not Found",
+        "requestId": 0,
+        "timestamp": 0,
+        "path": "/usuarios/99999"
+      }
+    },
+    "/usuarios/4294967296": {
+      "status": 404,
+      "body": {
+        "statusCode": 404,
+        "message": "No existe el usuario con id 4294967296",
+        "error": "Not Found",
+        "requestId": 0,
+        "timestamp": 0,
+        "path": "/usuarios/4294967296"
+      }
+    }
+  },
+  "direcciones": [
+    [
+      201,
+      {
+        "id": 4,
+        "nombre": "Nueva",
+        "calle": "Calle Ñuñoa",
+        "numero": "10",
+        "comuna": "Ñuñoa",
+        "region": "RM",
+        "principal": false
+      }
+    ],
+    [
+      200,
+      {
+        "id": 4,
+        "nombre": "Nueva",
+        "calle": "Calle Ñuñoa",
+        "numero": "10",
+        "departamento": "Of 2",
+        "comuna": "Ñuñoa",
+        "region": "RM",
+        "principal": true
+      }
+    ],
+    [
+      200,
+      {
+        "id": 1,
+        "nombre": "Fernanda",
+        "apellido": "Rojas Pérez",
+        "email": "cliente@stylenow.cl",
+        "telefono": "+56912345678"
+      }
+    ],
+    [204],
+    [
+      200,
+      [
+        {
+          "id": 1,
+          "nombre": "Casa",
+          "calle": "Av. Providencia",
+          "numero": "1234",
+          "departamento": "Depto 502",
+          "comuna": "Providencia",
+          "region": "Region Metropolitana",
+          "principal": true
+        },
+        {
+          "id": 4,
+          "nombre": "Nueva",
+          "calle": "Calle Ñuñoa",
+          "numero": "10",
+          "departamento": "Of 2",
+          "comuna": "Ñuñoa",
+          "region": "RM",
+          "principal": true
+        }
+      ]
+    ]
+  ],
+  "openapi": {
+    "openapi": "3.0.0",
+    "paths": {
+      "/operaciones/pedidos/{pedidoId}/envio": {
+        "post": {
+          "operationId": "LogisticaController_crear",
+          "parameters": [
+            {
+              "name": "pedidoId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "required": ["id", "pedido_id", "estado", "despachado_en"],
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "pedido_id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "estado": {
+                        "type": "string",
+                        "enum": [
+                          "PENDING",
+                          "PREPARING",
+                          "SHIPPED",
+                          "DELIVERED",
+                          "CANCELLED"
+                        ]
+                      },
+                      "despachado_en": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Entrada invalida.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Sin permiso operativo.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Recurso inexistente o ajeno.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflicto de estado o persistencia.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Error interno sin detalles sensibles.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "503": {
+              "description": "La operacion requiere MySQL.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Crea envio pendiente (solo operador autorizado)",
+          "tags": ["logistica"]
+        },
+        "patch": {
+          "operationId": "LogisticaController_cambiar",
+          "parameters": [
+            {
+              "name": "pedidoId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransicionEnvioDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "required": ["id", "pedido_id", "estado", "despachado_en"],
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "pedido_id": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "estado": {
+                        "type": "string",
+                        "enum": [
+                          "PENDING",
+                          "PREPARING",
+                          "SHIPPED",
+                          "DELIVERED",
+                          "CANCELLED"
+                        ]
+                      },
+                      "despachado_en": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Entrada invalida.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Sin permiso operativo.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Recurso inexistente o ajeno.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflicto de estado o persistencia.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Error interno sin detalles sensibles.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "503": {
+              "description": "La operacion requiere MySQL.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Transicion logistica (solo operador autorizado)",
+          "tags": ["logistica"]
+        }
+      },
+      "/usuarios/{usuarioId}/pedidos/{pedidoId}/seguimiento": {
+        "get": {
+          "operationId": "LogisticaController_seguir",
+          "parameters": [
+            {
+              "name": "pedidoId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            },
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "required": [
+                      "pedidoId",
+                      "estado",
+                      "despachadoEn",
+                      "eventos"
+                    ],
+                    "properties": {
+                      "pedidoId": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "estado": {
+                        "type": "string",
+                        "enum": [
+                          "PENDING",
+                          "PREPARING",
+                          "SHIPPED",
+                          "DELIVERED",
+                          "CANCELLED"
+                        ]
+                      },
+                      "despachadoEn": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                      },
+                      "eventos": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["anterior", "nuevo", "fecha"],
+                          "properties": {
+                            "anterior": {
+                              "type": "string",
+                              "enum": [
+                                "PENDING",
+                                "PREPARING",
+                                "SHIPPED",
+                                "DELIVERED",
+                                "CANCELLED",
+                                null
+                              ],
+                              "nullable": true
+                            },
+                            "nuevo": {
+                              "type": "string",
+                              "enum": [
+                                "PENDING",
+                                "PREPARING",
+                                "SHIPPED",
+                                "DELIVERED",
+                                "CANCELLED"
+                              ]
+                            },
+                            "fecha": {
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Entrada invalida.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Recurso inexistente o ajeno.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflicto de estado o persistencia.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Error interno sin detalles sensibles.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "503": {
+              "description": "La operacion requiere MySQL.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "tags": ["logistica"]
+        }
+      },
+      "/usuarios/{usuarioId}/pedidos/{pedidoId}/cancelacion": {
+        "post": {
+          "operationId": "LogisticaController_cancelar",
+          "parameters": [
+            {
+              "name": "pedidoId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            },
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelarPedidoDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "required": [
+                      "pedidoId",
+                      "estado",
+                      "stockRestituido",
+                      "fecha"
+                    ],
+                    "properties": {
+                      "pedidoId": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "estado": {
+                        "type": "string",
+                        "enum": ["cancelado"]
+                      },
+                      "stockRestituido": {
+                        "type": "boolean"
+                      },
+                      "fecha": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Entrada invalida.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Recurso inexistente o ajeno.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflicto de estado o persistencia.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Error interno sin detalles sensibles.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "503": {
+              "description": "La operacion requiere MySQL.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "tags": ["logistica"]
+        }
+      },
+      "/administracion/productos/{productoId}/imagenes": {
+        "post": {
+          "description": "Requiere JWT y permiso productos.imagenes.gestionar. JPEG, PNG o WebP estatico; 5 MiB, 16 millones de pixeles. Recodifica contenido real, ignora nombre/MIME del cliente. La portada existente no cambia.",
+          "operationId": "AdministrarImagenesController_cargar",
+          "parameters": [
+            {
+              "name": "productoId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "type": "object",
+                  "required": ["imagen"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "imagen": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "productoId": {
+                        "type": "integer"
+                      },
+                      "posicion": {
+                        "type": "integer"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Contenido invalido, animado o archivo ausente",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT requerido",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Sin permiso administrativo",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Producto inexistente",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "413": {
+              "description": "Imagen mayor a 5 MiB",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "503": {
+              "description": "Procesador de imagenes ocupado",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Agrega una imagen a la galeria del producto",
+          "tags": ["imagenes"]
+        }
+      },
+      "/administracion/imagenes/reconciliacion": {
+        "post": {
+          "description": "Solo permiso administrativo. Procesa hasta 100 registros. Nunca borra archivos publicados ni barre directorios; archivos alterados/parciales requieren revision.",
+          "operationId": "AdministrarImagenesController_reconciliar",
+          "parameters": [],
+          "responses": {
+            "201": {
+              "description": ""
+            },
+            "401": {
+              "description": "JWT requerido",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Sin permiso administrativo",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "503": {
+              "description": "La operacion requiere MySQL",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Reconciliar cargas fallidas o pendientes de mas de 15 minutos",
+          "tags": ["imagenes"]
+        }
+      },
+      "/imagenes/productos/{archivo}": {
+        "get": {
+          "operationId": "ImagenesPublicasController_abrir",
+          "parameters": [
+            {
+              "name": "archivo",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\\.(jpg|png|webp)$"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Bytes JPEG, PNG o WebP",
+              "content": {
+                "image/jpeg": {
+                  "schema": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "image/png": {
+                  "schema": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "image/webp": {
+                  "schema": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Imagen no publicada o inexistente",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "summary": "Lee una imagen publicada; no requiere autenticacion",
+          "tags": ["imagenes"]
+        }
+      },
+      "/usuarios/{usuarioId}": {
+        "get": {
+          "operationId": "UsuariosController_obtenerUsuario",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Perfil obtenido correctamente.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UsuarioDetalleResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "La entrada no cumple el contrato del endpoint.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe un usuario con ese id.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Obtiene el perfil del usuario",
+          "tags": ["usuarios"]
+        },
+        "patch": {
+          "description": "Modifica solo los campos enviados. El correo electronico y la contrasena no se cambian por este endpoint.",
+          "operationId": "UsuariosController_actualizarUsuario",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario."
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActualizarUsuarioDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Perfil actualizado. Devuelve el perfil completo.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UsuarioDetalleResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "La entrada no cumple el contrato del endpoint.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe un usuario con ese id.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Actualiza los datos del perfil",
+          "tags": ["usuarios"]
+        }
+      },
+      "/usuarios/{usuarioId}/contrasena": {
+        "patch": {
+          "description": "Verifica la contrasena actual y la reemplaza por la nueva; desde ese momento solo la nueva sirve para iniciar sesion. Responde 204 sin cuerpo: la contrasena nunca se devuelve y no hay otro dato del perfil que cambie.",
+          "operationId": "UsuariosController_cambiarContrasena",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario."
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CambiarContrasenaDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": "Contrasena cambiada."
+            },
+            "400": {
+              "description": "Falta algun campo, la contrasena actual no es correcta o la nueva es igual a la actual.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe un usuario con ese id.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Cambia la contrasena del usuario",
+          "tags": ["usuarios"]
+        }
+      },
+      "/productos": {
+        "get": {
+          "description": "Devuelve la pagina solicitada del catalogo. Sin filtros entrega el catalogo completo. Este mismo endpoint resuelve el buscador del header (search), la navegacion por categoria (categoria), el bloque Nueva coleccion de la home (novedad=true), la seccion Ofertas (oferta=true) y los filtros de talla, color, precio y orden del catalogo. Los filtros se combinan con AND. Una busqueda sin coincidencias o una pagina fuera de rango responden 200 con productos vacio.",
+          "operationId": "ProductosController_obtenerProductos",
+          "parameters": [
+            {
+              "name": "pagina",
+              "required": false,
+              "in": "query",
+              "description": "Pagina solicitada. Comienza en 1.",
+              "schema": {
+                "minimum": 1,
+                "default": 1,
+                "example": 1,
+                "type": "integer"
+              }
+            },
+            {
+              "name": "limite",
+              "required": false,
+              "in": "query",
+              "description": "Elementos por pagina.",
+              "schema": {
+                "minimum": 1,
+                "maximum": 50,
+                "default": 12,
+                "example": 12,
+                "type": "integer"
+              }
+            },
+            {
+              "name": "search",
+              "required": false,
+              "in": "query",
+              "description": "Texto del buscador del header. Coincidencia parcial en nombre o descripcion, sin distinguir mayusculas ni tildes.",
+              "schema": {
+                "example": "vestido",
+                "type": "string"
+              }
+            },
+            {
+              "name": "categoria",
+              "required": false,
+              "in": "query",
+              "description": "Slug de la categoria, obtenido desde GET /categorias. Una categoria sin productos devuelve un listado vacio.",
+              "schema": {
+                "minLength": 1,
+                "example": "mujer",
+                "type": "string"
+              }
+            },
+            {
+              "name": "talla",
+              "required": false,
+              "in": "query",
+              "description": "Talla con stock disponible en alguna variante del producto.",
+              "schema": {
+                "minLength": 1,
+                "example": "M",
+                "type": "string"
+              }
+            },
+            {
+              "name": "color",
+              "required": false,
+              "in": "query",
+              "description": "Color con stock disponible en alguna variante del producto. Si se envia junto con talla, la misma variante debe cumplir ambos.",
+              "schema": {
+                "minLength": 1,
+                "example": "Beige",
+                "type": "string"
+              }
+            },
+            {
+              "name": "precioMin",
+              "required": false,
+              "in": "query",
+              "description": "Precio minimo en pesos chilenos, sin decimales. Inclusivo.",
+              "schema": {
+                "minimum": 0,
+                "example": 10000,
+                "type": "integer"
+              }
+            },
+            {
+              "name": "precioMax",
+              "required": false,
+              "in": "query",
+              "description": "Precio maximo en pesos chilenos, sin decimales. Inclusivo. No puede ser menor que precioMin.",
+              "schema": {
+                "minimum": 0,
+                "example": 40000,
+                "type": "integer"
+              }
+            },
+            {
+              "name": "novedad",
+              "required": false,
+              "in": "query",
+              "description": "true devuelve solo los productos de la nueva coleccion; false, solo los que no lo son.",
+              "schema": {
+                "example": true,
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "oferta",
+              "required": false,
+              "in": "query",
+              "description": "true devuelve solo los productos en oferta; false, solo los que no lo estan.",
+              "schema": {
+                "example": false,
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "orden",
+              "required": false,
+              "in": "query",
+              "description": "Criterio de ordenamiento. relevancia es el orden propio del catalogo.",
+              "schema": {
+                "default": "relevancia",
+                "example": "precio_asc",
+                "type": "string",
+                "enum": [
+                  "relevancia",
+                  "precio_asc",
+                  "precio_desc",
+                  "nombre_asc"
+                ]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Catalogo obtenido correctamente.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProductosPaginadosResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Algun filtro tiene un formato invalido, se envio un parametro no declarado o precioMin es mayor que precioMax.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "summary": "Lista el catalogo de productos con filtros opcionales",
+          "tags": ["productos"]
+        }
+      },
+      "/productos/{id}": {
+        "get": {
+          "description": "Devuelve todo lo que muestra la ficha de producto: galeria de imagenes, descripcion, calificacion, colores, tallas, guia de tallas y las variantes con su stock. El id de la variante elegida es el que se envia luego al carrito.",
+          "operationId": "ProductosController_obtenerProductoPorId",
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del producto obtenido desde GET /productos."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Producto encontrado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProductoDetalleResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "El id no es un numero entero.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe un producto con ese id.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "summary": "Obtiene la ficha de un producto",
+          "tags": ["productos"]
+        }
+      },
+      "/categorias": {
+        "get": {
+          "description": "Devuelve las categorias en el orden del menu principal, tengan o no productos. Con destacada=true entrega solo las que se pintan en \"Categorias populares\" de la home. El slug de cada categoria es el valor del filtro GET /productos?categoria={slug}.",
+          "operationId": "CategoriasController_obtenerCategorias",
+          "parameters": [
+            {
+              "name": "destacada",
+              "required": false,
+              "in": "query",
+              "description": "true devuelve solo las categorias de \"Categorias populares\" de la home; false, solo las que no lo son.",
+              "schema": {
+                "example": true,
+                "type": "boolean"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Categorias obtenidas correctamente.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/CategoriaResponseDto"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "destacada no es true ni false, o se envio un parametro no declarado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "summary": "Lista las categorias del catalogo",
+          "tags": ["categorias"]
+        }
+      },
+      "/colecciones": {
+        "get": {
+          "description": "Devuelve las colecciones editoriales que se muestran en la navegacion de Looks y en el bloque \"Inspiracion para ti\" de la home. Es un contrato de solo lectura porque el wireframe no muestra ninguna accion de creacion o edicion.",
+          "operationId": "ColeccionesController_obtenerColecciones",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "Colecciones obtenidas correctamente.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ColeccionResponseDto"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "summary": "Lista las colecciones editoriales",
+          "tags": ["colecciones"]
+        }
+      },
+      "/posts": {
+        "get": {
+          "description": "Devuelve las publicaciones que se muestran como tarjetas en la seccion Comunidad. Solo lectura: el wireframe no expone acciones de creacion, edicion, eliminacion, comentarios ni likes, por lo que esos contratos no existen.",
+          "operationId": "ComunidadController_obtenerPosts",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "Publicaciones obtenidas correctamente.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/PostResponseDto"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "summary": "Lista las publicaciones de Comunidad",
+          "tags": ["comunidad"]
+        }
+      },
+      "/usuarios/{usuarioId}/carrito": {
+        "get": {
+          "description": "Devuelve el id del carrito, sus lineas con los precios vigentes del catalogo, la cantidad total de unidades y el subtotal general. Si el usuario aun no agrega nada, items viene vacio. El id es el carritoId que se envia en POST /pedidos.",
+          "operationId": "CarritoController_obtenerCarrito",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno del carrito."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Carrito obtenido correctamente.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CarritoResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "usuarioId no es un entero mayor que cero.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe un usuario con ese id.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Obtiene el carrito del usuario",
+          "tags": ["carrito"]
+        }
+      },
+      "/usuarios/{usuarioId}/carrito/items": {
+        "post": {
+          "description": "Corresponde al boton \"Agregar al carrito\" de la ficha de producto. Si la variante ya estaba en el carrito, suma la cantidad a la linea existente. La cantidad resultante no puede superar el stock disponible de la variante.",
+          "operationId": "CarritoController_agregarItem",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno del carrito."
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "description": "Variante elegida en la ficha y cantidad que se agrega.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgregarItemCarritoDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Variante agregada. Devuelve el carrito recalculado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CarritoResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "La cantidad no es un entero mayor que cero, la variante no tiene stock o la cantidad total de la variante en el carrito superaria su stock.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario o no existe la variante.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Agrega una variante al carrito",
+          "tags": ["carrito"]
+        }
+      },
+      "/usuarios/{usuarioId}/carrito/items/{varianteId}": {
+        "patch": {
+          "description": "Corresponde al selector de cantidad del carrito. Reemplaza la cantidad de la linea indicada, por eso es PATCH y no PUT: se modifica un solo campo de la linea. La nueva cantidad debe ser mayor que cero y no puede superar el stock de la variante.",
+          "operationId": "CarritoController_actualizarCantidad",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno del carrito."
+            },
+            {
+              "name": "varianteId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador de la variante que identifica la linea del carrito."
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "description": "Nueva cantidad de la linea.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActualizarCantidadDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Cantidad actualizada. Devuelve el carrito recalculado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CarritoResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "La cantidad no es un entero mayor que cero o supera el stock disponible.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario, o la variante no esta en el carrito.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Cambia la cantidad de una linea del carrito",
+          "tags": ["carrito"]
+        },
+        "delete": {
+          "description": "Corresponde al boton de eliminar de cada linea del carrito. Devuelve el carrito ya recalculado con codigo 200, y no 204, porque la respuesta si tiene cuerpo: el frontend necesita el nuevo subtotal y el nuevo contador del header.",
+          "operationId": "CarritoController_eliminarItem",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno del carrito."
+            },
+            {
+              "name": "varianteId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador de la variante que identifica la linea del carrito."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Linea eliminada. Devuelve el carrito recalculado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CarritoResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "usuarioId o varianteId no son enteros validos.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario, o la variante no esta en el carrito.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Elimina una linea del carrito",
+          "tags": ["carrito"]
+        }
+      },
+      "/auth/registro": {
+        "post": {
+          "description": "Crea la cuenta del formulario \"Crear cuenta\" del header, junto con su carrito vacio. El correo electronico identifica la cuenta y no se puede repetir (se compara sin distinguir mayusculas). El perfil nace con apellido vacio, que se completa en PATCH /usuarios/{usuarioId}. La respuesta nunca incluye la contrasena; solo se guarda su hash scrypt. Usuario y credencial se crean en una misma transaccion.",
+          "operationId": "AuthController_registrar",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "description": "Datos del formulario de registro.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrarUsuarioDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Cuenta creada correctamente.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UsuarioResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Falta alguno de los campos obligatorios, el correo no es valido o se envian campos no declarados.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Ya existe una cuenta con ese correo electronico.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "summary": "Registra una cuenta nueva",
+          "tags": ["auth"]
+        }
+      },
+      "/auth/login": {
+        "post": {
+          "description": "Valida el correo electronico y la contrasena del formulario \"Iniciar sesion\". La respuesta devuelve un mensaje, los datos publicos del usuario y un JWT HS256 (accessToken, tipoToken Bearer, expiraEnSegundos). Enviar Authorization: Bearer <accessToken> en las rutas /usuarios/{usuarioId}/..., POST /pedidos y POST /looks.",
+          "operationId": "AuthController_login",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "description": "Credenciales del formulario de inicio de sesion.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Inicio de sesion correcto.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AuthResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Falta el correo o la contrasena, o el correo no es valido.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Correo electronico o contrasena incorrectos.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "summary": "Inicia sesion",
+          "tags": ["auth"]
+        }
+      },
+      "/auth/logout": {
+        "post": {
+          "description": "Devuelve la confirmacion de cierre de sesion que el header necesita para volver al estado de visitante. IMPORTANTE: el JWT es sin estado; este endpoint no revoca el token en el servidor (la revocacion esta pendiente de decision). El frontend descarta el token y los datos del usuario; el token vence por expiracion.",
+          "operationId": "AuthController_cerrarSesion",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "Cierre de sesion confirmado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MensajeResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "summary": "Cierra la sesion del frontend",
+          "tags": ["auth"]
+        }
+      },
+      "/usuarios/{usuarioId}/direcciones": {
+        "get": {
+          "operationId": "DireccionesController_obtenerDirecciones",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno de las direcciones."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Direcciones obtenidas correctamente.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/DireccionResponseDto"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "La entrada no cumple el contrato del endpoint.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario, o la direccion no existe o no es suya.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Lista las direcciones del usuario",
+          "tags": ["direcciones"]
+        },
+        "post": {
+          "operationId": "DireccionesController_crearDireccion",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno de las direcciones."
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrearDireccionDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Direccion creada.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DireccionResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "La entrada no cumple el contrato del endpoint.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario, o la direccion no existe o no es suya.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Agrega una direccion al usuario",
+          "tags": ["direcciones"]
+        }
+      },
+      "/usuarios/{usuarioId}/direcciones/{direccionId}": {
+        "patch": {
+          "description": "Modifica solo los campos enviados.",
+          "operationId": "DireccionesController_actualizarDireccion",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno de las direcciones."
+            },
+            {
+              "name": "direccionId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador de la direccion."
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActualizarDireccionDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Direccion actualizada. Devuelve la direccion completa.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DireccionResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "La entrada no cumple el contrato del endpoint.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario, o la direccion no existe o no es suya.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Actualiza una direccion",
+          "tags": ["direcciones"]
+        },
+        "delete": {
+          "operationId": "DireccionesController_eliminarDireccion",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno de las direcciones."
+            },
+            {
+              "name": "direccionId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador de la direccion."
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Direccion eliminada."
+            },
+            "400": {
+              "description": "La entrada no cumple el contrato del endpoint.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario, o la direccion no existe o no es suya.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Elimina una direccion",
+          "tags": ["direcciones"]
+        }
+      },
+      "/usuarios/{usuarioId}/favoritos": {
+        "get": {
+          "operationId": "FavoritosController_listar",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ProductoDetalleResponseDto"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "El identificador debe ser un entero positivo seguro.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "El usuario no existe.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Lista los productos favoritos del usuario",
+          "tags": ["favoritos"]
+        },
+        "post": {
+          "description": "Corresponde al boton \"Agregar a favoritos\" de la ficha de producto. Se envia el producto y no la variante porque el wireframe marca el producto completo, sin exigir color ni talla. Un mismo producto no se puede guardar dos veces para el mismo usuario.",
+          "operationId": "FavoritosController_agregarFavorito",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno de la lista de favoritos."
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "description": "Producto que se marca como favorito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgregarFavoritoDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Producto agregado a favoritos.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FavoritoResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "usuarioId o productoId no son enteros validos.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario o no existe el producto.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "El producto ya esta en la lista de favoritos.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Agrega un producto a favoritos",
+          "tags": ["favoritos"]
+        }
+      },
+      "/looks": {
+        "get": {
+          "operationId": "LooksController_obtenerLooks",
+          "parameters": [
+            {
+              "name": "pagina",
+              "required": false,
+              "in": "query",
+              "description": "Pagina solicitada. Comienza en 1.",
+              "schema": {
+                "minimum": 1,
+                "default": 1,
+                "example": 1,
+                "type": "integer"
+              }
+            },
+            {
+              "name": "limite",
+              "required": false,
+              "in": "query",
+              "description": "Elementos por pagina.",
+              "schema": {
+                "minimum": 1,
+                "maximum": 50,
+                "default": 12,
+                "example": 12,
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Looks obtenidos correctamente.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/LooksPaginadosResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "La entrada no cumple el contrato del endpoint.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "summary": "Lista los looks publicados",
+          "tags": ["looks"]
+        },
+        "post": {
+          "description": "Crea un look a partir de productos y variantes del catalogo. El precio total lo calcula el backend.",
+          "operationId": "LooksController_crearLook",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrearLookDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Look creado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/LookResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "La entrada no cumple el contrato del endpoint.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Algun producto no existe o la variante no pertenece a ese producto.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Compone un look nuevo",
+          "tags": ["looks"]
+        }
+      },
+      "/looks/{lookId}": {
+        "get": {
+          "operationId": "LooksController_obtenerLook",
+          "parameters": [
+            {
+              "name": "lookId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del look."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Look encontrado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/LookResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "La entrada no cumple el contrato del endpoint.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe un look con ese id.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "summary": "Obtiene el detalle de un look",
+          "tags": ["looks"]
+        }
+      },
+      "/usuarios/{usuarioId}/looks": {
+        "post": {
+          "description": "Asocia un look existente a la cuenta del usuario. No crea un look nuevo: para eso existe POST /looks.",
+          "operationId": "LooksController_guardarLook",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario que guarda el look."
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuardarLookDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Look guardado. Devuelve el look guardado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/LookResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "La entrada no cumple el contrato del endpoint.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario o no existe el look.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Guarda un look en la cuenta del usuario",
+          "tags": ["looks"]
+        }
+      },
+      "/usuarios/{usuarioId}/alertas": {
+        "get": {
+          "operationId": "AlertasController_obtenerAlertas",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno de las alertas."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Alertas obtenidas correctamente.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/AlertaResponseDto"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "La entrada no cumple el contrato del endpoint.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario, la alerta no existe o no es suya, o el producto o la variante indicados no existen en el catalogo.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Lista las alertas del usuario",
+          "tags": ["alertas"]
+        }
+      },
+      "/usuarios/{usuarioId}/alertas/precio": {
+        "post": {
+          "description": "Registra el interes del usuario en saber cuando un producto baja de precio. No envia ninguna notificacion.",
+          "operationId": "AlertasController_crearAlertaPrecio",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno de las alertas."
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrearAlertaPrecioDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Alerta de precio creada.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AlertaResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "La entrada no cumple el contrato del endpoint.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario, la alerta no existe o no es suya, o el producto o la variante indicados no existen en el catalogo.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Crea una alerta de baja de precio",
+          "tags": ["alertas"]
+        }
+      },
+      "/usuarios/{usuarioId}/alertas/reposicion": {
+        "post": {
+          "description": "Registra el interes del usuario en saber cuando un producto o una variante vuelve a tener stock. Si se indica varianteId, debe pertenecer al producto. No envia ninguna notificacion.",
+          "operationId": "AlertasController_crearAvisoReposicion",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno de las alertas."
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrearAvisoReposicionDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Aviso de reposicion creado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AlertaResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "La entrada no cumple el contrato del endpoint.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario, la alerta no existe o no es suya, o el producto o la variante indicados no existen en el catalogo.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Crea un aviso de reposicion de stock",
+          "tags": ["alertas"]
+        }
+      },
+      "/usuarios/{usuarioId}/alertas/{alertaId}": {
+        "delete": {
+          "operationId": "AlertasController_eliminarAlerta",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno de las alertas."
+            },
+            {
+              "name": "alertaId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador de la alerta."
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Alerta eliminada."
+            },
+            "400": {
+              "description": "La entrada no cumple el contrato del endpoint.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario, la alerta no existe o no es suya, o el producto o la variante indicados no existen en el catalogo.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Elimina una alerta",
+          "tags": ["alertas"]
+        }
+      },
+      "/pedidos": {
+        "post": {
+          "description": "Convierte el carrito indicado por carritoId en un pedido del dueno del carrito. Revalida stock, copia nombre y precio vigentes de cada producto en sus items, guarda contacto y direccion como foto del checkout y vacia el carrito. El envio no se cobra (costoEnvio 0) porque el checkout no indica modalidad de despacho, y en modo MySQL descuenta stock transaccionalmente al confirmar. Devuelve el detalle completo, con items, para que el frontend no necesite una segunda consulta.",
+          "operationId": "PedidosController_crearPedido",
+          "parameters": [
+            {
+              "name": "Idempotency-Key",
+              "in": "header",
+              "description": "En MySQL: clave ASCII de 1 a 128 caracteres; mismo checkout devuelve el pedido original, payload distinto 409.",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrearPedidoDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Pedido creado. Aparece desde ya en los pedidos del usuario y el carrito queda vacio.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PedidoDetalleResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "El body no cumple el contrato, el carrito no tiene items o alguna linea supera el stock disponible. En estos casos no se crea el pedido y el carrito no cambia.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el carrito indicado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Ya hay un checkout en curso para el mismo carrito.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Crea un pedido",
+          "tags": ["pedidos"]
+        }
+      },
+      "/usuarios/{usuarioId}/pedidos": {
+        "get": {
+          "operationId": "PedidosController_obtenerPedidos",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno de los pedidos."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Pedidos obtenidos. Puede venir vacio.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/PedidoResponseDto"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Los identificadores deben ser enteros positivos en formato canonico.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Lista los pedidos del usuario",
+          "tags": ["pedidos"]
+        }
+      },
+      "/usuarios/{usuarioId}/pedidos/{pedidoId}": {
+        "get": {
+          "description": "Devuelve el pedido con sus items. El id de cada item es el pedidoItemId que se envia en POST /usuarios/{usuarioId}/pedidos/{pedidoId}/cambios-devoluciones.",
+          "operationId": "PedidosController_obtenerPedido",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno del pedido."
+            },
+            {
+              "name": "pedidoId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del pedido."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Pedido encontrado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PedidoDetalleResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Los identificadores deben ser enteros positivos en formato canonico.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario, o el pedido no existe o no es suyo.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Obtiene el detalle de un pedido",
+          "tags": ["pedidos"]
+        }
+      },
+      "/usuarios/{usuarioId}/pedidos/{pedidoId}/cambios-devoluciones": {
+        "post": {
+          "description": "Registra la solicitud sobre un item del pedido (items[].id del detalle del pedido). Un cambio exige nuevaVarianteId del mismo producto; una devolucion no lo admite. Nace en estado solicitada. No genera reembolsos ni movimientos de stock.",
+          "operationId": "CambiosDevolucionesController_crearSolicitud",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno del pedido."
+            },
+            {
+              "name": "pedidoId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del pedido."
+            },
+            {
+              "name": "Idempotency-Key",
+              "in": "header",
+              "description": "En MySQL evita repetir la misma solicitud; otra carga con la misma clave responde 409.",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrearCambioDevolucionDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Solicitud creada.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CambioDevolucionResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Body invalido, cambio sin nuevaVarianteId, cambio por la misma variante o devolucion con nuevaVarianteId.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario, el pedido no existe o no es suyo, el item no es de ese pedido, o la nueva variante no es del producto comprado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Solicita un cambio o una devolucion",
+          "tags": ["cambios-devoluciones"]
+        },
+        "get": {
+          "operationId": "CambiosDevolucionesController_obtenerSolicitudesDePedido",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno del pedido."
+            },
+            {
+              "name": "pedidoId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del pedido."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Solicitudes obtenidas. Puede venir vacio.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/CambioDevolucionResponseDto"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Los identificadores deben ser enteros positivos en formato canonico.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario, o el pedido no existe o no es suyo.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Lista las solicitudes de un pedido",
+          "tags": ["cambios-devoluciones"]
+        }
+      },
+      "/usuarios/{usuarioId}/cambios-devoluciones/{solicitudId}": {
+        "get": {
+          "operationId": "CambiosDevolucionesController_obtenerSolicitud",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador del usuario dueno del pedido."
+            },
+            {
+              "name": "solicitudId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "description": "Identificador de la solicitud."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Solicitud encontrada.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CambioDevolucionResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Los identificadores deben ser enteros positivos en formato canonico.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No existe el usuario, o la solicitud no existe o no es suya.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Obtiene el detalle de una solicitud",
+          "tags": ["cambios-devoluciones"]
+        }
+      },
+      "/usuarios/{usuarioId}/cambios-devoluciones/{solicitudId}/eventos": {
+        "get": {
+          "operationId": "CambiosDevolucionesController_historial",
+          "parameters": [
+            {
+              "name": "usuarioId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            },
+            {
+              "name": "solicitudId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            },
+            "401": {
+              "description": "JWT ausente, invalido o expirado.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "tags": ["cambios-devoluciones"]
+        }
+      }
+    },
+    "info": {
+      "title": "",
+      "description": "",
+      "version": "1.0.0",
+      "contact": {}
+    },
+    "tags": [],
+    "servers": [],
+    "components": {
+      "schemas": {
+        "ErrorResponseDto": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "integer"
+            },
+            "message": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            "error": {
+              "type": "string"
+            },
+            "requestId": {
+              "type": "string"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "statusCode",
+            "message",
+            "error",
+            "requestId",
+            "timestamp",
+            "path"
+          ]
+        },
+        "TransicionEnvioDto": {
+          "type": "object",
+          "properties": {
+            "estado": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "PREPARING",
+                "SHIPPED",
+                "DELIVERED",
+                "CANCELLED"
+              ]
+            }
+          },
+          "required": ["estado"]
+        },
+        "CancelarPedidoDto": {
+          "type": "object",
+          "properties": {
+            "motivo": {
+              "type": "string"
+            }
+          }
+        },
+        "UsuarioDetalleResponseDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "Identificador del usuario.",
+              "example": 1
+            },
+            "nombre": {
+              "type": "string",
+              "description": "Nombre del cliente.",
+              "example": "Fernanda"
+            },
+            "apellido": {
+              "type": "string",
+              "description": "Apellido del cliente.",
+              "example": "Rojas"
+            },
+            "email": {
+              "type": "string",
+              "description": "Correo electronico de la cuenta.",
+              "example": "cliente@stylenow.cl"
+            },
+            "telefono": {
+              "type": "string",
+              "description": "Telefono de contacto.",
+              "example": "+56912345678"
+            }
+          },
+          "required": ["id", "nombre", "apellido", "email"]
+        },
+        "ActualizarUsuarioDto": {
+          "type": "object",
+          "properties": {
+            "nombre": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Nombre del cliente.",
+              "example": "Fernanda"
+            },
+            "apellido": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Apellido del cliente.",
+              "example": "Rojas"
+            },
+            "telefono": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Telefono de contacto.",
+              "example": "+56912345678"
+            }
+          }
+        },
+        "CambiarContrasenaDto": {
+          "type": "object",
+          "properties": {
+            "contrasenaActual": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Contrasena vigente de la cuenta.",
+              "example": "StyleNow2026"
+            },
+            "contrasenaNueva": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Contrasena que reemplaza a la actual.",
+              "example": "StyleNow2027"
+            }
+          },
+          "required": ["contrasenaActual", "contrasenaNueva"]
+        },
+        "ProductoResponseDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "title": "Identificador",
+              "description": "Identificador del producto. Se usa para abrir la ficha en GET /productos/{id}.",
+              "example": 1
+            },
+            "nombre": {
+              "type": "string",
+              "title": "Nombre",
+              "description": "Nombre comercial del producto.",
+              "example": "Vestido de lino"
+            },
+            "precio": {
+              "type": "number",
+              "title": "Precio",
+              "description": "Precio vigente en pesos chilenos, sin decimales.",
+              "example": 29990
+            },
+            "imagenUrl": {
+              "type": "string",
+              "title": "Imagen principal",
+              "description": "Imagen que se muestra en la tarjeta del catalogo.",
+              "example": "https://cdn.stylenow.cl/productos/vestido-lino.jpg"
+            },
+            "categoria": {
+              "type": "string",
+              "title": "Categoria",
+              "description": "Slug de la categoria a la que pertenece el producto.",
+              "example": "mujer"
+            },
+            "novedad": {
+              "type": "boolean",
+              "title": "Novedad",
+              "description": "Indica si el producto forma parte de la nueva coleccion de la home.",
+              "example": true
+            },
+            "oferta": {
+              "type": "boolean",
+              "title": "Oferta",
+              "description": "Indica si el producto aparece en la seccion Ofertas.",
+              "example": false
+            }
+          },
+          "required": [
+            "id",
+            "nombre",
+            "precio",
+            "imagenUrl",
+            "categoria",
+            "novedad",
+            "oferta"
+          ]
+        },
+        "ProductosPaginadosResponseDto": {
+          "type": "object",
+          "properties": {
+            "productos": {
+              "title": "Productos",
+              "description": "Productos de la pagina solicitada, ya filtrados y ordenados.",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ProductoResponseDto"
+              }
+            },
+            "pagina": {
+              "type": "number",
+              "title": "Pagina",
+              "description": "Numero de pagina devuelta.",
+              "example": 1
+            },
+            "limite": {
+              "type": "number",
+              "title": "Limite",
+              "description": "Cantidad maxima de productos por pagina.",
+              "example": 12
+            },
+            "total": {
+              "type": "number",
+              "title": "Total",
+              "description": "Cantidad total de productos que cumplen los filtros aplicados.",
+              "example": 8
+            }
+          },
+          "required": ["productos", "pagina", "limite", "total"]
+        },
+        "VarianteResponseDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "title": "Identificador de variante",
+              "description": "Identificador que se envia en POST /usuarios/{usuarioId}/carrito/items.",
+              "example": 101
+            },
+            "color": {
+              "type": "string",
+              "title": "Color",
+              "description": "Color de la variante.",
+              "example": "Beige"
+            },
+            "talla": {
+              "type": "string",
+              "title": "Talla",
+              "description": "Talla de la variante.",
+              "example": "M"
+            },
+            "stock": {
+              "type": "number",
+              "title": "Stock",
+              "description": "Unidades disponibles en memoria para esta combinacion.",
+              "example": 8
+            }
+          },
+          "required": ["id", "color", "talla", "stock"]
+        },
+        "ProductoDetalleResponseDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "title": "Identificador",
+              "description": "Identificador del producto. Se usa para abrir la ficha en GET /productos/{id}.",
+              "example": 1
+            },
+            "nombre": {
+              "type": "string",
+              "title": "Nombre",
+              "description": "Nombre comercial del producto.",
+              "example": "Vestido de lino"
+            },
+            "precio": {
+              "type": "number",
+              "title": "Precio",
+              "description": "Precio vigente en pesos chilenos, sin decimales.",
+              "example": 29990
+            },
+            "imagenUrl": {
+              "type": "string",
+              "title": "Imagen principal",
+              "description": "Imagen que se muestra en la tarjeta del catalogo.",
+              "example": "https://cdn.stylenow.cl/productos/vestido-lino.jpg"
+            },
+            "categoria": {
+              "type": "string",
+              "title": "Categoria",
+              "description": "Slug de la categoria a la que pertenece el producto.",
+              "example": "mujer"
+            },
+            "novedad": {
+              "type": "boolean",
+              "title": "Novedad",
+              "description": "Indica si el producto forma parte de la nueva coleccion de la home.",
+              "example": true
+            },
+            "oferta": {
+              "type": "boolean",
+              "title": "Oferta",
+              "description": "Indica si el producto aparece en la seccion Ofertas.",
+              "example": false
+            },
+            "descripcion": {
+              "type": "string",
+              "title": "Descripcion",
+              "description": "Texto descriptivo mostrado bajo el nombre del producto.",
+              "example": "Vestido de lino de corte recto, ideal para primavera."
+            },
+            "imagenes": {
+              "title": "Galeria de imagenes",
+              "description": "Galeria ordenada de la ficha, independiente de la portada imagenUrl.",
+              "example": [
+                "https://cdn.stylenow.cl/productos/vestido-lino-1.jpg",
+                "https://cdn.stylenow.cl/productos/vestido-lino-2.jpg"
+              ],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "calificacion": {
+              "type": "number",
+              "title": "Calificacion",
+              "description": "Valor de calificacion del catalogo, entre 0 y 5. No se calcula desde resenas.",
+              "example": 4.5,
+              "minimum": 0,
+              "maximum": 5
+            },
+            "colores": {
+              "title": "Colores",
+              "description": "Colores que se pintan en el selector de color de la ficha.",
+              "example": ["Beige", "Negro"],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "tallas": {
+              "title": "Tallas",
+              "description": "Tallas que se pintan en el selector de talla de la ficha.",
+              "example": ["S", "M", "L"],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "guiaTallas": {
+              "type": "string",
+              "title": "Guia de tallas",
+              "description": "Enlace de la guia de tallas que abre el link \"Guia de tallas\" de la ficha.",
+              "example": "https://www.stylenow.cl/ayuda/guia-de-tallas"
+            },
+            "variantes": {
+              "title": "Variantes",
+              "description": "Combinaciones de color y talla con su stock. El frontend usa el id de la variante elegida para agregar el producto al carrito.",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/VarianteResponseDto"
+              }
+            }
+          },
+          "required": [
+            "id",
+            "nombre",
+            "precio",
+            "imagenUrl",
+            "categoria",
+            "novedad",
+            "oferta",
+            "descripcion",
+            "imagenes",
+            "calificacion",
+            "colores",
+            "tallas",
+            "guiaTallas",
+            "variantes"
+          ]
+        },
+        "CategoriaResponseDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "title": "Identificador",
+              "description": "Identificador de la categoria.",
+              "example": 1
+            },
+            "nombre": {
+              "type": "string",
+              "title": "Nombre",
+              "description": "Nombre visible en el menu y en las tarjetas de la home.",
+              "example": "Mujer"
+            },
+            "slug": {
+              "type": "string",
+              "title": "Slug",
+              "description": "Valor que el frontend envia en GET /productos?categoria={slug}.",
+              "example": "mujer"
+            },
+            "imagenUrl": {
+              "type": "string",
+              "title": "Imagen",
+              "description": "Imagen de la tarjeta de la categoria.",
+              "example": "https://cdn.stylenow.cl/categorias/mujer.jpg"
+            },
+            "destacada": {
+              "type": "boolean",
+              "title": "Destacada",
+              "description": "Indica si la categoria aparece en \"Categorias populares\" de la home.",
+              "example": true
+            }
+          },
+          "required": ["id", "nombre", "slug", "imagenUrl", "destacada"]
+        },
+        "ColeccionResponseDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "title": "Identificador",
+              "description": "Identificador de la coleccion.",
+              "example": 1
+            },
+            "nombre": {
+              "type": "string",
+              "title": "Nombre",
+              "description": "Nombre del look o coleccion.",
+              "example": "Look urbano"
+            },
+            "descripcion": {
+              "type": "string",
+              "title": "Descripcion",
+              "description": "Texto editorial corto que acompana la imagen del look.",
+              "example": "Prendas comodas en tonos neutros para el dia a dia."
+            },
+            "imagenUrl": {
+              "type": "string",
+              "title": "Imagen",
+              "description": "Imagen principal del look.",
+              "example": "https://cdn.stylenow.cl/colecciones/look-urbano.jpg"
+            }
+          },
+          "required": ["id", "nombre", "descripcion", "imagenUrl"]
+        },
+        "PostResponseDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "title": "Identificador",
+              "description": "Identificador de la publicacion.",
+              "example": 1
+            },
+            "titulo": {
+              "type": "string",
+              "title": "Titulo",
+              "description": "Titulo de la publicacion.",
+              "example": "Como combinar tus basicos de temporada"
+            },
+            "contenido": {
+              "type": "string",
+              "title": "Contenido",
+              "description": "Texto de la publicacion mostrado en la tarjeta.",
+              "example": "Tres combinaciones simples para renovar tu closet sin comprar de mas."
+            },
+            "imagenUrl": {
+              "type": "string",
+              "title": "Imagen",
+              "description": "Imagen de la tarjeta de comunidad.",
+              "example": "https://cdn.stylenow.cl/comunidad/basicos-temporada.jpg"
+            }
+          },
+          "required": ["id", "titulo", "contenido", "imagenUrl"]
+        },
+        "ItemCarritoResponseDto": {
+          "type": "object",
+          "properties": {
+            "productoId": {
+              "type": "number",
+              "title": "Identificador de producto",
+              "description": "Producto al que pertenece la linea. Permite volver a la ficha.",
+              "example": 1
+            },
+            "varianteId": {
+              "type": "number",
+              "title": "Identificador de variante",
+              "description": "Variante de la linea. Identifica la linea en PATCH y DELETE.",
+              "example": 101
+            },
+            "nombre": {
+              "type": "string",
+              "title": "Nombre",
+              "description": "Nombre del producto.",
+              "example": "Vestido de lino"
+            },
+            "imagenUrl": {
+              "type": "string",
+              "title": "Imagen",
+              "description": "Imagen del producto mostrada en la linea del carrito.",
+              "example": "https://cdn.stylenow.cl/productos/vestido-lino.jpg"
+            },
+            "talla": {
+              "type": "string",
+              "title": "Talla",
+              "description": "Talla elegida en la ficha.",
+              "example": "M"
+            },
+            "color": {
+              "type": "string",
+              "title": "Color",
+              "description": "Color elegido en la ficha.",
+              "example": "Beige"
+            },
+            "precioUnitario": {
+              "type": "number",
+              "title": "Precio unitario",
+              "description": "Precio del producto en pesos chilenos al momento de la consulta.",
+              "example": 29990
+            },
+            "cantidad": {
+              "type": "number",
+              "title": "Cantidad",
+              "description": "Unidades de esta variante en el carrito.",
+              "example": 2
+            },
+            "subtotal": {
+              "type": "number",
+              "title": "Subtotal",
+              "description": "Precio unitario multiplicado por la cantidad. Lo calcula el backend.",
+              "example": 59980
+            }
+          },
+          "required": [
+            "productoId",
+            "varianteId",
+            "nombre",
+            "imagenUrl",
+            "talla",
+            "color",
+            "precioUnitario",
+            "cantidad",
+            "subtotal"
+          ]
+        },
+        "CarritoResponseDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "title": "Identificador del carrito",
+              "description": "Identidad propia del carrito, distinta del usuario. Es el carritoId que se envia en POST /pedidos para hacer el checkout.",
+              "example": 1
+            },
+            "usuarioId": {
+              "type": "number",
+              "title": "Identificador de usuario",
+              "description": "Usuario dueno del carrito.",
+              "example": 1
+            },
+            "items": {
+              "title": "Items",
+              "description": "Lineas actuales del carrito. Puede venir vacio.",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ItemCarritoResponseDto"
+              }
+            },
+            "cantidadTotal": {
+              "type": "number",
+              "title": "Cantidad total",
+              "description": "Suma de unidades del carrito. Es el numero del icono del header.",
+              "example": 3
+            },
+            "subtotal": {
+              "type": "number",
+              "title": "Subtotal",
+              "description": "Suma de los subtotales de las lineas, en pesos chilenos.",
+              "example": 89970
+            }
+          },
+          "required": ["id", "usuarioId", "items", "cantidadTotal", "subtotal"]
+        },
+        "AgregarItemCarritoDto": {
+          "type": "object",
+          "properties": {
+            "varianteId": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Identificador de variante",
+              "description": "Variante seleccionada en la ficha, es decir la combinacion de color y talla.",
+              "example": 101
+            },
+            "cantidad": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Cantidad",
+              "description": "Unidades que se agregan al carrito. Debe ser mayor que cero.",
+              "example": 2
+            }
+          },
+          "required": ["varianteId", "cantidad"]
+        },
+        "ActualizarCantidadDto": {
+          "type": "object",
+          "properties": {
+            "cantidad": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Cantidad",
+              "description": "Nueva cantidad de la linea del carrito. Debe ser mayor que cero.",
+              "example": 3
+            }
+          },
+          "required": ["cantidad"]
+        },
+        "RegistrarUsuarioDto": {
+          "type": "object",
+          "properties": {
+            "nombre": {
+              "type": "string",
+              "minLength": 1,
+              "title": "Nombre",
+              "description": "Nombre con el que se saluda al cliente en la tienda.",
+              "example": "Fernanda Rojas"
+            },
+            "correoElectronico": {
+              "type": "string",
+              "format": "email",
+              "title": "Correo electronico",
+              "description": "Correo electronico del cliente. Se usa como identificador unico de la cuenta.",
+              "example": "cliente@stylenow.cl",
+              "maxLength": 320
+            },
+            "contrasena": {
+              "type": "string",
+              "minLength": 1,
+              "title": "Contrasena",
+              "description": "Contrasena elegida por el cliente. Se almacena un hash scrypt con sal aleatoria. La contrasena en claro nunca se devuelve.",
+              "example": "StyleNow2026"
+            }
+          },
+          "required": ["nombre", "correoElectronico", "contrasena"]
+        },
+        "UsuarioResponseDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "title": "Identificador",
+              "description": "Identificador del usuario. Se usa en las rutas de carrito y favoritos.",
+              "example": 1
+            },
+            "nombre": {
+              "type": "string",
+              "title": "Nombre",
+              "description": "Nombre del cliente mostrado en el header.",
+              "example": "Fernanda Rojas"
+            },
+            "correoElectronico": {
+              "type": "string",
+              "title": "Correo electronico",
+              "description": "Correo electronico de la cuenta.",
+              "example": "cliente@stylenow.cl"
+            }
+          },
+          "required": ["id", "nombre", "correoElectronico"]
+        },
+        "LoginDto": {
+          "type": "object",
+          "properties": {
+            "correoElectronico": {
+              "type": "string",
+              "format": "email",
+              "title": "Correo electronico",
+              "description": "Correo electronico registrado previamente en POST /auth/registro.",
+              "example": "cliente@stylenow.cl",
+              "maxLength": 320
+            },
+            "contrasena": {
+              "type": "string",
+              "minLength": 1,
+              "title": "Contrasena",
+              "description": "Contrasena de la cuenta.",
+              "example": "StyleNow2026"
+            }
+          },
+          "required": ["correoElectronico", "contrasena"]
+        },
+        "AuthResponseDto": {
+          "type": "object",
+          "properties": {
+            "mensaje": {
+              "type": "string",
+              "title": "Mensaje",
+              "description": "Texto de confirmacion del inicio de sesion.",
+              "example": "Inicio de sesion correcto"
+            },
+            "usuario": {
+              "title": "Usuario",
+              "description": "Datos publicos del usuario autenticado, sin la contrasena.",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/UsuarioResponseDto"
+                }
+              ]
+            },
+            "accessToken": {
+              "type": "string",
+              "title": "Token de acceso",
+              "description": "JWT HS256 firmado por el servidor. Enviar como Authorization: Bearer <token> en las rutas de usuario. Expira segun expiraEnSegundos."
+            },
+            "tipoToken": {
+              "type": "string",
+              "enum": ["Bearer"],
+              "title": "Tipo de token",
+              "example": "Bearer"
+            },
+            "expiraEnSegundos": {
+              "type": "number",
+              "title": "Vigencia en segundos",
+              "example": 3600
+            }
+          },
+          "required": [
+            "mensaje",
+            "usuario",
+            "accessToken",
+            "tipoToken",
+            "expiraEnSegundos"
+          ]
+        },
+        "MensajeResponseDto": {
+          "type": "object",
+          "properties": {
+            "mensaje": {
+              "type": "string",
+              "title": "Mensaje",
+              "description": "Texto de confirmacion de la operacion.",
+              "example": "Sesion cerrada correctamente"
+            }
+          },
+          "required": ["mensaje"]
+        },
+        "DireccionResponseDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "Identificador de la direccion.",
+              "example": 1
+            },
+            "nombre": {
+              "type": "string",
+              "description": "Nombre con que el usuario identifica la direccion.",
+              "example": "Casa"
+            },
+            "calle": {
+              "type": "string",
+              "description": "Nombre de la calle.",
+              "example": "Av. Providencia"
+            },
+            "numero": {
+              "type": "string",
+              "description": "Numero de la direccion.",
+              "example": "1234"
+            },
+            "departamento": {
+              "type": "string",
+              "description": "Departamento, oficina o casa interior.",
+              "example": "Depto 502"
+            },
+            "comuna": {
+              "type": "string",
+              "description": "Comuna de despacho.",
+              "example": "Providencia"
+            },
+            "region": {
+              "type": "string",
+              "description": "Region de despacho.",
+              "example": "Region Metropolitana"
+            },
+            "principal": {
+              "type": "boolean",
+              "description": "Indica si es la direccion principal del usuario.",
+              "example": true
+            }
+          },
+          "required": [
+            "id",
+            "nombre",
+            "calle",
+            "numero",
+            "comuna",
+            "region",
+            "principal"
+          ]
+        },
+        "CrearDireccionDto": {
+          "type": "object",
+          "properties": {
+            "nombre": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Nombre con que el usuario identifica la direccion.",
+              "example": "Casa"
+            },
+            "calle": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Nombre de la calle.",
+              "example": "Av. Providencia"
+            },
+            "numero": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Numero de la direccion.",
+              "example": "1234"
+            },
+            "departamento": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Departamento, oficina o casa interior.",
+              "example": "Depto 502"
+            },
+            "comuna": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Comuna de despacho.",
+              "example": "Providencia"
+            },
+            "region": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Region de despacho.",
+              "example": "Region Metropolitana"
+            },
+            "principal": {
+              "type": "boolean",
+              "description": "Indica si es la direccion principal del usuario.",
+              "example": true
+            }
+          },
+          "required": [
+            "nombre",
+            "calle",
+            "numero",
+            "comuna",
+            "region",
+            "principal"
+          ]
+        },
+        "ActualizarDireccionDto": {
+          "type": "object",
+          "properties": {
+            "nombre": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Nombre con que el usuario identifica la direccion.",
+              "example": "Casa"
+            },
+            "calle": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Nombre de la calle.",
+              "example": "Av. Providencia"
+            },
+            "numero": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Numero de la direccion.",
+              "example": "1234"
+            },
+            "departamento": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Departamento, oficina o casa interior.",
+              "example": "Depto 502"
+            },
+            "comuna": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Comuna de despacho.",
+              "example": "Providencia"
+            },
+            "region": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Region de despacho.",
+              "example": "Region Metropolitana"
+            },
+            "principal": {
+              "type": "boolean",
+              "description": "Indica si es la direccion principal del usuario.",
+              "example": true
+            }
+          }
+        },
+        "AgregarFavoritoDto": {
+          "type": "object",
+          "properties": {
+            "productoId": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Identificador de producto",
+              "description": "Producto que el cliente marca como favorito desde la ficha.",
+              "example": 1
+            }
+          },
+          "required": ["productoId"]
+        },
+        "FavoritoResponseDto": {
+          "type": "object",
+          "properties": {
+            "usuarioId": {
+              "type": "number",
+              "title": "Identificador de usuario",
+              "description": "Usuario dueno de la lista de favoritos.",
+              "example": 1
+            },
+            "productoId": {
+              "type": "number",
+              "title": "Identificador de producto",
+              "description": "Producto que quedo guardado en favoritos.",
+              "example": 1
+            },
+            "mensaje": {
+              "type": "string",
+              "title": "Mensaje",
+              "description": "Texto de confirmacion que el frontend puede mostrar en la ficha.",
+              "example": "Producto agregado a favoritos"
+            }
+          },
+          "required": ["usuarioId", "productoId", "mensaje"]
+        },
+        "LookProductoResponseDto": {
+          "type": "object",
+          "properties": {
+            "productoId": {
+              "type": "number",
+              "description": "Identificador del producto.",
+              "example": 1
+            },
+            "varianteId": {
+              "type": "number",
+              "description": "Identificador de la variante elegida.",
+              "example": 101
+            }
+          },
+          "required": ["productoId", "varianteId"]
+        },
+        "LookResponseDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "Identificador del look.",
+              "example": 1
+            },
+            "nombre": {
+              "type": "string",
+              "description": "Nombre del look.",
+              "example": "Look urbano"
+            },
+            "productos": {
+              "description": "Productos que componen el look.",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/LookProductoResponseDto"
+              }
+            },
+            "precioTotal": {
+              "type": "number",
+              "description": "Suma de los precios de los productos, en pesos chilenos.",
+              "example": 89970
+            }
+          },
+          "required": ["id", "nombre", "productos", "precioTotal"]
+        },
+        "LooksPaginadosResponseDto": {
+          "type": "object",
+          "properties": {
+            "looks": {
+              "description": "Looks de la pagina solicitada.",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/LookResponseDto"
+              }
+            },
+            "pagina": {
+              "type": "number",
+              "description": "Numero de pagina devuelta.",
+              "example": 1
+            },
+            "limite": {
+              "type": "number",
+              "description": "Cantidad maxima de looks por pagina.",
+              "example": 12
+            },
+            "total": {
+              "type": "number",
+              "description": "Cantidad total de looks.",
+              "example": 4
+            }
+          },
+          "required": ["looks", "pagina", "limite", "total"]
+        },
+        "LookProductoDto": {
+          "type": "object",
+          "properties": {
+            "productoId": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Identificador del producto.",
+              "example": 1
+            },
+            "varianteId": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Identificador de la variante elegida.",
+              "example": 101
+            }
+          },
+          "required": ["productoId", "varianteId"]
+        },
+        "CrearLookDto": {
+          "type": "object",
+          "properties": {
+            "nombre": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Nombre del look.",
+              "example": "Look urbano"
+            },
+            "productos": {
+              "minItems": 1,
+              "description": "Productos que componen el look.",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/LookProductoDto"
+              }
+            }
+          },
+          "required": ["nombre", "productos"]
+        },
+        "GuardarLookDto": {
+          "type": "object",
+          "properties": {
+            "lookId": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Identificador del look que se guarda.",
+              "example": 1
+            }
+          },
+          "required": ["lookId"]
+        },
+        "AlertaResponseDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "Identificador de la alerta.",
+              "example": 1
+            },
+            "tipo": {
+              "type": "string",
+              "enum": ["precio", "reposicion"],
+              "description": "Tipo de alerta: precio o reposicion.",
+              "example": "precio"
+            },
+            "productoId": {
+              "type": "number",
+              "description": "Identificador del producto.",
+              "example": 1
+            },
+            "varianteId": {
+              "type": "number",
+              "description": "Variante (color y talla) esperada. Solo en avisos de reposicion.",
+              "example": 103
+            },
+            "precioObjetivo": {
+              "type": "number",
+              "description": "Precio desde el cual se avisa, en pesos chilenos. Solo en alertas de precio.",
+              "example": 29990
+            },
+            "estado": {
+              "type": "string",
+              "enum": ["activa", "notificada", "cancelada"],
+              "description": "Estado actual de la alerta.",
+              "example": "activa"
+            }
+          },
+          "required": ["id", "tipo", "productoId", "estado"]
+        },
+        "CrearAlertaPrecioDto": {
+          "type": "object",
+          "properties": {
+            "productoId": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Identificador del producto.",
+              "example": 1
+            },
+            "precioObjetivo": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Precio desde el cual se avisa, en pesos chilenos.",
+              "example": 29990
+            }
+          },
+          "required": ["productoId"]
+        },
+        "CrearAvisoReposicionDto": {
+          "type": "object",
+          "properties": {
+            "productoId": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Identificador del producto.",
+              "example": 1
+            },
+            "varianteId": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Variante (color y talla) que se espera.",
+              "example": 101
+            }
+          },
+          "required": ["productoId"]
+        },
+        "ContactoPedidoDto": {
+          "type": "object",
+          "properties": {
+            "nombre": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Nombre de quien recibe el pedido.",
+              "example": "Fernanda Rojas"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "description": "Correo electronico de contacto.",
+              "example": "cliente@stylenow.cl"
+            },
+            "telefono": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Telefono de contacto.",
+              "example": "+56912345678"
+            }
+          },
+          "required": ["nombre", "email", "telefono"]
+        },
+        "DireccionPedidoDto": {
+          "type": "object",
+          "properties": {
+            "calle": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Nombre de la calle.",
+              "example": "Av. Providencia"
+            },
+            "numero": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Numero de la direccion.",
+              "example": "1234"
+            },
+            "departamento": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Departamento, oficina o casa interior.",
+              "example": "Depto 502"
+            },
+            "comuna": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Comuna de despacho.",
+              "example": "Providencia"
+            },
+            "region": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Region de despacho.",
+              "example": "Region Metropolitana"
+            }
+          },
+          "required": ["calle", "numero", "comuna", "region"]
+        },
+        "CrearPedidoDto": {
+          "type": "object",
+          "properties": {
+            "direccionId": {
+              "type": "integer",
+              "description": "Direccion guardada del usuario; si se omite se conserva la direccion libre H2.",
+              "minimum": 1
+            },
+            "carritoId": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Identificador del carrito que se convierte en pedido.",
+              "example": 1
+            },
+            "contacto": {
+              "description": "Datos de contacto de quien recibe el pedido.",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ContactoPedidoDto"
+                }
+              ]
+            },
+            "direccion": {
+              "description": "Direccion de despacho del pedido.",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/DireccionPedidoDto"
+                }
+              ]
+            },
+            "metodoPago": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Metodo de pago elegido en el checkout.",
+              "example": "webpay"
+            }
+          },
+          "required": ["carritoId", "contacto", "direccion", "metodoPago"]
+        },
+        "PedidoItemResponseDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "Identificador propio del item. Es el pedidoItemId de cambios y devoluciones.",
+              "example": 5001
+            },
+            "productoId": {
+              "type": "number",
+              "description": "Identificador del producto.",
+              "example": 1
+            },
+            "varianteId": {
+              "type": "number",
+              "description": "Identificador de la variante comprada.",
+              "example": 102
+            },
+            "nombre": {
+              "type": "string",
+              "description": "Nombre del producto.",
+              "example": "Vestido de lino blanco"
+            },
+            "cantidad": {
+              "type": "number",
+              "description": "Unidades compradas.",
+              "example": 1
+            },
+            "precioUnitario": {
+              "type": "number",
+              "description": "Precio unitario, en pesos chilenos.",
+              "example": 39990
+            },
+            "subtotal": {
+              "type": "number",
+              "description": "Precio unitario por cantidad, en pesos chilenos.",
+              "example": 39990
+            }
+          },
+          "required": [
+            "id",
+            "productoId",
+            "varianteId",
+            "nombre",
+            "cantidad",
+            "precioUnitario",
+            "subtotal"
+          ]
+        },
+        "PedidoDetalleResponseDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "Identificador del pedido.",
+              "example": 1001
+            },
+            "numeroPedido": {
+              "type": "string",
+              "description": "Numero de pedido visible para el cliente.",
+              "example": "SN-2026-1001"
+            },
+            "estado": {
+              "type": "string",
+              "description": "Estado actual del pedido.",
+              "example": "confirmado"
+            },
+            "fecha": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Fecha de creacion del pedido en formato ISO 8601.",
+              "example": "2026-10-04T15:30:00.000Z"
+            },
+            "subtotal": {
+              "type": "number",
+              "description": "Suma de los items, en pesos chilenos.",
+              "example": 39990
+            },
+            "costoEnvio": {
+              "type": "number",
+              "description": "Costo de despacho, en pesos chilenos.",
+              "example": 0
+            },
+            "total": {
+              "type": "number",
+              "description": "Total pagado, en pesos chilenos.",
+              "example": 39990
+            },
+            "metodoPago": {
+              "type": "string",
+              "description": "Metodo de pago utilizado.",
+              "example": "webpay"
+            },
+            "items": {
+              "description": "Lineas del pedido.",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/PedidoItemResponseDto"
+              }
+            }
+          },
+          "required": [
+            "id",
+            "numeroPedido",
+            "estado",
+            "fecha",
+            "subtotal",
+            "costoEnvio",
+            "total",
+            "metodoPago",
+            "items"
+          ]
+        },
+        "PedidoResponseDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "Identificador del pedido.",
+              "example": 1001
+            },
+            "numeroPedido": {
+              "type": "string",
+              "description": "Numero de pedido visible para el cliente.",
+              "example": "SN-2026-1001"
+            },
+            "estado": {
+              "type": "string",
+              "description": "Estado actual del pedido.",
+              "example": "confirmado"
+            },
+            "fecha": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Fecha de creacion del pedido en formato ISO 8601.",
+              "example": "2026-10-04T15:30:00.000Z"
+            },
+            "subtotal": {
+              "type": "number",
+              "description": "Suma de los items, en pesos chilenos.",
+              "example": 39990
+            },
+            "costoEnvio": {
+              "type": "number",
+              "description": "Costo de despacho, en pesos chilenos.",
+              "example": 0
+            },
+            "total": {
+              "type": "number",
+              "description": "Total pagado, en pesos chilenos.",
+              "example": 39990
+            },
+            "metodoPago": {
+              "type": "string",
+              "description": "Metodo de pago utilizado.",
+              "example": "webpay"
+            }
+          },
+          "required": [
+            "id",
+            "numeroPedido",
+            "estado",
+            "fecha",
+            "subtotal",
+            "costoEnvio",
+            "total",
+            "metodoPago"
+          ]
+        },
+        "CrearCambioDevolucionDto": {
+          "type": "object",
+          "properties": {
+            "pedidoItemId": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Identificador del item, obtenido del detalle del pedido (items[].id).",
+              "example": 5001
+            },
+            "tipo": {
+              "type": "string",
+              "enum": ["cambio", "devolucion"],
+              "description": "Tipo de solicitud: cambio o devolucion.",
+              "example": "cambio"
+            },
+            "motivo": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Motivo de la solicitud.",
+              "example": "La talla me quedo grande"
+            },
+            "nuevaVarianteId": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Obligatoria para cambio. No se permite para devolucion.",
+              "example": 101
+            },
+            "metodoEntrega": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Forma en que el cliente entrega el producto.",
+              "example": "retiro_domicilio"
+            }
+          },
+          "required": ["pedidoItemId", "tipo", "motivo", "metodoEntrega"]
+        },
+        "CambioDevolucionResponseDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "Identificador de la solicitud.",
+              "example": 1
+            },
+            "pedidoId": {
+              "type": "number",
+              "description": "Identificador del pedido asociado.",
+              "example": 1001
+            },
+            "pedidoItemId": {
+              "type": "number",
+              "description": "Identificador del item del pedido.",
+              "example": 5001
+            },
+            "tipo": {
+              "type": "string",
+              "enum": ["cambio", "devolucion"],
+              "description": "Tipo de solicitud: cambio o devolucion.",
+              "example": "cambio"
+            },
+            "estado": {
+              "type": "string",
+              "enum": ["solicitada", "aprobada", "rechazada", "completada"],
+              "description": "Estado actual de la solicitud.",
+              "example": "solicitada"
+            },
+            "motivo": {
+              "type": "string",
+              "description": "Motivo de la solicitud.",
+              "example": "La talla me quedo grande"
+            },
+            "nuevaVarianteId": {
+              "type": "number",
+              "description": "Variante solicitada. Solo cuando el tipo es cambio.",
+              "example": 101
+            },
+            "metodoEntrega": {
+              "type": "string",
+              "description": "Forma en que el cliente entrega el producto.",
+              "example": "retiro_domicilio"
+            },
+            "fechaSolicitud": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Fecha de la solicitud en formato ISO 8601.",
+              "example": "2026-10-06T12:00:00.000Z"
+            }
+          },
+          "required": [
+            "id",
+            "pedidoId",
+            "pedidoItemId",
+            "tipo",
+            "estado",
+            "motivo",
+            "metodoEntrega",
+            "fechaSolicitud"
+          ]
+        }
+      }
+    }
+  }
+}

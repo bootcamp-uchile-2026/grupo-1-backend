@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { DummyPedidosRepository } from '../repositorios/dummy/dummy-pedidos.repository';
+import type { Pedido } from './modelos';
 import { aPedidoRespuesta } from '../services/respuestas.mapper';
 
 describe('Separacion persistencia / HTTP (H2-017)', () => {
@@ -28,9 +28,10 @@ describe('Separacion persistencia / HTTP (H2-017)', () => {
     }
   });
 
-  it('conserva dueno/snapshot internamente y proyecta el pedido sin exponerlos', async () => {
-    const repo = new DummyPedidosRepository();
-    const order = await repo.crear({
+  it('conserva dueno/snapshot internamente y proyecta el pedido sin exponerlos', () => {
+    const order: Pedido = {
+      id: 1,
+      numeroPedido: 'SN-unitario',
       usuarioId: 777,
       estado: 'confirmado',
       fecha: '2026-11-15T00:00:00.000Z',
@@ -40,6 +41,7 @@ describe('Separacion persistencia / HTTP (H2-017)', () => {
       metodoPago: 'webpay',
       items: [
         {
+          id: 1,
           productoId: 1,
           varianteId: 101,
           nombre: 'Prueba',
@@ -61,7 +63,7 @@ describe('Separacion persistencia / HTTP (H2-017)', () => {
           region: 'Prueba',
         },
       },
-    });
+    };
     const output = aPedidoRespuesta(order);
     expect(order.usuarioId).toBe(777);
     expect(order.checkout?.contacto.nombre).toBe('privado');
@@ -69,9 +71,7 @@ describe('Separacion persistencia / HTTP (H2-017)', () => {
     expect(output).not.toHaveProperty('usuarioId');
     output.items[0].nombre = 'mutado externamente';
     order.checkout!.contacto.nombre = 'otra mutacion';
-    const stored = await repo.buscarDeUsuario(777, order.id);
-    expect(stored?.items[0].nombre).toBe('Prueba');
-    expect(stored?.checkout?.contacto.nombre).toBe('privado');
-    expect(await repo.buscarDeUsuario(778, order.id)).toBeNull();
+    expect(order.items[0].nombre).toBe('Prueba');
+    expect(output).not.toHaveProperty('checkout');
   });
 });

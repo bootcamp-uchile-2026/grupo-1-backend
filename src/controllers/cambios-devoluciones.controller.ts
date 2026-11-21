@@ -10,6 +10,8 @@ import {
   ApiHeader,
   ApiParam,
   ApiTags,
+  ApiBearerAuth,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { CambioDevolucionResponseDto } from '../dto/cambio-devolucion-response.dto';
 import { CrearCambioDevolucionDto } from '../dto/crear-cambio-devolucion.dto';
@@ -26,6 +28,11 @@ import { CambiosDevolucionesService } from '../services/cambios-devoluciones.ser
   schema: { type: 'integer', minimum: 1, maximum: Number.MAX_SAFE_INTEGER },
   description: 'Identificador del usuario dueno del pedido.',
   example: 1,
+})
+@ApiBearerAuth()
+@ApiUnauthorizedResponse({
+  type: ErrorResponseDto,
+  description: 'JWT ausente, invalido o expirado.',
 })
 @Controller('usuarios/:usuarioId')
 export class CambiosDevolucionesController {

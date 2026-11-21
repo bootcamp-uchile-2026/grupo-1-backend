@@ -56,6 +56,8 @@ export class Producto {
 
 @Entity('variante')
 @Index('uq_variante_posicion', ['productoId', 'posicion'], { unique: true })
+// Destino de las FK compuestas (variante_id, producto_id) de alerta y pedido_item.
+@Index('uq_p4_variante_producto', ['id', 'productoId'], { unique: true })
 export class Variante {
   @PrimaryColumn({ type: 'bigint', unsigned: true, transformer: enteroSeguro })
   id!: number;

@@ -7,7 +7,6 @@ import {
   ProductoTalla,
   Variante,
 } from '../../persistencia/productos.entidades';
-import { DummyProductosRepository } from '../dummy/dummy-productos.repository';
 import { TypeOrmProductosRepository } from './typeorm-productos.repository';
 
 /** Construye metadatos sin abrir conexion (buildMetadatas es protegido). */
@@ -55,14 +54,14 @@ describe('B1 TypeOrmProductosRepository con ids no seguros', () => {
   });
 
   it.each(NO_SEGUROS)(
-    'buscarVariante(%p) y buscarPorId responden null sin consultar, igual que dummy',
+    'buscarVariante(%p) y buscarPorId responden null sin consultar, sin acceder al repositorio',
     async (id) => {
       const sql = new TypeOrmProductosRepository(source);
-      const dummy = new DummyProductosRepository();
+      const consulta = jest.spyOn(source, 'getRepository');
       await expect(sql.buscarVariante(id)).resolves.toBeNull();
       await expect(sql.buscarPorId(id)).resolves.toBeNull();
-      await expect(dummy.buscarVariante(id)).resolves.toBeNull();
-      await expect(dummy.buscarPorId(id)).resolves.toBeNull();
+      expect(consulta).not.toHaveBeenCalled();
+      consulta.mockRestore();
     },
   );
 });

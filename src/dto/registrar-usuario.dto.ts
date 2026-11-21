@@ -1,5 +1,6 @@
+import { LONGITUD_MAXIMA_CORREO } from '../dominio/limites-identidad';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 /**
  * DTO de ENTRADA.
@@ -20,6 +21,7 @@ export class RegistrarUsuarioDto {
 
   @ApiProperty({
     format: 'email',
+    maxLength: LONGITUD_MAXIMA_CORREO,
     type: String,
     title: 'Correo electronico',
     description:
@@ -28,6 +30,7 @@ export class RegistrarUsuarioDto {
     required: true,
   })
   @IsEmail()
+  @MaxLength(LONGITUD_MAXIMA_CORREO)
   correoElectronico!: string;
 
   @ApiProperty({
@@ -35,8 +38,8 @@ export class RegistrarUsuarioDto {
     type: String,
     title: 'Contrasena',
     description:
-      'Contrasena elegida por el cliente. En la fase dummy de Hito 2 se guarda en memoria ' +
-      'y no se aplica hashing. Nunca se devuelve.',
+      'Contrasena elegida por el cliente. Se almacena un hash scrypt con sal aleatoria. ' +
+      'La contrasena en claro nunca se devuelve.',
     example: 'StyleNow2026',
     required: true,
   })

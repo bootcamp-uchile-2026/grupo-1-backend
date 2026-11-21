@@ -7,6 +7,8 @@ import {
   ApiParam,
   ApiResponse,
   ApiTags,
+  ApiBearerAuth,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ProductoDetalleResponseDto } from '../dto/producto-detalle-response.dto';
 import { AgregarFavoritoDto } from '../dto/agregar-favorito.dto';
@@ -14,6 +16,11 @@ import { FavoritoResponseDto } from '../dto/favorito-response.dto';
 import { FavoritosService } from '../services/favoritos.service';
 
 @ApiTags('favoritos')
+@ApiBearerAuth()
+@ApiUnauthorizedResponse({
+  type: ErrorResponseDto,
+  description: 'JWT ausente, invalido o expirado.',
+})
 @Controller('usuarios/:usuarioId/favoritos')
 export class FavoritosController {
   constructor(private readonly favoritosService: FavoritosService) {}

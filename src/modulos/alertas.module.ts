@@ -1,13 +1,9 @@
-import {
-  proveerRepositorio,
-  proveerDummy,
-} from '../persistencia/proveer-repositorio';
+import { DataSource } from 'typeorm';
 import { TypeOrmAlertasRepository } from '../repositorios/typeorm/typeorm-alertas.repository';
 import { Module } from '@nestjs/common';
 import { AlertasController } from '../controllers/alertas.controller';
 import { AlertasService } from '../services/alertas.service';
 import { AlertasRepository } from '../repositorios/alertas.repository';
-import { DummyAlertasRepository } from '../repositorios/dummy/dummy-alertas.repository';
 import { UsuariosModule } from './usuarios.module';
 import { ProductosModule } from './productos.module';
 
@@ -16,12 +12,11 @@ import { ProductosModule } from './productos.module';
   controllers: [AlertasController],
   providers: [
     AlertasService,
-    proveerDummy(DummyAlertasRepository),
-    proveerRepositorio(
-      AlertasRepository,
-      DummyAlertasRepository,
-      TypeOrmAlertasRepository,
-    ),
+    {
+      provide: AlertasRepository,
+      inject: [DataSource],
+      useFactory: (source: DataSource) => new TypeOrmAlertasRepository(source),
+    },
   ],
   exports: [AlertasService, AlertasRepository],
 })

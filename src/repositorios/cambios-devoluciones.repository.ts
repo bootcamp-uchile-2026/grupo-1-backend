@@ -14,12 +14,9 @@ export type NuevaSolicitud = Omit<
  * la pertenencia al usuario la resuelve el Service a traves del pedido.
  */
 export abstract class CambiosDevolucionesRepository {
-  historial(
-    _id: number,
-  ): Promise<{ estado: string; fecha: Date; resolucion: string | null }[]> {
-    void _id;
-    return Promise.resolve([]);
-  }
+  abstract historial(
+    id: number,
+  ): Promise<{ estado: string; fecha: Date; resolucion: string | null }[]>;
 
   abstract listarPorPedido(
     pedidoId: number,
